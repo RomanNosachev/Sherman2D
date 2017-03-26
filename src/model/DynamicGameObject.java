@@ -46,14 +46,14 @@ public abstract class DynamicGameObject implements GameObject {
 	
 	public boolean boundingWith(Shape s)
 	{
-		return s.intersects(getBoundingCircle());
+		return getBoundingCircle().intersects(s) || getBoundingCircle().contains(s);
 	}
 	
 	public boolean boundingWith(DynamicGameObject object)
 	{
-		return object.getBoundingCircle().intersects(getBoundingCircle());
+		return getBoundingCircle().intersects(object.getBoundingCircle()) || getBoundingCircle().contains(object.getBoundingCircle());
 	}
-
+ 
 	public Shape getBase() 
 	{
 		return base;
@@ -70,7 +70,7 @@ public abstract class DynamicGameObject implements GameObject {
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
-	public float getBaseBoundingCircleRadius()
+	public float getBoundingCircleRadius()
 	{
 		return base.getBoundingCircleRadius();
 	}

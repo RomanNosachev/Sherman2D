@@ -7,6 +7,8 @@ public class Level {
 	private Tank 		actor;
 	private StaticLevel field;
 	
+	private boolean 	isShellLeftTank = false;
+	
 	public Level(Tank actor, StaticLevel field)
 	{
 		this.actor = actor;
@@ -199,11 +201,11 @@ public class Level {
 	}
 	
 	public boolean tankExcludesShell()
-	{
+	{	
 		return !actor.collidesWith(actor.getShellBase()) && !actor.isContains(getShellBase());
 	}
 	
-	public Shape getTankShape()
+	public Shape getTankBase()
 	{
 		return actor.getBase();
 	}
@@ -211,6 +213,16 @@ public class Level {
 	public Shape getShellBase()
 	{
 		return actor.getShellBase();
+	}
+
+	public boolean isShellLeftTank() 
+	{
+		return isShellLeftTank;
+	}
+
+	public void setShellLeftTank(boolean isShellLeftTank) 
+	{
+		this.isShellLeftTank = isShellLeftTank;
 	}
 }
 

@@ -12,7 +12,6 @@ public class GameController {
 	private Level model;
 	
 	private boolean gameOver = false;
-	private boolean shot = false;
 	
 	private static final int CLOCK_PER_SEC = 1000;
 	
@@ -41,25 +40,25 @@ public class GameController {
 			
 			model.addShotPathPoint(model.getShellBase().getCenterX(), model.getShellBase().getCenterY());
 			
-			if (model.tankExcludesShell() && !shot)
+			if (model.tankExcludesShell() && !model.isShellLeftTank())
 			{
-				shot = true;
+				model.setShellLeftTank(true);
 			}
 			
-			if (shot && model.shellBoundingWithTank())
-			{
+			if (model.isShellLeftTank() && model.shellBoundingWithTank())
+			{				
 				if (model.shellCollidesWithTank())
 				{
 					setGameOver(true);
 				}
 			}
-			
+
 			if (model.shellBoundingWithLevel())
 			{
 				if (model.shellCollidesWithLevel() || !model.levelContainsShell())
 				{
 					model.setIsShooting(false);
-					shot = false;
+					model.setShellLeftTank(false);
 					
 					model.setShellPosition(model.getShellBase().getX() - model.getShotRouteVectorX() * delta / CLOCK_PER_SEC,
 							   			   model.getShellBase().getY() + model.getShotRouteVectorY() * delta / CLOCK_PER_SEC);
@@ -68,7 +67,7 @@ public class GameController {
 		}
 		else
 		{
-			model.setShellPosition(model.getTankShape().getCenterX(), model.getTankShape().getY());
+			model.setShellPosition(model.getTankBase().getCenterX(), model.getTankBase().getY());
 		}
 	}
 	
@@ -133,11 +132,11 @@ public class GameController {
 		{
 			model.setIsMoving(Move.BACK);
 			
-			model.setPositionX(model.getTankShape().getX() - model.getMovePoint() * delta / CLOCK_PER_SEC);
+			model.setPositionX(model.getTankBase().getX() - model.getMovePoint() * delta / CLOCK_PER_SEC);
 			
 			if (model.tankCollidesWithLevel())
 			{
-				model.setPositionX(model.getTankShape().getX() + model.getMovePoint() * delta / CLOCK_PER_SEC);
+				model.setPositionX(model.getTankBase().getX() + model.getMovePoint() * delta / CLOCK_PER_SEC);
 			}
 		}
 
@@ -145,31 +144,31 @@ public class GameController {
 		{
 			model.setIsMoving(Move.FORTH);
 		
-			model.setPositionX(model.getTankShape().getX() + model.getMovePoint() * delta / CLOCK_PER_SEC);
+			model.setPositionX(model.getTankBase().getX() + model.getMovePoint() * delta / CLOCK_PER_SEC);
 			
 			if (model.tankCollidesWithLevel())
 			{
-				model.setPositionX(model.getTankShape().getX() - model.getMovePoint() * delta / CLOCK_PER_SEC);
+				model.setPositionX(model.getTankBase().getX() - model.getMovePoint() * delta / CLOCK_PER_SEC);
 			}
 		}
 		
 		if (gc.getInput().isKeyDown(Input.KEY_S))
 		{
-			model.setPositionY(model.getTankShape().getY() + model.getMovePoint() * delta / CLOCK_PER_SEC);
+			model.setPositionY(model.getTankBase().getY() + model.getMovePoint() * delta / CLOCK_PER_SEC);
 			
 			if (model.tankCollidesWithLevel())
 			{
-				model.setPositionY(model.getTankShape().getY() - model.getMovePoint() * delta / CLOCK_PER_SEC);
+				model.setPositionY(model.getTankBase().getY() - model.getMovePoint() * delta / CLOCK_PER_SEC);
 			}
 		}
 		
 		if (gc.getInput().isKeyDown(Input.KEY_W))
 		{
-			model.setPositionY(model.getTankShape().getY() - model.getMovePoint() * delta / CLOCK_PER_SEC);
+			model.setPositionY(model.getTankBase().getY() - model.getMovePoint() * delta / CLOCK_PER_SEC);
 			
 			if (model.tankCollidesWithLevel())
 			{
-				model.setPositionY(model.getTankShape().getY() + model.getMovePoint() * delta / CLOCK_PER_SEC);
+				model.setPositionY(model.getTankBase().getY() + model.getMovePoint() * delta / CLOCK_PER_SEC);
 			}
 		}
 	}

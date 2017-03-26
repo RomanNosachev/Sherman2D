@@ -31,7 +31,7 @@ public class ShellRenderer extends DynamicRenderer {
 	public void init(GameContainer gc) throws SlickException 
 	{		
 		prevRotate = renderingObject.getStartAngle();
-		boundingRadius = renderingObject.getBaseBoundingCircleRadius();
+		boundingRadius = renderingObject.getBoundingCircleRadius();
 	}
 
 	@Override

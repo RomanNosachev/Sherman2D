@@ -32,7 +32,7 @@ public class TankRenderer extends DynamicRenderer{
 	@Override
 	public void init(GameContainer gc) throws SlickException 
 	{
-		boundingRadius = renderingObject.getBaseBoundingCircleRadius();
+		boundingRadius = renderingObject.getBoundingCircleRadius();
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Polygon;
 
 import controller.GameController;
 import model.Level;
@@ -18,11 +19,9 @@ import view.StaticLevelRenderer;
 import view.TankRenderer;
 
 /*
- * - Исправить баг с коллизией снаряда и танка
  * - Добавить звуковое сопровождение
  * - Исправить проблему с плохой отрисовкой
  * - Решить проблему с потерей FPS
- * - Избавиться от магических констант
  * - Сделать импорт настроек
  * - Реализовать создание игровых объектов посредством абстрактной фабрики
  * - Использовать Builder для создания классов 
@@ -63,7 +62,21 @@ public class Game extends BasicGame{
 		
 		Image shellImg = new Image("res/sprites/shell.png");
 		
-		field = new StaticLevel(70);
+		float floorHeight = 70;
+		
+		float [] polygonPoint = new float[]
+		{
+			0, 0,
+			Display.getWidth(), 0,
+			Display.getWidth(), Display.getHeight() - floorHeight,
+			Display.getWidth() - floorHeight, Display.getHeight() - floorHeight,
+			Display.getWidth() - floorHeight, Display.getHeight() - floorHeight * 2,
+			Display.getWidth() - floorHeight * 2, Display.getHeight() - floorHeight * 2,
+			Display.getWidth() / 2, Display.getHeight() - floorHeight,
+			0, Display.getHeight() - floorHeight
+		};
+						
+		field = new StaticLevel(floorHeight, new Polygon(polygonPoint));
 		
 		actor = new Tank(field.getFloorHeight(), 
 				  Display.getHeight() - (actorImg.getHeight() + field.getFloorHeight() + 1F),

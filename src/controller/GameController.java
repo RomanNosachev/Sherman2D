@@ -53,16 +53,15 @@ public class GameController {
 				}
 			}
 
-			if (model.shellBoundingWithLevel())
+			if (model.shellCollidesWithLevel() || !model.levelContainsShell())
 			{
-				if (model.shellCollidesWithLevel() || !model.levelContainsShell())
-				{
-					model.setIsShooting(false);
-					model.setShellLeftTank(false);
+				model.setIsShooting(false);
+				model.setShellLeftTank(false);
 					
-					model.setShellPosition(model.getShellBase().getX() - model.getShotRouteVectorX() * delta / CLOCK_PER_SEC,
-							   			   model.getShellBase().getY() + model.getShotRouteVectorY() * delta / CLOCK_PER_SEC);
-				}
+				model.setShellPosition(model.getTankBase().getCenterX(), model.getTankBase().getY());
+
+				model.setShellPosition(model.getShellBase().getX() - model.getShotRouteVectorX() * delta / CLOCK_PER_SEC,
+						   			   model.getShellBase().getY() + model.getShotRouteVectorY() * delta / CLOCK_PER_SEC);
 			}
 		}
 		else
@@ -152,6 +151,7 @@ public class GameController {
 			}
 		}
 		
+		/*
 		if (gc.getInput().isKeyDown(Input.KEY_S))
 		{
 			model.setPositionY(model.getTankBase().getY() + model.getMovePoint() * delta / CLOCK_PER_SEC);
@@ -171,6 +171,7 @@ public class GameController {
 				model.setPositionY(model.getTankBase().getY() + model.getMovePoint() * delta / CLOCK_PER_SEC);
 			}
 		}
+		*/
 	}
 
 	public boolean isGameOver() {

@@ -57,7 +57,7 @@ public class Game extends BasicGame{
 	{
 		Image background = new Image("res/sprites/forest.jpg");
 		
-		Image actorImg = new Image("res/sprites/tanksprite_green.png");
+		Image actorImg = new Image("res/sprites/tanksprite.png");
 		int sheetCount = 8;
 		
 		Image shellImg = new Image("res/sprites/shell.png");

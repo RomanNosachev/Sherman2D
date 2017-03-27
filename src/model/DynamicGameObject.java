@@ -8,7 +8,7 @@ public abstract class DynamicGameObject implements GameObject {
 	protected Shape base;
 	protected float boundingRadius;
 	
-	public void setPosition(Point pos)
+	public void setPosition(Point pos) throws NullPointerException
 	{
 		base.setX(pos.getX());
 		base.setY(pos.getY());
@@ -29,27 +29,35 @@ public abstract class DynamicGameObject implements GameObject {
 		base.setY(y);
 	}
 
-	public boolean collidesWith(DynamicGameObject object)
+	@Override
+	public boolean collidesWith(GameObject object) throws NullPointerException
 	{
 		return base.intersects(object.getBase());
 	}
 	
-	public boolean collidesWith(Shape s)
+	@Override
+	public boolean collidesWith(Shape s) throws NullPointerException
 	{
 		return base.intersects(s);
 	}
 	
-	public boolean isContains(Shape s)
+	@Override
+	public boolean isContains(GameObject object) throws NullPointerException {
+		return base.contains(object.getBase());
+	}
+	
+	@Override
+	public boolean isContains(Shape s) throws NullPointerException
 	{
 		return base.contains(s);
 	}
 	
-	public boolean boundingWith(Shape s)
+	public boolean boundingWith(Shape s) throws NullPointerException
 	{
 		return getBoundingCircle().intersects(s) || getBoundingCircle().contains(s);
 	}
 	
-	public boolean boundingWith(DynamicGameObject object)
+	public boolean boundingWith(DynamicGameObject object) throws NullPointerException
 	{
 		return getBoundingCircle().intersects(object.getBoundingCircle()) || getBoundingCircle().contains(object.getBoundingCircle());
 	}
@@ -64,7 +72,7 @@ public abstract class DynamicGameObject implements GameObject {
 		return new Ellipse(base.getCenterX(), base.getCenterY(), boundingRadius, boundingRadius);
 	}
 
-	public void setBase(Shape base) 
+	public void setBase(Shape base) throws NullPointerException
 	{
 		this.base = base;
 		boundingRadius = base.getBoundingCircleRadius();

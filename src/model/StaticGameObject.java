@@ -5,21 +5,37 @@ import org.newdawn.slick.geom.Shape;
 public abstract class StaticGameObject implements GameObject {
 	protected Shape base;
 
-	public boolean collidesWith(Shape s)
+	@Override
+	public boolean collidesWith(Shape s) throws NullPointerException
 	{
 		return base.intersects(s);
 	}
 	
-	public boolean isContains(Shape s)
+	@Override
+	public boolean collidesWith(GameObject object) throws NullPointerException 
+	{
+		return base.intersects(object.getBase());
+	}
+	
+	@Override
+	public boolean isContains(Shape s) throws NullPointerException
 	{
 		return base.contains(s);
 	}
+	
+	@Override
+	public boolean isContains(GameObject object) throws NullPointerException 
+	{
+		return base.contains(object.getBase());
+	}
 
-	public Shape getBase() {
+	public Shape getBase() 
+	{
 		return base;
 	}
 
-	public void setBase(Shape base) {
+	public void setBase(Shape base) 
+	{
 		this.base = base;
 	}
 }

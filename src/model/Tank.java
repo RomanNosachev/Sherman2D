@@ -13,77 +13,77 @@ public class Tank extends DynamicGameObject {
 	private float 		maxAimingAngle;
 	private Move 		isMoving = Move.STOP;
 
-	public Tank(Shape base)
+	public Tank(Shape base) throws IllegalArgumentException
 	{
 		setBase(base);
 		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
-	public Tank(Point pos, float width, float height)
+	public Tank(Point pos, float width, float height) throws IllegalArgumentException
 	{
 		setBase(new Rectangle(pos.getX(), pos.getY(), width, height));
 		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
-	public Tank(float x, float y, float width, float height)
+	public Tank(float x, float y, float width, float height) throws IllegalArgumentException
 	{
 		setBase(new Rectangle(x, y, width, height));
 		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
-	public Tank(Point pos, Image baseImg)
+	public Tank(Point pos, Image baseImg) throws IllegalArgumentException
 	{
 		setBase(new Rectangle(pos.getX(), pos.getY(), baseImg.getWidth(), baseImg.getHeight()));
 		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
-	public Tank(float x, float y, Image baseImg)
+	public Tank(float x, float y, Image baseImg) throws IllegalArgumentException
 	{
 		setBase(new Rectangle(x, y, baseImg.getWidth(), baseImg.getHeight()));
 		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
-	public void setShell(Shell ammo)
+	public void setShell(Shell ammo) throws IllegalArgumentException
 	{
 		this.ammo = ammo;
 	}
 	
-	public void setShellBase(Shape ammoBase)
+	public void setShellBase(Shape ammoBase) throws IllegalArgumentException
 	{
 		ammo = new Shell(ammoBase);
 	}
 	
-	public void setShellBase(Point pos, float width, float height)
+	public void setShellBase(Point pos, float width, float height) throws IllegalArgumentException
 	{
 		ammo = new Shell(pos.getX(), pos.getY(), width, height);
 	}
 	
-	public void setShellBase(Point pos, Image imgBase)
+	public void setShellBase(Point pos, Image imgBase) throws IllegalArgumentException
 	{
 		ammo = new Shell(pos.getX(), pos.getY(), imgBase);
 	}
 	
-	public void setShellBase(float x, float y, float width, float height)
+	public void setShellBase(float x, float y, float width, float height) throws IllegalArgumentException
 	{
 		ammo = new Shell(x, y, width, height);
 	}
 	
-	public void setShellBase(float x, float y, Image imgBase)
+	public void setShellBase(float x, float y, Image imgBase) throws IllegalArgumentException
 	{
 		ammo = new Shell(x, y, imgBase);
 	}
 	
-	public void setShellPosition(Point pos)
+	public void setShellPosition(Point pos) throws IllegalArgumentException
 	{
 		ammo.setPosition(pos);
 	}
 	
-	public void setShellPosition(float x, float y)
+	public void setShellPosition(float x, float y) 
 	{
 		ammo.setPosition(x, y);
 	}

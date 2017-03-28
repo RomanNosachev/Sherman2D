@@ -8,7 +8,7 @@ public abstract class DynamicGameObject implements GameObject {
 	protected Shape base;
 	protected float boundingRadius;
 	
-	public void setPosition(Point pos) throws NullPointerException
+	public void setPosition(Point pos) throws IllegalArgumentException
 	{
 		base.setX(pos.getX());
 		base.setY(pos.getY());
@@ -30,34 +30,35 @@ public abstract class DynamicGameObject implements GameObject {
 	}
 
 	@Override
-	public boolean collidesWith(GameObject object) throws NullPointerException
+	public boolean collidesWith(GameObject object) throws IllegalArgumentException
 	{
 		return base.intersects(object.getBase());
 	}
 	
 	@Override
-	public boolean collidesWith(Shape s) throws NullPointerException
+	public boolean collidesWith(Shape s) throws IllegalArgumentException
 	{
 		return base.intersects(s);
 	}
 	
 	@Override
-	public boolean isContains(GameObject object) throws NullPointerException {
+	public boolean isContains(GameObject object) throws IllegalArgumentException 
+	{
 		return base.contains(object.getBase());
 	}
 	
 	@Override
-	public boolean isContains(Shape s) throws NullPointerException
+	public boolean isContains(Shape s) throws IllegalArgumentException
 	{
 		return base.contains(s);
 	}
 	
-	public boolean boundingWith(Shape s) throws NullPointerException
+	public boolean boundingWith(Shape s) throws IllegalArgumentException
 	{
 		return getBoundingCircle().intersects(s) || getBoundingCircle().contains(s);
 	}
 	
-	public boolean boundingWith(DynamicGameObject object) throws NullPointerException
+	public boolean boundingWith(DynamicGameObject object) throws IllegalArgumentException
 	{
 		return getBoundingCircle().intersects(object.getBoundingCircle()) || getBoundingCircle().contains(object.getBoundingCircle());
 	}
@@ -72,7 +73,7 @@ public abstract class DynamicGameObject implements GameObject {
 		return new Ellipse(base.getCenterX(), base.getCenterY(), boundingRadius, boundingRadius);
 	}
 
-	public void setBase(Shape base) throws NullPointerException
+	public void setBase(Shape base) throws IllegalArgumentException
 	{
 		this.base = base;
 		boundingRadius = base.getBoundingCircleRadius();

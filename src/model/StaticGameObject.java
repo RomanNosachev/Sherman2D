@@ -6,25 +6,25 @@ public abstract class StaticGameObject implements GameObject {
 	protected Shape base;
 
 	@Override
-	public boolean collidesWith(Shape s) throws NullPointerException
+	public boolean collidesWith(Shape s) throws IllegalArgumentException
 	{
 		return base.intersects(s);
 	}
 	
 	@Override
-	public boolean collidesWith(GameObject object) throws NullPointerException 
+	public boolean collidesWith(GameObject object) throws IllegalArgumentException 
 	{
 		return base.intersects(object.getBase());
 	}
 	
 	@Override
-	public boolean isContains(Shape s) throws NullPointerException
+	public boolean isContains(Shape s) throws IllegalArgumentException
 	{
 		return base.contains(s);
 	}
 	
 	@Override
-	public boolean isContains(GameObject object) throws NullPointerException 
+	public boolean isContains(GameObject object) throws IllegalArgumentException 
 	{
 		return base.contains(object.getBase());
 	}

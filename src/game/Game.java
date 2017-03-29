@@ -25,15 +25,6 @@ import view.ShellRenderer;
 import view.StaticLevelRenderer;
 import view.TankRenderer;
 
-/*
- * - Добавить звуковое сопровождение
- * - Исправить проблему с плохой отрисовкой
- * - Решить проблему с потерей FPS
- * - Сделать импорт настроек
- * - Реализовать создание игровых объектов посредством абстрактной фабрики
- * - Использовать Builder для создания классов 
- */
-
 public class Game extends BasicGame{
 	private Level 		level;
 	private StaticLevel field;

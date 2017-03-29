@@ -82,8 +82,6 @@ public class GameController {
 		
 		if (gc.getInput().isKeyDown(Input.KEY_UP))
 		{	
-			model.tankRotate(45F * delta / CLOCK_PER_SEC);
-
 			if (Float.compare(model.getShotStartAngle(), model.getMinAimingAngle()) > 0)
 			{
 				model.setShotStartAngle(model.getShotStartAngle() - 45F * delta / CLOCK_PER_SEC);
@@ -94,9 +92,7 @@ public class GameController {
 			}
 		}
 		else if (gc.getInput().isKeyDown(Input.KEY_DOWN))
-		{
-			model.tankRotate(-45F * delta / CLOCK_PER_SEC);
-			
+		{			
 			if (Float.compare(model.getShotStartAngle(), model.getMaxAimingAngle()) < 0)	
 			{
 				model.setShotStartAngle(model.getShotStartAngle() + 45F * delta / CLOCK_PER_SEC);

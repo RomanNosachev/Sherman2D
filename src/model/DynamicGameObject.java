@@ -1,14 +1,31 @@
 package model;
 
 import org.newdawn.slick.geom.Ellipse;
-import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
+import org.newdawn.slick.geom.Vector2f;
 
 public abstract class DynamicGameObject implements GameObject {
 	protected Shape base;
-	protected float boundingRadius;
+	protected float width;
+
+	protected float height;
 	
-	public void setPosition(Point pos) throws IllegalArgumentException
+	protected float boundingRadius;
+	protected float rotateAngle = 0;
+	
+	public float getRotateAngle() 
+	{
+		return rotateAngle;
+	}
+
+	public void setRotateAngle(float rotateAngle) 
+	{
+		this.rotateAngle = rotateAngle;
+	}
+
+	public void setPosition(Vector2f pos) throws IllegalArgumentException
 	{
 		base.setX(pos.getX());
 		base.setY(pos.getY());
@@ -29,6 +46,18 @@ public abstract class DynamicGameObject implements GameObject {
 		base.setY(y);
 	}
 
+	public void rotate(float angle)
+	{
+		rotateAngle += angle;
+		setBase(new Polygon(base.transform(Transform.createRotateTransform(angle * (float)Math.PI / 180F, base.getCenterX(), base.getCenterY())).getPoints()));
+	}
+	
+	public void rotate(float angle, float x, float y)
+	{
+		rotateAngle += angle;
+		setBase(new Polygon(base.transform(Transform.createRotateTransform(angle * (float)Math.PI / 180F, x, y)).getPoints()));
+	}
+	
 	@Override
 	public boolean collidesWith(GameObject object) throws IllegalArgumentException
 	{
@@ -76,6 +105,8 @@ public abstract class DynamicGameObject implements GameObject {
 	public void setBase(Shape base) throws IllegalArgumentException
 	{
 		this.base = base;
+		width = base.getWidth();
+		height = base.getHeight();
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
@@ -83,54 +114,64 @@ public abstract class DynamicGameObject implements GameObject {
 	{
 		return base.getBoundingCircleRadius();
 	}
-	
-	public float getBaseX()
+
+	public float getX()
 	{
 		return base.getX();
 	}
 	
-	public float getBaseY()
+	public float getY()
 	{
 		return base.getY();
 	}
 	
-	public float getBaseCenterX()
+	public float getCenterX()
 	{
 		return base.getCenterX();
 	}
 	
-	public float getBaseCenterY()
+	public float getCenterY()
 	{
 		return base.getCenterY();
 	}
 	
-	public float getBaseMinX()
+	public float getMinX()
 	{
 		return base.getMinX();
 	}
 	
-	public float getBaseMinY()
+	public float getMinY()
 	{
 		return base.getMinY();
 	}
 	
-	public float getBaseMaxX()
+	public float getMaxX()
 	{
 		return base.getMaxX();
 	}
 	
-	public float getBaseMaxY()
+	public float getMaxY()
 	{
 		return base.getMaxY();
 	}
 	
+	public void setWidth(float width)
+	{
+		this.width = width;
+	}
+
+	public void setHeight(float height) 
+	{
+		this.height = height;
+	}
+	
 	public float getHeight()
 	{
-		return base.getHeight();
+		return height;
 	}
 	
 	public float getWidth()
 	{
-		return base.getWidth();
+		return width;
 	}
 }

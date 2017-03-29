@@ -1,10 +1,8 @@
 package game;
 
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 import java.util.Properties;
 
 import org.lwjgl.opengl.Display;
@@ -15,6 +13,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
 
 import controller.GameController;
 import model.Level;
@@ -65,31 +65,6 @@ public class Game extends BasicGame{
 		try
 		{
 			Properties config = new Properties();
-			Writer writer = new FileWriter("config.ini");
-			
-			config.setProperty("BackgroundTexture", "res/sprites/forest.jpg");
-			config.setProperty("TankSpriteSheet", "res/sprites/tanksprite.png");
-			config.setProperty("TankSpriteSheetCount", "8");
-			config.setProperty("ShellTexture", "res/sprites/shell.png");
-			config.setProperty("FloorHeight", "70");
-			config.setProperty("LevelPolygonPoint", "0.0, 0.0, 800.0, 0.0, 800.0, 530.0, 730.0, 530.0, "
-												  + "730.0, 460.0, 660.0, 460.0, 400.0, 530.0, 0.0, 530.0");
-			
-			config.setProperty("ShellStartSpeed", "750");
-			config.setProperty("ShellStartAngle", "0");
-			config.setProperty("TankSpeed", "150");
-			config.setProperty("TankMinAimingAngle", "-5");
-			config.setProperty("TankMaxAimingAngle", "90");
-			
-			config.store(writer, null);
-		}
-		catch (IOException e) {
-			
-		}
-		
-		try
-		{
-			Properties config = new Properties();
 			Reader reader = new FileReader("config.ini");
 			config.load(reader);
 			
@@ -102,20 +77,13 @@ public class Game extends BasicGame{
 			
 			float floorHeight = Float.parseFloat(config.getProperty("FloorHeight"));
 						
-			//String polygonPointStr = config.getProperty("LevelPilygonPoint");
-			//double[] polygonPoint = Arrays.stream(polygonPointStr.split(", ")).mapToDouble(Float::parseFloat).toArray();
+			String polygonPointStr = config.getProperty("LevelPolygonPoint");
+			String[] polygonPointStrArray = polygonPointStr.split(", ");
 			
-			float [] polygonPoint = new float[]
-			{
-				0, 0,
-				Display.getWidth(), 0,
-				Display.getWidth(), Display.getHeight() - floorHeight,
-				Display.getWidth() - floorHeight, Display.getHeight() - floorHeight,
-				Display.getWidth() - floorHeight, Display.getHeight() - floorHeight * 2,
-				Display.getWidth() - floorHeight * 2, Display.getHeight() - floorHeight * 2,
-				Display.getWidth() / 2, Display.getHeight() - floorHeight,
-				0, Display.getHeight() - floorHeight
-			};
+			float[] polygonPoint = new float[polygonPointStrArray.length];
+			
+			for (int i = 0; i < polygonPointStrArray.length; i++)
+				polygonPoint[i] = Float.parseFloat(polygonPointStrArray[i]);
 					
 			field = new StaticLevel(floorHeight, new Polygon(polygonPoint));
 			
@@ -150,6 +118,13 @@ public class Game extends BasicGame{
 			
 			fieldRenderer = new StaticLevelRenderer(field);
 			fieldRenderer.setTexture(background);
+			
+			Shape aShape = new Polygon(polygonPoint);
+			System.out.println(aShape.getX() + " " + aShape.getY());
+			aShape.setX(5);
+			aShape.setY(5);
+			aShape = aShape.transform(Transform.createRotateTransform(0));
+			System.out.println(aShape.getX() + " " + aShape.getY());
 		}
 		catch (IOException e) {
 			e.printStackTrace();

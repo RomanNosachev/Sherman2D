@@ -16,7 +16,7 @@ public class TankRenderer extends DynamicRenderer{
 	private Animation 	animation;
 	private int 		sheetCount;
 	private int 		selectSheet;
-	
+		
 	public TankRenderer(Tank rObject) 
 	{
 		renderingObject = rObject;
@@ -44,7 +44,9 @@ public class TankRenderer extends DynamicRenderer{
 	}
 	
 	public void drawAnimation(Graphics g)
-	{
+	{		
+		System.out.println(renderingObject.getRotateAngle());
+		
 		if (renderingObject.isMoving() == Move.BACK)
 			if (++selectSheet >= sheetCount)
 				selectSheet = 0;
@@ -53,6 +55,9 @@ public class TankRenderer extends DynamicRenderer{
 			if (--selectSheet <= 0)
 				selectSheet = sheetCount - 1;
 		
-		g.drawImage(animation.getImage(selectSheet), renderingObject.getBase().getX(), renderingObject.getBase().getY());
+		Image sprite = animation.getImage(selectSheet);
+		sprite.setRotation(renderingObject.getRotateAngle());
+		g.drawImage(sprite, renderingObject.getCenterX() - sprite.getWidth() / 2,
+							renderingObject.getCenterY() - sprite.getHeight() / 2);
 	}
 }

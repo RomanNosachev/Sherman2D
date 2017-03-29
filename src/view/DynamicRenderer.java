@@ -19,12 +19,6 @@ public abstract class DynamicRenderer implements Renderer{
 		g.setColor(Color.lightGray);
 		
 		g.draw(object.getBoundingCircle());
-		/*
-		g.drawOval(base.getCenterX() - boundingRadius, 
-				   base.getCenterY() - boundingRadius,
-				   boundingRadius * 2, 
-				   boundingRadius * 2);
-		*/
 	}
 	
 	public void drawBase(Graphics g, Shape base)

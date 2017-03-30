@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Properties;
 
-import org.lwjgl.opengl.Display;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -13,8 +12,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Transform;
+import org.newdawn.slick.geom.Vector2f;
 
 import controller.GameController;
 import model.Level;
@@ -68,20 +66,29 @@ public class Game extends BasicGame{
 			
 			float floorHeight = Float.parseFloat(config.getProperty("FloorHeight"));
 						
-			String polygonPointStr = config.getProperty("LevelPolygonPoint");
-			String[] polygonPointStrArray = polygonPointStr.split(", ");
+			String[] levelPolygonPointStrArray = config.getProperty("LevelPolygonPoint").split(", ");
+			float[] levelPolygonPoint = new float[levelPolygonPointStrArray.length];
 			
-			float[] polygonPoint = new float[polygonPointStrArray.length];
-			
-			for (int i = 0; i < polygonPointStrArray.length; i++)
-				polygonPoint[i] = Float.parseFloat(polygonPointStrArray[i]);
+			for (int i = 0; i < levelPolygonPointStrArray.length; i++)
+				levelPolygonPoint[i] = Float.parseFloat(levelPolygonPointStrArray[i]);
 					
-			field = new StaticLevel(floorHeight, new Polygon(polygonPoint));
+			String[] tankPolygonPointStrArray = config.getProperty("TankPolygonPoint").split(", ");
+			float[] tankPolygonPoint = new float[tankPolygonPointStrArray.length];
 			
-			actor = new Tank(field.getFloorHeight(), 
-					  Display.getHeight() - (actorImg.getHeight() + field.getFloorHeight() + 1F),
-					  actorImg.getWidth() / sheetCount,
-					  actorImg.getHeight());
+			for (int i = 0; i < tankPolygonPointStrArray.length; i++)
+				tankPolygonPoint[i] = Float.parseFloat(tankPolygonPointStrArray[i]);
+			
+			field = new StaticLevel(floorHeight, new Polygon(levelPolygonPoint));
+			
+			actor = new Tank(new Polygon(tankPolygonPoint));
+			
+			String[] tankStartPositionStrArray = config.getProperty("TankStartPosition").split(", ");
+			float[] tankStartPosition = new float[tankStartPositionStrArray.length];
+			
+			for (int i = 0; i < tankStartPositionStrArray.length; i++)
+				tankStartPosition[i] = Float.parseFloat(tankStartPositionStrArray[i]);
+			
+			actor.setPosition(new Vector2f(tankStartPosition));
 			
 			shell = new Shell(actor.getBase().getCenterX(), 
 					actor.getBase().getY() + shellImg.getHeight(), 
@@ -108,14 +115,7 @@ public class Game extends BasicGame{
 			shellRenderer.init(gc);
 			
 			fieldRenderer = new StaticLevelRenderer(field);
-			fieldRenderer.setTexture(background);
-			
-			Shape aShape = new Polygon(polygonPoint);
-			System.out.println(aShape.getX() + " " + aShape.getY());
-			aShape.setX(5);
-			aShape.setY(5);
-			aShape = aShape.transform(Transform.createRotateTransform(0));
-			System.out.println(aShape.getX() + " " + aShape.getY());
+			fieldRenderer.setTexture(background);			
 		}
 		catch (IOException e) {
 			e.printStackTrace();

@@ -8,8 +8,8 @@ import org.newdawn.slick.geom.Vector2f;
 
 public abstract class DynamicGameObject implements GameObject {
 	protected Shape base;
+	
 	protected float width;
-
 	protected float height;
 	
 	protected float boundingRadius;
@@ -154,17 +154,7 @@ public abstract class DynamicGameObject implements GameObject {
 	{
 		return base.getMaxY();
 	}
-	
-	public void setWidth(float width)
-	{
-		this.width = width;
-	}
 
-	public void setHeight(float height) 
-	{
-		this.height = height;
-	}
-	
 	public float getHeight()
 	{
 		return height;

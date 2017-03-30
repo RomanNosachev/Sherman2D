@@ -1,4 +1,9 @@
 /game/
 /controller/
 /model/
+<<<<<<< HEAD
+=======
+/controller/
+/game/
+>>>>>>> refs/remotes/origin/master
 /view/

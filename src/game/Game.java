@@ -12,6 +12,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import controller.GameController;
@@ -66,21 +67,21 @@ public class Game extends BasicGame{
 			
 			float floorHeight = Float.parseFloat(config.getProperty("FloorHeight"));
 						
-			String[] levelPolygonPointStrArray = config.getProperty("LevelPolygonPoint").split(", ");
-			float[] levelPolygonPoint = new float[levelPolygonPointStrArray.length];
+			String[] levelpolygonPointsStrArray = config.getProperty("LevelpolygonPoints").split(", ");
+			float[] levelpolygonPoints = new float[levelpolygonPointsStrArray.length];
 			
-			for (int i = 0; i < levelPolygonPointStrArray.length; i++)
-				levelPolygonPoint[i] = Float.parseFloat(levelPolygonPointStrArray[i]);
+			for (int i = 0; i < levelpolygonPointsStrArray.length; i++)
+				levelpolygonPoints[i] = Float.parseFloat(levelpolygonPointsStrArray[i]);
 					
-			String[] tankPolygonPointStrArray = config.getProperty("TankPolygonPoint").split(", ");
-			float[] tankPolygonPoint = new float[tankPolygonPointStrArray.length];
+			String[] tankpolygonPointsStrArray = config.getProperty("TankpolygonPoints").split(", ");
+			float[] tankpolygonPoints = new float[tankpolygonPointsStrArray.length];
 			
-			for (int i = 0; i < tankPolygonPointStrArray.length; i++)
-				tankPolygonPoint[i] = Float.parseFloat(tankPolygonPointStrArray[i]);
+			for (int i = 0; i < tankpolygonPointsStrArray.length; i++)
+				tankpolygonPoints[i] = Float.parseFloat(tankpolygonPointsStrArray[i]);
 			
-			field = new StaticLevel(floorHeight, new Polygon(levelPolygonPoint));
-			
-			actor = new Tank(new Polygon(tankPolygonPoint));
+			field = new StaticLevel(floorHeight, new Polygon(levelpolygonPoints));
+	
+			actor = new Tank(new Polygon(tankpolygonPoints));
 			
 			String[] tankStartPositionStrArray = config.getProperty("TankStartPosition").split(", ");
 			float[] tankStartPosition = new float[tankStartPositionStrArray.length];
@@ -90,9 +91,7 @@ public class Game extends BasicGame{
 			
 			actor.setPosition(new Vector2f(tankStartPosition));
 			
-			shell = new Shell(actor.getBase().getCenterX(), 
-					actor.getBase().getY() + shellImg.getHeight(), 
-					shellImg);
+			shell = new Shell(new Rectangle(actor.getCenterX(), actor.getY(), shellImg.getWidth(), shellImg.getHeight()));
 					
 			shell.setStartSpeed(Float.parseFloat(config.getProperty("ShellStartSpeed")));
 			shell.setStartAngle(Float.parseFloat(config.getProperty("ShellStartAngle")));
@@ -101,7 +100,7 @@ public class Game extends BasicGame{
 			actor.setSpeed(Float.parseFloat(config.getProperty("TankSpeed")));
 			actor.setMinAimingAngle(Float.parseFloat(config.getProperty("TankMinAimingAngle")));
 			actor.setMaxAimingAngle(Float.parseFloat(config.getProperty("TankMaxAimingAngle")));
-			
+
 			level = new Level(actor, field);
 			
 			controller = new GameController(level);

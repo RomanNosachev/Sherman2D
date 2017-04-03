@@ -17,7 +17,6 @@ public abstract class DynamicRenderer implements Renderer{
 	public void drawBoundingSphere(Graphics g, DynamicGameObject object)
 	{
 		g.setColor(Color.lightGray);
-		
 		g.draw(object.getBoundingCircle());
 	}
 	

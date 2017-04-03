@@ -14,6 +14,7 @@ public class TankRenderer extends DynamicRenderer{
 	private Tank renderingObject;
 
 	private Animation 	animation;
+	private Image 		frame;
 	private int 		sheetCount;
 	private int 		selectSheet;
 		
@@ -27,6 +28,7 @@ public class TankRenderer extends DynamicRenderer{
 		animation = new Animation(new SpriteSheet(sprite, sprite.getWidth() / count, sprite.getHeight()), 1);
 		sheetCount = count;
 		selectSheet = count / 2;
+		frame = animation.getImage(selectSheet);
 	}
 	
 	@Override
@@ -53,15 +55,10 @@ public class TankRenderer extends DynamicRenderer{
 			if (--selectSheet <= 0)
 				selectSheet = sheetCount - 1;
 		
-		Image sprite = animation.getImage(selectSheet);
-		//sprite.setCenterOfRotation(renderingObject.getCenterX(), renderingObject.getCenterY());
-		sprite.setRotation(renderingObject.getRotateAngle());
-		
-	//	g.drawImage(sprite, renderingObject.getX(), renderingObject.getY());
-
-		g.drawImage(sprite, renderingObject.getCenterX() - sprite.getWidth() / 2,
-							renderingObject.getCenterY() - sprite.getHeight() / 2);	
-		
-		System.out.println(renderingObject.getCenterX() + " " + renderingObject.getCenterY() + "    " + sprite.getWidth() + " " + sprite.getHeight());
+		frame = animation.getImage(selectSheet);
+		frame.setRotation(renderingObject.getRotateAngle());
+	
+		frame.drawCentered(renderingObject.getSimpleCenterX(),
+						   renderingObject.getSimpleCenterY());	
 	}
 }

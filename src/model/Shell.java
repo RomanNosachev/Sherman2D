@@ -2,9 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 public class Shell extends DynamicGameObject {
@@ -20,34 +18,6 @@ public class Shell extends DynamicGameObject {
 	public Shell(Shape base)
 	{
 		setBase(base);
-		path = new ArrayList<Vector2f>();
-		boundingRadius = base.getBoundingCircleRadius();
-	}
-	
-	public Shell(Vector2f pos, float width, float height)
-	{
-		setBase(new Rectangle(pos.getX(), pos.getY(), width, height));
-		path = new ArrayList<Vector2f>();
-		boundingRadius = base.getBoundingCircleRadius();
-	}
-	
-	public Shell(float x, float y, float width, float height)
-	{
-		setBase(new Rectangle(x, y, width, height));
-		path = new ArrayList<Vector2f>();
-		boundingRadius = base.getBoundingCircleRadius();
-	}
-	
-	public Shell(Vector2f pos, Image baseImg)
-	{
-		setBase(new Rectangle(pos.getX(), pos.getY(), baseImg.getWidth(), baseImg.getHeight()));
-		path = new ArrayList<Vector2f>();
-		boundingRadius = base.getBoundingCircleRadius();
-	}
-	
-	public Shell(float x, float y, Image imgBase)
-	{
-		setBase(new Rectangle(x, y, imgBase.getWidth(), imgBase.getHeight()));
 		path = new ArrayList<Vector2f>();
 		boundingRadius = base.getBoundingCircleRadius();
 	}

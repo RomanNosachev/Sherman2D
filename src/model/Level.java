@@ -208,11 +208,13 @@ public class Level {
 	public void tankRotate(float angle)
 	{
 		actor.rotate(angle);
+		actor.setShotStartAngle(actor.getShotStartAngle() - angle);
 	}
 	
 	public void tankRotate(float angle, float x, float y)
 	{
 		actor.rotate(angle, x, y);
+		actor.setShotStartAngle(actor.getShotStartAngle() - angle);
 	}
 	
 	public float getTankRotateAngle()

@@ -2,18 +2,22 @@ package model;
 
 import org.newdawn.slick.geom.Ellipse;
 import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
 public abstract class DynamicGameObject implements GameObject {
 	protected Shape base;
-	
-	protected float width;
-	protected float height;
-	
+	protected Shape simpleBase;
+
 	protected float boundingRadius;
 	protected float rotateAngle = 0;
+
+	public Shape getSimpleBase()
+	{
+		return simpleBase;
+	}
 	
 	public float getRotateAngle() 
 	{
@@ -27,35 +31,44 @@ public abstract class DynamicGameObject implements GameObject {
 
 	public void setPosition(Vector2f pos) throws IllegalArgumentException
 	{
-		base.setX(pos.getX());
-		base.setY(pos.getY());
+		simpleBase.setLocation(simpleBase.getX() - (base.getX() - pos.x),
+							   simpleBase.getY() - (base.getY() - pos.y));
+		
+		base.setLocation(pos.x, pos.y);
 	}
 	
 	public void setPosition(float x, float y)
 	{
+		simpleBase.setLocation(simpleBase.getX() - (base.getX() - x),
+							   simpleBase.getY() - (base.getY() - y));
 		base.setLocation(x, y);
 	}
 	
 	public void setPositionX(float x)
 	{
+		simpleBase.setX(simpleBase.getX() - (base.getX() - x));
 		base.setX(x);
 	}
 	
 	public void setPositionY(float y)
 	{
+		simpleBase.setY(simpleBase.getY() - (base.getY() - y));
 		base.setY(y);
 	}
 
 	public void rotate(float angle)
 	{
 		rotateAngle += angle;
-		setBase(new Polygon(base.transform(Transform.createRotateTransform(angle * (float)Math.PI / 180F, base.getCenterX(), base.getCenterY())).getPoints()));
+		base = new Polygon(base.transform(Transform.createRotateTransform(angle * (float)Math.PI / 180F, simpleBase.getCenterX(), simpleBase.getCenterY())).getPoints());
+		simpleBase = new Polygon(simpleBase.transform(Transform.createRotateTransform(angle * (float)Math.PI / 180F, simpleBase.getCenterX(), simpleBase.getCenterY())).getPoints());
+
 	}
 	
 	public void rotate(float angle, float x, float y)
 	{
 		rotateAngle += angle;
-		setBase(new Polygon(base.transform(Transform.createRotateTransform(angle * (float)Math.PI / 180F, x, y)).getPoints()));
+		base = new Polygon(base.transform(Transform.createRotateTransform(angle * (float)Math.PI / 180F, x, y)).getPoints());
+		simpleBase = new Polygon(simpleBase.transform(Transform.createRotateTransform(angle * (float)Math.PI / 180F, x, y)).getPoints());
 	}
 	
 	@Override
@@ -91,7 +104,7 @@ public abstract class DynamicGameObject implements GameObject {
 	{
 		return getBoundingCircle().intersects(object.getBoundingCircle()) || getBoundingCircle().contains(object.getBoundingCircle());
 	}
- 
+
 	public Shape getBase() 
 	{
 		return base;
@@ -102,12 +115,11 @@ public abstract class DynamicGameObject implements GameObject {
 		return new Ellipse(base.getCenterX(), base.getCenterY(), boundingRadius, boundingRadius);
 	}
 
-	public void setBase(Shape base) throws IllegalArgumentException
+	protected void setBase(Shape base) throws IllegalArgumentException
 	{
 		this.base = base;
-		width = base.getWidth();
-		height = base.getHeight();
 		boundingRadius = base.getBoundingCircleRadius();
+		simpleBase = new Rectangle(base.getX(), base.getY(), base.getWidth(), base.getHeight());
 	}
 	
 	public float getBoundingCircleRadius()
@@ -123,6 +135,16 @@ public abstract class DynamicGameObject implements GameObject {
 	public float getY()
 	{
 		return base.getY();
+	}
+	
+	public float getSimpleCenterX()
+	{
+		return simpleBase.getCenterX();
+	}
+	
+	public float getSimpleCenterY()
+	{
+		return simpleBase.getCenterY();
 	}
 	
 	public float getCenterX()
@@ -157,11 +179,11 @@ public abstract class DynamicGameObject implements GameObject {
 
 	public float getHeight()
 	{
-		return height;
+		return base.getHeight();
 	}
 	
 	public float getWidth()
 	{
-		return width;
+		return base.getWidth();
 	}
 }

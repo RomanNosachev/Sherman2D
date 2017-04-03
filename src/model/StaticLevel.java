@@ -14,16 +14,16 @@ public class StaticLevel extends StaticGameObject {
 		setBase(new Rectangle(0, 0, 0, 0));
 	}
 	
-	public StaticLevel(float floorHeight, Shape polygonShape)
+	public StaticLevel(float floorHeight, Shape PolygonShape)
 	{
 		this.floorHeight = floorHeight;
-		setBase(polygonShape);
+		setBase(PolygonShape);
 	}
 	
-	public StaticLevel(float[] polygonPointss)
+	public StaticLevel(float[] PolygonPointss)
 	{
-		if (polygonPointss.length % 2 == 0)
-			setBase(new Polygon(polygonPointss));
+		if (PolygonPointss.length % 2 == 0)
+			setBase(new Polygon(PolygonPointss));
 	}
 
 	public float getFloorHeight() 

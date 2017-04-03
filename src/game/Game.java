@@ -67,21 +67,21 @@ public class Game extends BasicGame{
 			
 			float floorHeight = Float.parseFloat(config.getProperty("FloorHeight"));
 						
-			String[] levelpolygonPointsStrArray = config.getProperty("LevelpolygonPoints").split(", ");
-			float[] levelpolygonPoints = new float[levelpolygonPointsStrArray.length];
+			String[] levelPolygonPointsStrArray = config.getProperty("LevelPolygonPoints").split(", ");
+			float[] levelPolygonPoints = new float[levelPolygonPointsStrArray.length];
 			
-			for (int i = 0; i < levelpolygonPointsStrArray.length; i++)
-				levelpolygonPoints[i] = Float.parseFloat(levelpolygonPointsStrArray[i]);
+			for (int i = 0; i < levelPolygonPointsStrArray.length; i++)
+				levelPolygonPoints[i] = Float.parseFloat(levelPolygonPointsStrArray[i]);
 					
-			String[] tankpolygonPointsStrArray = config.getProperty("TankpolygonPoints").split(", ");
-			float[] tankpolygonPoints = new float[tankpolygonPointsStrArray.length];
+			String[] tankPolygonPointsStrArray = config.getProperty("TankPolygonPoints").split(", ");
+			float[] tankPolygonPoints = new float[tankPolygonPointsStrArray.length];
 			
-			for (int i = 0; i < tankpolygonPointsStrArray.length; i++)
-				tankpolygonPoints[i] = Float.parseFloat(tankpolygonPointsStrArray[i]);
+			for (int i = 0; i < tankPolygonPointsStrArray.length; i++)
+				tankPolygonPoints[i] = Float.parseFloat(tankPolygonPointsStrArray[i]);
 			
-			field = new StaticLevel(floorHeight, new Polygon(levelpolygonPoints));
+			field = new StaticLevel(floorHeight, new Polygon(levelPolygonPoints));
 	
-			actor = new Tank(new Polygon(tankpolygonPoints));
+			actor = new Tank(new Polygon(tankPolygonPoints));
 			
 			String[] tankStartPositionStrArray = config.getProperty("TankStartPosition").split(", ");
 			float[] tankStartPosition = new float[tankStartPositionStrArray.length];

@@ -1,8 +1,7 @@
 package model;
 
-import org.newdawn.slick.Image;
-import org.newdawn.slick.geom.Point;
-import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 
 public class Tank extends DynamicGameObject {
@@ -16,35 +15,15 @@ public class Tank extends DynamicGameObject {
 	public Tank(Shape base) throws IllegalArgumentException
 	{
 		setBase(base);
-		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
+		ammo = new Shell(new Polygon());
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
-	public Tank(Point pos, float width, float height) throws IllegalArgumentException
+	public Tank(Shape base, Vector2f position) throws IllegalArgumentException
 	{
-		setBase(new Rectangle(pos.getX(), pos.getY(), width, height));
-		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
-		boundingRadius = base.getBoundingCircleRadius();
-	}
-	
-	public Tank(float x, float y, float width, float height) throws IllegalArgumentException
-	{
-		setBase(new Rectangle(x, y, width, height));
-		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
-		boundingRadius = base.getBoundingCircleRadius();
-	}
-	
-	public Tank(Point pos, Image baseImg) throws IllegalArgumentException
-	{
-		setBase(new Rectangle(pos.getX(), pos.getY(), baseImg.getWidth(), baseImg.getHeight()));
-		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
-		boundingRadius = base.getBoundingCircleRadius();
-	}
-	
-	public Tank(float x, float y, Image baseImg) throws IllegalArgumentException
-	{
-		setBase(new Rectangle(x, y, baseImg.getWidth(), baseImg.getHeight()));
-		ammo = new Shell(getBase().getCenterX(), getBase().getY(), 0, 0);
+		setBase(base);
+		base.setLocation(position);
+		ammo = new Shell(new Polygon());
 		boundingRadius = base.getBoundingCircleRadius();
 	}
 	
@@ -58,27 +37,7 @@ public class Tank extends DynamicGameObject {
 		ammo = new Shell(ammoBase);
 	}
 	
-	public void setShellBase(Point pos, float width, float height) throws IllegalArgumentException
-	{
-		ammo = new Shell(pos.getX(), pos.getY(), width, height);
-	}
-	
-	public void setShellBase(Point pos, Image imgBase) throws IllegalArgumentException
-	{
-		ammo = new Shell(pos.getX(), pos.getY(), imgBase);
-	}
-	
-	public void setShellBase(float x, float y, float width, float height) throws IllegalArgumentException
-	{
-		ammo = new Shell(x, y, width, height);
-	}
-	
-	public void setShellBase(float x, float y, Image imgBase) throws IllegalArgumentException
-	{
-		ammo = new Shell(x, y, imgBase);
-	}
-	
-	public void setShellPosition(Point pos) throws IllegalArgumentException
+	public void setShellPosition(Vector2f pos) throws IllegalArgumentException
 	{
 		ammo.setPosition(pos);
 	}
@@ -156,7 +115,7 @@ public class Tank extends DynamicGameObject {
 		ammo.addPathPoint(ammo.getBase().getCenterX(), ammo.getBase().getCenterY());
 	}
 	
-	public void addShotPathPoint(Point pos)
+	public void addShotPathPoint(Vector2f pos)
 	{
 		ammo.addPathPoint(pos);
 	}
@@ -181,7 +140,7 @@ public class Tank extends DynamicGameObject {
 		ammo.setRouteVectorY(y);
 	}
 	
-	public Point getShotRouteVector()
+	public Vector2f getShotRouteVector()
 	{
 		return ammo.getRouteVector();
 	}

@@ -3,7 +3,6 @@ package controller;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-
 import model.Level;
 import model.Move;
 import model.PhysicConstants;
@@ -66,7 +65,8 @@ public class GameController {
 		}
 		else
 		{
-			model.setShellPosition(model.getTankBase().getCenterX(), model.getTankBase().getY());
+			model.setShellPosition(model.getTankBase().getCenterX(), 
+								   model.getTankBase().getMinY());
 		}
 	}
 	
@@ -82,17 +82,8 @@ public class GameController {
 		
 		if (gc.getInput().isKeyDown(Input.KEY_UP))
 		{	
-			if (Float.compare(model.getShotStartAngle(), model.getMaxAimingAngle()) < 0)
-			{
-				model.setShotStartAngle(model.getShotStartAngle() + 45F * delta / CLOCK_PER_SEC);
-			}
-			else
-			{
-				model.setShotStartAngle(model.getMaxAimingAngle());
-			}
-		}
-		else if (gc.getInput().isKeyDown(Input.KEY_DOWN))
-		{
+			model.tankRotate(45F * delta / CLOCK_PER_SEC);
+			
 			if (Float.compare(model.getShotStartAngle(), model.getMinAimingAngle()) > 0)
 			{
 				model.setShotStartAngle(model.getShotStartAngle() - 45F * delta / CLOCK_PER_SEC);
@@ -100,6 +91,19 @@ public class GameController {
 			else
 			{
 				model.setShotStartAngle(model.getMinAimingAngle());
+			}
+		}
+		else if (gc.getInput().isKeyDown(Input.KEY_DOWN))
+		{			
+			model.tankRotate(-45F * delta / CLOCK_PER_SEC);
+			
+			if (Float.compare(model.getShotStartAngle(), model.getMaxAimingAngle()) < 0)	
+			{
+				model.setShotStartAngle(model.getShotStartAngle() + 45F * delta / CLOCK_PER_SEC);
+			}
+			else
+			{
+				model.setShotStartAngle(model.getMaxAimingAngle());
 			}
 		}
 		
@@ -151,7 +155,6 @@ public class GameController {
 			}
 		}
 		
-		/*
 		if (gc.getInput().isKeyDown(Input.KEY_S))
 		{
 			model.setPositionY(model.getTankBase().getY() + model.getMovePoint() * delta / CLOCK_PER_SEC);
@@ -171,7 +174,6 @@ public class GameController {
 				model.setPositionY(model.getTankBase().getY() + model.getMovePoint() * delta / CLOCK_PER_SEC);
 			}
 		}
-		*/
 	}
 
 	public boolean isGameOver() {

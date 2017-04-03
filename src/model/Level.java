@@ -1,6 +1,6 @@
 package model;
 
-import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.geom.Shape;
 
 public class Level {
@@ -35,7 +35,7 @@ public class Level {
 		actor.setIsShooting(fl);
 	}
 
-	public void setShellPosition(Point pos)
+	public void setShellPosition(Vector2f pos)
 	{
 		actor.setShellPosition(pos);
 	}
@@ -55,7 +55,7 @@ public class Level {
 		actor.setShellPositionY(y);
 	}
 	
-	public void setPosition(Point pos)
+	public void setPosition(Vector2f pos)
 	{
 		actor.setPosition(pos);
 	}
@@ -135,7 +135,7 @@ public class Level {
 		actor.setShotRouteVectorY(y);
 	}
 	
-	public Point getShotRouteVector()
+	public Vector2f getShotRouteVector()
 	{
 		return actor.getShotRouteVector();
 	}
@@ -150,7 +150,7 @@ public class Level {
 		return actor.getShotRouteVectorY();
 	}
 
-	public void addShotPathPoint(Point pos)
+	public void addShotPathPoint(Vector2f pos)
 	{
 		actor.addShotPathPoint(pos);
 	}
@@ -203,6 +203,31 @@ public class Level {
 	public boolean tankExcludesShell()
 	{	
 		return !actor.collidesWith(actor.getShellBase()) && !actor.isContains(getShellBase());
+	}
+	
+	public void tankRotate(float angle)
+	{
+		actor.rotate(angle);
+	}
+	
+	public void tankRotate(float angle, float x, float y)
+	{
+		actor.rotate(angle, x, y);
+	}
+	
+	public float getTankRotateAngle()
+	{
+		return actor.getRotateAngle();
+	}
+	
+	public float getTankHeight()
+	{
+		return actor.getHeight();
+	}
+	
+	public float getTankWidth()
+	{
+		return actor.getWidth();
 	}
 	
 	public Shape getTankBase()

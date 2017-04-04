@@ -85,7 +85,7 @@ public class Shell extends DynamicGameObject {
 	public void setRouteVector()
 	{
 		routeVector = new Vector2f((float)(startSpeed * Math.cos(startAngle * Math.PI / 180)),
-								(float)(startSpeed * Math.sin(startAngle * Math.PI / 180)));
+							       (float)(startSpeed * Math.sin(startAngle * Math.PI / 180)));
 	}
 
 	public void addPathPoint(Vector2f pos)

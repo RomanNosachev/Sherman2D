@@ -97,6 +97,7 @@ public class Level {
 	
 	public void setShotStartAngle(float angle)
 	{
+		actor.shellRotate(actor.getShotStartAngle() - angle);
 		actor.setShotStartAngle(angle);
 	}
 	
@@ -205,10 +206,33 @@ public class Level {
 		return !actor.collidesWith(actor.getShellBase()) && !actor.isContains(getShellBase());
 	}
 	
+	public void shellRotate(float angle)
+	{
+		actor.shellRotate(angle);
+		actor.setShotStartAngle(actor.getShotStartAngle() - angle);
+	}
+	
+	public void shellRotate(float angle, float x, float y)
+	{
+		actor.shellRotate(angle, x, y);
+		actor.setShotStartAngle(actor.getShotStartAngle() - angle);
+	}
+	
+	public void setShellRotation(float angle)
+	{
+		actor.shellRotate(angle);
+		actor.setShotStartAngle(angle);
+	}
+	
+	public void setShellRotation(float angle, float x, float y)
+	{
+		actor.shellRotate(angle, x, y);
+		actor.setShotStartAngle(angle);
+	}
+	
 	public void tankRotate(float angle)
 	{
 		actor.rotate(angle);
-		actor.setShotStartAngle(actor.getShotStartAngle() - angle);
 	}
 	
 	public void tankRotate(float angle, float x, float y)
@@ -232,9 +256,24 @@ public class Level {
 		return actor.getWidth();
 	}
 	
+	public float getTankSimpleCenterX()
+	{
+		return actor.getSimpleCenterX();
+	}
+	
+	public float getTankSimpleCenterY()
+	{
+		return actor.getSimpleCenterY();
+	}
+	
 	public Shape getTankBase()
 	{
 		return actor.getBase();
+	}
+	
+	public Shape getTankSimpleBase()
+	{
+		return actor.getSimpleBase();
 	}
 	
 	public Shape getShellBase()

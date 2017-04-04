@@ -14,7 +14,6 @@ public class ShellRenderer extends DynamicRenderer {
 	private Shell renderingObject;
 	
 	private Image texture;
-	private float prevRotate;
 	
 	public ShellRenderer(Shell rObject) 
 	{
@@ -24,13 +23,11 @@ public class ShellRenderer extends DynamicRenderer {
 	public void setTexture(Image texture)
 	{
 		this.texture = texture;
-		this.texture.rotate(90);
 	}
 	
 	@Override
 	public void init(GameContainer gc) throws SlickException 
 	{		
-		prevRotate = renderingObject.getStartAngle();
 		boundingRadius = renderingObject.getBoundingCircleRadius();
 	}
 
@@ -46,9 +43,8 @@ public class ShellRenderer extends DynamicRenderer {
 	
 	public void drawTexture(Graphics g)
 	{
-		g.drawImage(texture, renderingObject.getBase().getX(), renderingObject.getBase().getY());
-		texture.rotate(prevRotate - renderingObject.getStartAngle());
-		prevRotate = renderingObject.getStartAngle();
+		texture.drawCentered(renderingObject.getSimpleBase().getCenterX(), renderingObject.getSimpleBase().getCenterY());	
+		texture.setRotation(90 - renderingObject.getStartAngle());
 	}
 	
 	public void drawShotParameters(Graphics g)

@@ -58,15 +58,14 @@ public class GameController {
 				model.setShellLeftTank(false);
 					
 				model.setShellPosition(model.getTankBase().getCenterX(), model.getTankBase().getY());
-
-				model.setShellPosition(model.getShellBase().getX() - model.getShotRouteVectorX() * delta / CLOCK_PER_SEC,
-						   			   model.getShellBase().getY() + model.getShotRouteVectorY() * delta / CLOCK_PER_SEC);
 			}
 		}
 		else
 		{
-			model.setShellPosition(model.getTankBase().getCenterX() - model.getShellBase().getWidth(), 
-								   model.getTankBase().getCenterY() - model.getShellBase().getHeight());
+			model.setShellPosition(model.getTankBase().getCenterX() + model.getShellBase().getWidth(), 
+								   model.getTankBase().getMinY() - model.getShellBase().getHeight() / 2);
+			
+			//model.setShellRotation(model.getTankRotateAngle(), model.getTankSimpleBase().getCenterX(), model.getTankSimpleBase().getCenterY());
 		}
 	}
 	
@@ -83,11 +82,17 @@ public class GameController {
 		if (gc.getInput().isKeyDown(Input.KEY_RIGHT))
 		{
 			model.tankRotate(45F * delta / CLOCK_PER_SEC);
+			
+			if (!model.isShooting())
+				model.shellRotate(45F * delta / CLOCK_PER_SEC, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
 		}
 		
 		if (gc.getInput().isKeyDown(Input.KEY_LEFT))
 		{
 			model.tankRotate(-45F * delta / CLOCK_PER_SEC);
+			
+			if (!model.isShooting())
+				model.shellRotate(45F * delta / CLOCK_PER_SEC, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
 		}
 		
 		if (gc.getInput().isKeyDown(Input.KEY_UP))

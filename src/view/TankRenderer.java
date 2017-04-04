@@ -46,7 +46,7 @@ public class TankRenderer extends DynamicRenderer{
 	}
 	
 	public void drawAnimation(Graphics g)
-	{				
+	{						
 		if (renderingObject.isMoving() == Move.BACK)
 			if (++selectSheet >= sheetCount)
 				selectSheet = 0;

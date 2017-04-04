@@ -154,7 +154,12 @@ public class Tank extends DynamicGameObject {
 	{
 		return ammo.getRouteVectorY();
 	}
-
+	
+	public float getShellRotateAngle()
+	{
+		return ammo.getRotateAngle();
+	}
+	
 	public Shape getShellBase()
 	{
 		return ammo.getBase();
@@ -183,5 +188,20 @@ public class Tank extends DynamicGameObject {
 	public void setMaxAimingAngle(float maxAimingAngle)
 	{
 		this.maxAimingAngle = maxAimingAngle;
+	}
+	
+	public void shellRotate(float angle)
+	{
+		ammo.rotate(angle);
+	}
+	
+	public void shellRotate(float angle, float x, float y)
+	{
+		ammo.rotate(angle, x, y);
+	}
+
+	public void setShellRotateAngle(float angle) 
+	{
+		ammo.setRotateAngle(angle);
 	}
 }

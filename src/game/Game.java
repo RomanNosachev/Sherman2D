@@ -12,7 +12,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import controller.GameController;
@@ -91,10 +90,16 @@ public class Game extends BasicGame{
 			
 			actor.setPosition(new Vector2f(tankStartPosition));
 			
-			shell = new Shell(new Rectangle(actor.getCenterX(), actor.getY(), shellImg.getWidth(), shellImg.getHeight()));
-					
+			String[] shellPolygonPointsStrArray = config.getProperty("ShellPolygonPoints").split(", ");
+			float[] shellPolygonPoints = new float[shellPolygonPointsStrArray.length];
+			
+			for (int i = 0; i < shellPolygonPointsStrArray.length; i++)
+				shellPolygonPoints[i] = Float.parseFloat(shellPolygonPointsStrArray[i]);
+				
+			shell = new Shell(new Polygon(shellPolygonPoints));					
 			shell.setStartSpeed(Float.parseFloat(config.getProperty("ShellStartSpeed")));
 			shell.setStartAngle(Float.parseFloat(config.getProperty("ShellStartAngle")));
+			shell.rotate(Float.parseFloat(config.getProperty("ShellStartAngle")));
 			
 			actor.setShell(shell);
 			actor.setSpeed(Float.parseFloat(config.getProperty("TankSpeed")));
@@ -111,6 +116,7 @@ public class Game extends BasicGame{
 			
 			shellRenderer = new ShellRenderer(shell);
 			shellRenderer.setTexture(shellImg);
+			
 			shellRenderer.init(gc);
 			
 			fieldRenderer = new StaticLevelRenderer(field);
@@ -135,7 +141,7 @@ public class Game extends BasicGame{
 		AppGameContainer app = new AppGameContainer(new Game("Sherman2D"));
 		app.setDisplayMode(800, 600, false);
 		app.setAlwaysRender(true);
-		app.setVSync(true);
+		app.setTargetFrameRate(100);
 		app.start();
 	}
 }

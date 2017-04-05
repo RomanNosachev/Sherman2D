@@ -220,13 +220,13 @@ public class Level {
 	
 	public void setShellRotation(float angle)
 	{
-		actor.shellRotate(angle);
+		actor.shellRotate(actor.getShotStartAngle() - angle);
 		actor.setShotStartAngle(angle);
 	}
 	
 	public void setShellRotation(float angle, float x, float y)
 	{
-		actor.shellRotate(angle, x, y);
+		actor.shellRotate(actor.getShotStartAngle() - angle, x, y);
 		actor.setShotStartAngle(angle);
 	}
 	
@@ -256,9 +256,99 @@ public class Level {
 		return actor.getWidth();
 	}
 	
+	public float getShellStartWidth()
+	{
+		return actor.getShellStartWidth();
+	}
+	
+	public float getShellStartHeight()
+	{
+		return actor.getShellStartHeight();
+	}
+	
+	public float getShellX()
+	{
+		return actor.getShellBase().getX();
+	}
+	
+	public float getShellY()
+	{
+		return actor.getShellBase().getY();
+	}
+	
+	public float getTankX()
+	{
+		return actor.getX();
+	}
+	
+	public float getTankY()
+	{
+		return actor.getY();
+	}
+	
+	public float getTankStartWidth()
+	{
+		return actor.getStartWidth();
+	}
+	
+	public float getTankStartHeight()
+	{
+		return actor.getStartHeight();
+	}
+	
 	public float getTankSimpleCenterX()
 	{
 		return actor.getSimpleCenterX();
+	}
+	
+	public Vector2f getTankStartPosition()
+	{
+		return actor.getStartPosition();
+	}
+	
+	public float getTankStartPositionX()
+	{
+		return actor.getStartPositionX();
+	}
+	
+	public float getTankStartPositionY()
+	{
+		return actor.getStartPositionY();
+	}
+	
+	public float getTankCenterX()
+	{
+		return actor.getCenterX();
+	}
+	
+	public float getTankCenterY()
+	{
+		return actor.getCenterY();
+	}
+	
+	public float getShellCenterX()
+	{
+		return actor.getShellBase().getCenterX();
+	}
+	
+	public float getShellCenterY()
+	{
+		return actor.getShellBase().getCenterY();
+	}
+	
+	public Vector2f getShellStartPosition()
+	{
+		return actor.getShellStartPosition();
+	}
+	
+	public float getShellStartPositionX()
+	{
+		return actor.getShellStartPositionX();
+	}
+	
+	public float getShellStartPositionY()
+	{
+		return actor.getShellStartPositionY();
 	}
 	
 	public float getTankSimpleCenterY()

@@ -10,6 +10,10 @@ import org.newdawn.slick.geom.Vector2f;
 public abstract class DynamicGameObject implements GameObject {
 	protected Shape base;
 	protected Shape simpleBase;
+	
+	protected Vector2f startPosition;
+	protected float startWidth;
+	protected float startHeight;
 
 	protected float boundingRadius;
 	protected float rotateAngle = 0;
@@ -17,6 +21,16 @@ public abstract class DynamicGameObject implements GameObject {
 	public Shape getSimpleBase()
 	{
 		return simpleBase;
+	}
+
+	public float getStartWidth() 
+	{
+		return startWidth;
+	}
+
+	public float getStartHeight() 
+	{
+		return startHeight;
 	}
 	
 	public float getRotateAngle() 
@@ -29,6 +43,30 @@ public abstract class DynamicGameObject implements GameObject {
 		this.rotateAngle = rotateAngle;
 	}
 
+	public void setStartPosition(Vector2f pos) throws IllegalArgumentException
+	{
+		startPosition = pos;	
+		simpleBase.setLocation(simpleBase.getX() - (base.getX() - pos.x),
+							   simpleBase.getY() - (base.getY() - pos.y));
+
+		base.setLocation(pos.x, pos.y);
+	}
+	
+	public Vector2f getStartPosition()
+	{
+		return startPosition;
+	}
+	
+	public float getStartPositionX()
+	{
+		return startPosition.x;
+	}
+	
+	public float getStartPositionY()
+	{
+		return startPosition.y;
+	}
+	
 	public void setPosition(Vector2f pos) throws IllegalArgumentException
 	{
 		simpleBase.setLocation(simpleBase.getX() - (base.getX() - pos.x),
@@ -121,6 +159,8 @@ public abstract class DynamicGameObject implements GameObject {
 		this.base = base;
 		boundingRadius = base.getBoundingCircleRadius();
 		simpleBase = new Rectangle(base.getX(), base.getY(), base.getWidth(), base.getHeight());
+		startWidth = simpleBase.getWidth();
+		startHeight = simpleBase.getHeight();
 	}
 	
 	public float getBoundingCircleRadius()

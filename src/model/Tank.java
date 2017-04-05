@@ -170,6 +170,31 @@ public class Tank extends DynamicGameObject {
 		return ammo.getBoundingCircle();
 	}
 
+	public float getShellStartWidth()
+	{
+		return ammo.getStartWidth();
+	}
+	
+	public float getShellStartHeight()
+	{
+		return ammo.getStartHeight();
+	}
+	
+	public Vector2f getShellStartPosition()
+	{
+		return ammo.getStartPosition();
+	}
+	
+	public float getShellStartPositionX()
+	{
+		return ammo.getStartPositionX();
+	}
+	
+	public float getShellStartPositionY()
+	{
+		return ammo.getStartPositionY();
+	}
+	
 	public float getMinAimingAngle() 
 	{
 		return minAimingAngle;

@@ -48,6 +48,9 @@ public class Game extends BasicGame{
 		actorRenderer.render(gc, g);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
+	 */
 	@Override
 	public void init(GameContainer gc) throws SlickException 
 	{ 		
@@ -88,18 +91,25 @@ public class Game extends BasicGame{
 			for (int i = 0; i < tankStartPositionStrArray.length; i++)
 				tankStartPosition[i] = Float.parseFloat(tankStartPositionStrArray[i]);
 			
-			actor.setPosition(new Vector2f(tankStartPosition));
+			actor.setStartPosition(new Vector2f(tankStartPosition));
 			
 			String[] shellPolygonPointsStrArray = config.getProperty("ShellPolygonPoints").split(", ");
 			float[] shellPolygonPoints = new float[shellPolygonPointsStrArray.length];
 			
 			for (int i = 0; i < shellPolygonPointsStrArray.length; i++)
 				shellPolygonPoints[i] = Float.parseFloat(shellPolygonPointsStrArray[i]);
-				
+			
+			String[] shellStartPositionStrArray = config.getProperty("ShellStartPosition").split(", ");
+			float[] shellStartPosition = new float[shellStartPositionStrArray.length];
+			
+			for (int i = 0; i < shellStartPositionStrArray.length; i++)
+				shellStartPosition[i] = Float.parseFloat(shellStartPositionStrArray[i]);
+			
 			shell = new Shell(new Polygon(shellPolygonPoints));					
 			shell.setStartSpeed(Float.parseFloat(config.getProperty("ShellStartSpeed")));
 			shell.setStartAngle(Float.parseFloat(config.getProperty("ShellStartAngle")));
-			shell.rotate(Float.parseFloat(config.getProperty("ShellStartAngle")));
+			shell.setStartPosition(new Vector2f(shellStartPosition));
+			shell.rotate(90 - Float.parseFloat(config.getProperty("ShellStartAngle")));
 			
 			actor.setShell(shell);
 			actor.setSpeed(Float.parseFloat(config.getProperty("TankSpeed")));
@@ -120,7 +130,7 @@ public class Game extends BasicGame{
 			shellRenderer.init(gc);
 			
 			fieldRenderer = new StaticLevelRenderer(field);
-			fieldRenderer.setTexture(background);			
+			fieldRenderer.setTexture(background);						
 		}
 		catch (IOException e) {
 			e.printStackTrace();

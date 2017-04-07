@@ -34,7 +34,7 @@ public class StaticLevelRenderer implements Renderer {
 	public void render(GameContainer gc, Graphics g) throws SlickException 
 	{
 		background.draw(0, 0);
-		//drawDebugLines(g, 70);
+		//drawDebugLines(g, 50);
 		g.setColor(Color.green);
 		g.draw(renderingObject.getBase());
 	}

@@ -48,9 +48,6 @@ public class Game extends BasicGame{
 		actorRenderer.render(gc, g);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
-	 */
 	@Override
 	public void init(GameContainer gc) throws SlickException 
 	{ 		
@@ -65,58 +62,21 @@ public class Game extends BasicGame{
 			Image actorImg = new Image(config.getProperty("TankSpriteSheet"));
 			int sheetCount = Integer.parseInt(config.getProperty("TankSpriteSheetCount"));
 			
-			Image shellImg = new Image(config.getProperty("ShellTexture"));
+			Image shellImg = new Image(config.getProperty("ShellSprite"));
+		
+			ConfigManager configManager = new ConfigManager("config.ini");
 			
-			float floorHeight = Float.parseFloat(config.getProperty("FloorHeight"));
-						
-			String[] levelPolygonPointsStrArray = config.getProperty("LevelPolygonPoints").split(", ");
-			float[] levelPolygonPoints = new float[levelPolygonPointsStrArray.length];
+			StaticLevelSheduler staticLevelSheduler = new StaticLevelSheduler();
+			field = staticLevelSheduler.createStaticLevel(new StaticLevelBuilder(), configManager);
+				
+			ShellSheduler shellSheduler = new ShellSheduler();
+			shell = shellSheduler.createShell(new ShellBuilder(), configManager);
 			
-			for (int i = 0; i < levelPolygonPointsStrArray.length; i++)
-				levelPolygonPoints[i] = Float.parseFloat(levelPolygonPointsStrArray[i]);
-					
-			String[] tankPolygonPointsStrArray = config.getProperty("TankPolygonPoints").split(", ");
-			float[] tankPolygonPoints = new float[tankPolygonPointsStrArray.length];
-			
-			for (int i = 0; i < tankPolygonPointsStrArray.length; i++)
-				tankPolygonPoints[i] = Float.parseFloat(tankPolygonPointsStrArray[i]);
-			
-			field = new StaticLevel(floorHeight, new Polygon(levelPolygonPoints));
-	
-			actor = new Tank(new Polygon(tankPolygonPoints));
-			
-			String[] tankStartPositionStrArray = config.getProperty("TankStartPosition").split(", ");
-			float[] tankStartPosition = new float[tankStartPositionStrArray.length];
-			
-			for (int i = 0; i < tankStartPositionStrArray.length; i++)
-				tankStartPosition[i] = Float.parseFloat(tankStartPositionStrArray[i]);
-			
-			actor.setStartPosition(new Vector2f(tankStartPosition));
-			
-			String[] shellPolygonPointsStrArray = config.getProperty("ShellPolygonPoints").split(", ");
-			float[] shellPolygonPoints = new float[shellPolygonPointsStrArray.length];
-			
-			for (int i = 0; i < shellPolygonPointsStrArray.length; i++)
-				shellPolygonPoints[i] = Float.parseFloat(shellPolygonPointsStrArray[i]);
-			
-			String[] shellStartPositionStrArray = config.getProperty("ShellStartPosition").split(", ");
-			float[] shellStartPosition = new float[shellStartPositionStrArray.length];
-			
-			for (int i = 0; i < shellStartPositionStrArray.length; i++)
-				shellStartPosition[i] = Float.parseFloat(shellStartPositionStrArray[i]);
-			
-			shell = new Shell(new Polygon(shellPolygonPoints));					
-			shell.setStartSpeed(Float.parseFloat(config.getProperty("ShellStartSpeed")));
-			shell.setStartAngle(Float.parseFloat(config.getProperty("ShellStartAngle")));
-			shell.setStartPosition(new Vector2f(shellStartPosition));
-			shell.rotate(90 - Float.parseFloat(config.getProperty("ShellStartAngle")));
-			
-			actor.setShell(shell);
-			actor.setSpeed(Float.parseFloat(config.getProperty("TankSpeed")));
-			actor.setMinAimingAngle(Float.parseFloat(config.getProperty("TankMinAimingAngle")));
-			actor.setMaxAimingAngle(Float.parseFloat(config.getProperty("TankMaxAimingAngle")));
-
-			level = new Level(actor, field);
+			TankSheduler tankSheduler = new TankSheduler();
+			actor = tankSheduler.createTank(new TankBuilder(), shell, configManager);
+				
+			LevelSheduler levelSheduler = new LevelSheduler();
+			level = levelSheduler.createLevel(new LevelBuilder(), field, actor);
 			
 			controller = new GameController(level);
 					

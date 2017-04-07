@@ -12,6 +12,12 @@ public class Tank extends DynamicGameObject {
 	private float 		maxAimingAngle;
 	private Move 		isMoving = Move.STOP;
 
+	public Tank()
+	{
+		base = new Polygon();
+		ammo = new Shell();
+	}
+	
 	public Tank(Shape base) throws IllegalArgumentException
 	{
 		setBase(base);

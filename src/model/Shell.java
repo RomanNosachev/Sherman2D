@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 
 public class Shell extends DynamicGameObject {
@@ -15,9 +16,16 @@ public class Shell extends DynamicGameObject {
 
 	private	boolean isFlying = false;
 	
+	public Shell()
+	{
+		base = new Polygon();
+		path = new ArrayList<Vector2f>();
+		boundingRadius = base.getBoundingCircleRadius();
+	}
+	
 	public Shell(Shape base)
 	{
-		setBase(base);
+		this.base = base;
 		path = new ArrayList<Vector2f>();
 		boundingRadius = base.getBoundingCircleRadius();
 	}

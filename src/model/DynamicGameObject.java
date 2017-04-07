@@ -154,7 +154,7 @@ public abstract class DynamicGameObject implements GameObject {
 		return new Ellipse(base.getCenterX(), base.getCenterY(), boundingRadius, boundingRadius);
 	}
 
-	protected void setBase(Shape base) throws IllegalArgumentException
+	public void setBase(Shape base) throws IllegalArgumentException
 	{
 		this.base = base;
 		boundingRadius = base.getBoundingCircleRadius();

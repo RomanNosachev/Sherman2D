@@ -62,9 +62,7 @@ public class GameController {
 				
 				model.shellRotate(-model.getTankRotateAngle());
 				model.shellRotate(model.getTankRotateAngle(), 
-								  model.getTankCenterX(), model.getTankCenterY());
-				
-				System.out.println(model.getTankRotateAngle());
+								  model.getTankCenterX(), model.getTankCenterY());				
 			}
 		}
 	}

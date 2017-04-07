@@ -9,9 +9,25 @@ public class Level {
 	
 	private boolean 	isShellLeftTank = false;
 	
+	public Level()
+	{
+		actor = new Tank();
+		field = new StaticLevel();
+	}
+	
 	public Level(Tank actor, StaticLevel field)
 	{
 		this.actor = actor;
+		this.field = field;
+	}
+	
+	public void setTank(Tank tank)
+	{
+		actor = tank;
+	}
+	
+	public void setStaticLevel(StaticLevel field)
+	{
 		this.field = field;
 	}
 

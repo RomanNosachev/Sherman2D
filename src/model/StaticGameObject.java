@@ -2,7 +2,7 @@ package model;
 
 import org.newdawn.slick.geom.Shape;
 
-public abstract class StaticGameObject implements GameObject {
+public class StaticGameObject implements GameObject {
 	protected Shape base;
 
 	@Override

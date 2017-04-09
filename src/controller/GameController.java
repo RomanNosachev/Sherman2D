@@ -12,6 +12,7 @@ public class GameController {
     private Level            model;
     
     private boolean          gameOver      = false;
+    private float            shellCorrectionAngle;
     
     private static final int CLOCK_PER_SEC = 1000;
     
@@ -26,11 +27,11 @@ public class GameController {
     }
     
     public void update(GameContainer gc, int delta) throws SlickException
-    {
+    {        
         model.setIsMoving(Move.STOP);
         
         keyController(gc, delta);
-        
+                
         if (model.isShooting())
         {
             model.setShellPosition(model.getShellBase().getX() + model.getShotRouteVectorX() * delta / CLOCK_PER_SEC,
@@ -59,13 +60,14 @@ public class GameController {
                 model.setShellLeftTank(false);
                 
                 model.setShellPosition(
-                        model.getTankStartPositionX() + (model.getTankX() - model.getTankStartPositionX())
+                        model.getTankStartPositionX() + (model.getTankSimpleCenterX() - model.getTankStartWidth() / 2 - model.getTankStartPositionX())
                                 - (model.getTankStartPositionX() - model.getShellStartPositionX()),
-                        model.getTankStartPositionY() + (model.getTankY() - model.getTankStartPositionY())
+                        model.getTankStartPositionY() + (model.getTankSimpleCenterY() - model.getTankStartHeight() / 2 - model.getTankStartPositionY())
                                 - (model.getTankStartPositionY() - model.getShellStartPositionY()));
                 
-                model.shellRotate(-model.getTankRotateAngle());
-                model.shellRotate(model.getTankRotateAngle(), model.getTankCenterX(), model.getTankCenterY());
+                model.shellRotate(-model.getTankRotateAngle() + shellCorrectionAngle);
+                model.shellRotate(model.getTankRotateAngle(), 
+                        model.getTankCenterX(), model.getTankCenterY());
             }
         }
     }
@@ -77,52 +79,72 @@ public class GameController {
             if (!model.isShooting())
             {
                 model.shot();
+                shellCorrectionAngle = 0;
             }
         }
         
         if (gc.getInput().isKeyDown(Input.KEY_RIGHT))
         {
-            model.tankRotate(45F * delta / CLOCK_PER_SEC);
+            float rotateAngle = 45F * delta / CLOCK_PER_SEC;
             
-            if (!model.isShooting())
-                model.shellRotate(45F * delta / CLOCK_PER_SEC, model.getTankSimpleCenterX(),
+            model.tankRotate(rotateAngle);
+            model.setShotStartAngle(model.getShotStartAngle() - rotateAngle);
+            
+            if (model.isShooting())
+                shellCorrectionAngle += rotateAngle;
+            else
+                model.shellRotate(rotateAngle, model.getTankSimpleCenterX(),
                         model.getTankSimpleCenterY());
         }
         
         if (gc.getInput().isKeyDown(Input.KEY_LEFT))
         {
-            model.tankRotate(-45F * delta / CLOCK_PER_SEC);
+            float rotateAngle = 45F * delta / CLOCK_PER_SEC;
             
-            if (!model.isShooting())
-                model.shellRotate(-45F * delta / CLOCK_PER_SEC, model.getTankSimpleCenterX(),
+            model.tankRotate(-rotateAngle);
+            model.setShotStartAngle(model.getShotStartAngle() + rotateAngle);
+            
+            if (model.isShooting())
+                shellCorrectionAngle -= rotateAngle;
+            else
+                model.shellRotate(-rotateAngle, model.getTankSimpleCenterX(),
                         model.getTankSimpleCenterY());
         }
         
         if (gc.getInput().isKeyDown(Input.KEY_UP))
         {
-            if (!model.isShooting())
+            float rotateAngle = 45F * delta / CLOCK_PER_SEC;
+            
+            if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
+                    model.getMinAimingAngle()) > 0)
             {
-                if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
-                        model.getMinAimingAngle()) > 0)
+                model.setShotStartAngle(model.getShotStartAngle() - rotateAngle);
+                
+                if (!model.isShooting())
                 {
-                    model.setShotStartAngle(model.getShotStartAngle() - 45F * delta / CLOCK_PER_SEC);
-                } else
-                {
-                    model.setShotStartAngle(model.getMinAimingAngle() - model.getTankRotateAngle());
+                    model.shellRotate(rotateAngle);
                 }
+            } else
+            {
+                model.setShotStartAngle(model.getMinAimingAngle() - model.getTankRotateAngle());
             }
+            
         } else if (gc.getInput().isKeyDown(Input.KEY_DOWN))
         {
-            if (!model.isShooting())
+            float rotateAngle = 45F * delta / CLOCK_PER_SEC;
+            
+            if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
+                    model.getMaxAimingAngle()) < 0)
             {
-                if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
-                        model.getMaxAimingAngle()) < 0)
+                model.setShotStartAngle(model.getShotStartAngle() + rotateAngle);
+                
+                if (!model.isShooting())
                 {
-                    model.setShotStartAngle(model.getShotStartAngle() + 45F * delta / CLOCK_PER_SEC);
-                } else
-                {
-                    model.setShotStartAngle(model.getMaxAimingAngle() - model.getTankRotateAngle());
+                    model.shellRotate(-rotateAngle);
                 }
+            } else
+            {
+                model.setShotStartAngle(model.getMaxAimingAngle() - model.getTankRotateAngle());
             }
         }
         

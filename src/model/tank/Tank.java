@@ -109,7 +109,7 @@ public class Tank extends DynamicGameObject {
     
     public void setShotStartAngle(float angle)
     {
-        ammo.setStartAngle(angle % 360);
+        ammo.setStartAngle(angle);
     }
     
     public float getShotStartAngle()

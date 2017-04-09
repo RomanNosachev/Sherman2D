@@ -7,7 +7,7 @@ public class LevelSheduler {
     public Level createLevel(LevelBuilder builder, Field field, Tank actor)
     {
         builder.buildObject();
-        builder.buildStaticLevel(field);
+        builder.buildField(field);
         builder.buildTank(actor);
         
         return builder.getObject();

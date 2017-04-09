@@ -96,7 +96,6 @@ public abstract class DynamicGameObject implements GameObject {
     public void rotate(float angle)
     {
         rotateAngle += angle;
-        rotateAngle = rotateAngle % 360;
         base = new Polygon(base.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F,
                 simpleBase.getCenterX(), simpleBase.getCenterY())).getPoints());
         simpleBase = new Polygon(simpleBase.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F,
@@ -106,11 +105,10 @@ public abstract class DynamicGameObject implements GameObject {
     public void rotate(float angle, float x, float y)
     {
         rotateAngle += angle;
-        rotateAngle = rotateAngle % 360;
         base = new Polygon(
                 base.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
-        simpleBase = new Polygon(simpleBase
-                .transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
+        simpleBase = new Polygon(
+                simpleBase.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
     }
     
     @Override

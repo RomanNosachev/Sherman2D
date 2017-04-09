@@ -43,15 +43,15 @@ public class ShellRenderer extends DynamicRenderer {
     
     public void drawSprite(Graphics g)
     {
-        sprite.drawCentered(renderingObject.getSimpleBase().getCenterX(), renderingObject.getSimpleBase().getCenterY());
-        sprite.setRotation(90 - renderingObject.getStartAngle());
+        sprite.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
+        sprite.setRotation(renderingObject.getRotateAngle());
     }
     
     public void drawShotParameters(Graphics g)
     {
         g.setColor(Color.white);
-        g.drawString("Speed: " + Float.toString(renderingObject.getStartSpeed()), 20, Display.getHeight() - 30);
-        g.drawString("Angle: " + Float.toString(renderingObject.getStartAngle()), 190, Display.getHeight() - 30);
+        g.drawString("Speed: " + Float.toString(renderingObject.getStartSpeed()), 20, Display.getHeight() - 30);    
+        g.drawString("Angle: " + Float.toString(renderingObject.getStartAngle() % 180), 190, Display.getHeight() - 30);
     }
     
     public void drawPath(Graphics g)

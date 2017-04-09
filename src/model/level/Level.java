@@ -31,7 +31,7 @@ public class Level {
         actor = tank;
     }
     
-    public void setStaticLevel(Field field)
+    public void setField(Field field)
     {
         this.field = field;
     }
@@ -118,8 +118,12 @@ public class Level {
     
     public void setShotStartAngle(float angle)
     {
-        actor.shellRotate(actor.getShotStartAngle() - angle);
         actor.setShotStartAngle(angle);
+    }
+    
+    public float getShellRotateAngle()
+    {
+        return actor.getShellRotateAngle();
     }
     
     public float getShotStartAngle()
@@ -230,25 +234,21 @@ public class Level {
     public void shellRotate(float angle)
     {
         actor.shellRotate(angle);
-        actor.setShotStartAngle(actor.getShotStartAngle() - angle);
     }
     
     public void shellRotate(float angle, float x, float y)
     {
         actor.shellRotate(angle, x, y);
-        actor.setShotStartAngle(actor.getShotStartAngle() - angle);
     }
     
     public void setShellRotation(float angle)
     {
-        actor.shellRotate(actor.getShotStartAngle() - angle);
-        actor.setShotStartAngle(angle);
+        actor.shellRotate(actor.getShellRotateAngle() - angle);
     }
     
     public void setShellRotation(float angle, float x, float y)
     {
-        actor.shellRotate(actor.getShotStartAngle() - angle, x, y);
-        actor.setShotStartAngle(angle);
+        actor.shellRotate(actor.getShellRotateAngle() - angle, x, y);
     }
     
     public void tankRotate(float angle)

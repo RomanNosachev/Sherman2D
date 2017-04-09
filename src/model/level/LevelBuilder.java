@@ -18,9 +18,9 @@ public class LevelBuilder implements Builder {
         level.setTank(actor);
     }
     
-    public void buildStaticLevel(Field field)
+    public void buildField(Field field)
     {
-        level.setStaticLevel(field);
+        level.setField(field);
     }
     
     public Level getObject()

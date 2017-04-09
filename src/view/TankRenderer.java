@@ -47,7 +47,7 @@ public class TankRenderer extends DynamicRenderer {
     {
         drawBase(g, renderingObject.getBase());
         drawBoundingSphere(g, renderingObject);
-       // drawAnimation(g);
+        drawAnimation(g);
     }
     
     public void drawAnimation(Graphics g)

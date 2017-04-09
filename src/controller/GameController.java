@@ -120,10 +120,10 @@ public class GameController {
             {
                 model.setShotStartAngle(model.getShotStartAngle() - rotateAngle);
                 
-                if (!model.isShooting())
-                {
+                if (model.isShooting())
+                    shellCorrectionAngle += rotateAngle;
+                else
                     model.shellRotate(rotateAngle);
-                }
             } else
             {
                 model.setShotStartAngle(model.getMinAimingAngle() - model.getTankRotateAngle());
@@ -138,10 +138,10 @@ public class GameController {
             {
                 model.setShotStartAngle(model.getShotStartAngle() + rotateAngle);
                 
-                if (!model.isShooting())
-                {
+                if (model.isShooting())
+                    shellCorrectionAngle -= rotateAngle;
+                else
                     model.shellRotate(-rotateAngle);
-                }
             } else
             {
                 model.setShotStartAngle(model.getMaxAimingAngle() - model.getTankRotateAngle());

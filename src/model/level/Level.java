@@ -253,12 +253,12 @@ public class Level {
     
     public void setShellRotation(float angle)
     {
-        actor.shellRotate(actor.getShellRotateAngle() - angle);
+        actor.shellRotate(angle - actor.getShellRotateAngle());
     }
     
     public void setShellRotation(float angle, float x, float y)
     {
-        actor.shellRotate(actor.getShellRotateAngle() - angle, x, y);
+        actor.shellRotate(angle - actor.getShellRotateAngle(), x, y);
     }
     
     public void tankRotate(float angle)

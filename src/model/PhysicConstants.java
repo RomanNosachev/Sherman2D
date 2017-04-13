@@ -1,5 +1,5 @@
 package model;
 
 public interface PhysicConstants {
-	float GRAVITY = 700; 
+    float GRAVITY = 700;
 }

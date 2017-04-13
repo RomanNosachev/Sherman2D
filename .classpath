@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="D:/Program Files/Eclipse/Slick2D"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="D:/Grandfather/Documents/Eclipse/Sherman2D/lib"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="D:/Grandfather/Documents/Eclipse/Sherman2D/lib/jinput.jar"/>

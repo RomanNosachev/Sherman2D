@@ -44,14 +44,6 @@ public class GameController {
 			Vector2f newVector = new Vector2f(model.getShellCenterX(), model.getShellCenterY());
 			float rotateAngle = (float) new Vector2f(newVector.getX() - oldVector.getX(), newVector.getY() - oldVector.getY()).getTheta() + 90;
 
-            /*if (rotateAngle > 0)
-            {
-                model.shellRotate(rotateAngle);
-            }
-            else
-            {
-                model.shellRotate(-rotateAngle * 2);
-            }*/
 			model.setShellRotation(rotateAngle);
 
             model.setShotRouteVectorY(model.getShotRouteVectorY() - PhysicConstants.GRAVITY * delta / CLOCK_PER_SEC);

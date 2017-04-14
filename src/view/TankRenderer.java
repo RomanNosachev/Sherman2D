@@ -70,8 +70,8 @@ public class TankRenderer extends DynamicRenderer {
         frame.setRotation(renderingObject.getRotateAngle());
         frame.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
         
-        cannon.setRotation(90 - renderingObject.getShellStartAngle());
-        cannon.drawCentered(renderingObject.getShellSimpleCenterX() + renderingObject.getShellStartWidth(), 
-                            renderingObject.getShellSimpleCenterY() - renderingObject.getShellStartHeight());
+        //cannon.setRotation(90 - renderingObject.getShellStartAngle());
+        //cannon.drawCentered(renderingObject.getShellSimpleCenterX() + renderingObject.getShellStartWidth(), 
+        //                    renderingObject.getShellSimpleCenterY() - renderingObject.getShellStartHeight());
     }
 }

@@ -6,7 +6,6 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import controller.GameController;
@@ -74,7 +73,11 @@ public class Game extends BasicGame {
             
             actorRenderer = new TankRenderer(actor);
             actorRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
+<<<<<<< HEAD
             actorRenderer.setCannonSprite(new Image("res/sprites/cannon.png"));
+=======
+            actorRenderer.init(gc);
+>>>>>>> refs/remotes/origin/master
             
             shellRenderer = new ShellRenderer(shell);
             shellRenderer.setSprite(configManager.loadShellSprite());

@@ -58,6 +58,7 @@ public abstract class DynamicGameObject implements GameObject {
         return startPosition;
     }
     
+<<<<<<< HEAD
     public float getStartX()
     {
         return startPosition.x;
@@ -108,6 +109,38 @@ public abstract class DynamicGameObject implements GameObject {
     }
     
     public void setY(float y)
+=======
+    public float getStartPositionX()
+    {
+        return startPosition.x;
+    }
+    
+    public float getStartPositionY()
+    {
+        return startPosition.y;
+    }
+    
+    public void setPosition(Vector2f pos) throws IllegalArgumentException
+    {
+        simpleBase.setLocation(simpleBase.getX() - (base.getX() - pos.x), simpleBase.getY() - (base.getY() - pos.y));
+        
+        base.setLocation(pos.x, pos.y);
+    }
+    
+    public void setPosition(float x, float y)
+    {
+        simpleBase.setLocation(simpleBase.getX() - (base.getX() - x), simpleBase.getY() - (base.getY() - y));
+        base.setLocation(x, y);
+    }
+    
+    public void setPositionX(float x)
+    {
+        simpleBase.setX(simpleBase.getX() - (base.getX() - x));
+        base.setX(x);
+    }
+    
+    public void setPositionY(float y)
+>>>>>>> refs/remotes/origin/master
     {
         simpleBase.setY(simpleBase.getY() - (base.getY() - y));
         base.setY(y);

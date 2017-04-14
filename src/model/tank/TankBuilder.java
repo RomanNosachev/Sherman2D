@@ -8,7 +8,7 @@ import model.dynamicGameObject.DynamicGameObjectBuilder;
 import model.shell.Shell;
 
 public class TankBuilder implements DynamicGameObjectBuilder {
-    Tank tank;
+    private Tank tank;
     
     @Override
     public void buildObject()
@@ -26,6 +26,24 @@ public class TankBuilder implements DynamicGameObjectBuilder {
     public void buildStartPosition(Vector2f pos)
     {
         tank.setStartPosition(pos);
+        tank.setCannonRotationPoint(new Vector2f(tank.getCannonRotationX() + pos.x, tank.getCannonRotationY() + pos.y));
+        tank.setShellPosition(tank.getShellStartPositionX() + pos.x, tank.getShellStartPositionY() + pos.y);
+    }
+    
+    public void buildCannonRotationPoint(Vector2f pos)
+    {
+        tank.setCannonRotationPoint(pos);
+    }
+    
+    public void buildCannonBase(float[] polygonPoints, float angle)
+    {
+        tank.setCannonBase(new Polygon(polygonPoints));
+        tank.cannonRotate(90 - angle, tank.getCannonCenterX(), tank.getCannonCenterY());
+    }
+    
+    public void buildCannonStartPosition(Vector2f cannonPos)
+    {
+        tank.setCannonStartPosition(cannonPos);
     }
     
     public void buildShell(Shell ammo)

@@ -73,11 +73,8 @@ public class Game extends BasicGame {
             
             actorRenderer = new TankRenderer(actor);
             actorRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
-<<<<<<< HEAD
-            actorRenderer.setCannonSprite(new Image("res/sprites/cannon.png"));
-=======
+            actorRenderer.setCannonSprite(configManager.loadTankCannonSprite());
             actorRenderer.init(gc);
->>>>>>> refs/remotes/origin/master
             
             shellRenderer = new ShellRenderer(shell);
             shellRenderer.setSprite(configManager.loadShellSprite());

@@ -31,6 +31,11 @@ public class ConfigManager {
         return new Image(config.getProperty("TankSpriteSheet"));
     }
     
+    public Image loadTankCannonSprite() throws SlickException
+    {
+        return new Image(config.getProperty("TankCannonSprite"));
+    }
+    
     public int loadTankSpriteSheetCount()
     {
         return Integer.parseInt(config.getProperty("TankSpriteSheetCount"));
@@ -68,12 +73,39 @@ public class ConfigManager {
         return tankPolygonPoints;
     }
     
+    public float[] loadTankCannonPolygonPoints()
+    {
+        String[] tankCannonPolygonPointsStrArray = config.getProperty("TankCannonPolygonPoints").split(", ");
+        float[] tankCannonPolygonPoints = new float[tankCannonPolygonPointsStrArray.length];
+        
+        for (int i = 0; i < tankCannonPolygonPointsStrArray.length; i++)
+            tankCannonPolygonPoints[i] = Float.parseFloat(tankCannonPolygonPointsStrArray[i]);
+        
+        return tankCannonPolygonPoints;
+    }
+    
     public Vector2f loadTankStartPosition()
     {
         String[] tankStartPositionStrArray = config.getProperty("TankStartPosition").split(", ");
         
         return new Vector2f(Float.parseFloat(tankStartPositionStrArray[0]),
                 Float.parseFloat(tankStartPositionStrArray[1]));
+    }
+    
+    public Vector2f loadTankCannonStartPosition()
+    {
+        String[] tankCannonPositionStrArray = config.getProperty("TankCannonStartPosition").split(", ");
+        
+        return new Vector2f(Float.parseFloat(tankCannonPositionStrArray[0]),
+                Float.parseFloat(tankCannonPositionStrArray[1]));
+    }
+    
+    public Vector2f loadTankCannonRotationPoint()
+    {
+        String[] tankCannonRotationPointStrArray = config.getProperty("TankCannonRotationPoint").split(", ");
+        
+        return new Vector2f(Float.parseFloat(tankCannonRotationPointStrArray[0]),
+                Float.parseFloat(tankCannonRotationPointStrArray[1]));
     }
     
     public float[] loadShellPolygonPoints()

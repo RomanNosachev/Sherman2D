@@ -15,7 +15,6 @@ public class TankRenderer extends DynamicRenderer {
     
     private Animation animation;
     private Image     frame;
-<<<<<<< HEAD
     private Image     cannon; 
     private int       sheetCount;
     private int       selectSheet;
@@ -53,59 +52,7 @@ public class TankRenderer extends DynamicRenderer {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         drawBase(g, renderingObject.getBase());
-        drawBoundingSphere(g, renderingObject);
-       // drawAnimation(g);
-    }
-    
-    public void drawAnimation(Graphics g)
-    {
-        if (renderingObject.isMoving() == Move.BACK)
-            if (++selectSheet >= sheetCount)
-                selectSheet = 0;
-            
-        if (renderingObject.isMoving() == Move.FORTH)
-            if (--selectSheet <= 0)
-                selectSheet = sheetCount - 1;
-            
-        frame = animation.getImage(selectSheet);
-        frame.setRotation(renderingObject.getRotateAngle());
-        frame.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
-        
-        //cannon.setRotation(90 - renderingObject.getShellStartAngle());
-        //cannon.drawCentered(renderingObject.getShellSimpleCenterX() + renderingObject.getShellStartWidth(), 
-        //                    renderingObject.getShellSimpleCenterY() - renderingObject.getShellStartHeight());
-=======
-    private int       sheetCount;
-    private int       selectSheet;
-    
-    public TankRenderer(Tank rObject)
-    {
-        renderingObject = rObject;
-        boundingRadius = renderingObject.getBoundingCircleRadius();
-    }
-    
-    public void setSpriteSheet(Image sprite, int count)
-    {
-        animation = new Animation(new SpriteSheet(sprite, sprite.getWidth() / count, sprite.getHeight()), 1);
-        sheetCount = count;
-        selectSheet = count / 2;
-        frame = animation.getImage(selectSheet);
-    }
-    
-    public void setSprite(Image sprite)
-    {
-        frame = sprite;
-    }
-    
-    @Override
-    public void init(GameContainer gc) throws SlickException
-    {
-    }
-    
-    @Override
-    public void render(GameContainer gc, Graphics g) throws SlickException
-    {
-        drawBase(g, renderingObject.getBase());
+        drawBase(g, renderingObject.getCannonBase());
         drawBoundingSphere(g, renderingObject);
         drawAnimation(g);
     }
@@ -122,8 +69,12 @@ public class TankRenderer extends DynamicRenderer {
             
         frame = animation.getImage(selectSheet);
         frame.setRotation(renderingObject.getRotateAngle());
-        
         frame.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
->>>>>>> refs/remotes/origin/master
+        
+        cannon.setRotation(90 - renderingObject.getShellStartAngle());
+        cannon.drawCentered(renderingObject.getCannonCenterX(), 
+                            renderingObject.getCannonCenterY());
+        
+        System.out.println(renderingObject.getShellCenterX() + "  " + renderingObject.getShellCenterY());
     }
 }

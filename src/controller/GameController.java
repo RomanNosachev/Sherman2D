@@ -13,11 +13,10 @@ public class GameController {
     private Level            model;
     
     private boolean          gameOver      = false;
+    
     private float            shellCorrectionAngle;
     private float            muzzleAngle;
-    
-    private static final int CLOCK_PER_SEC = 1000;
-    
+        
     public GameController(Level model)
     {
         this.model = model;
@@ -29,7 +28,12 @@ public class GameController {
     }
     
     public void update(GameContainer gc, int delta) throws SlickException
-    {        
+    {                
+        if (model.getTankHitPoint() <= 0)
+        {
+            setGameOver(true);
+        }
+        
         model.setIsMoving(Move.STOP);
         
         keyController(gc, delta);
@@ -38,54 +42,46 @@ public class GameController {
         {
 			Vector2f oldVector = new Vector2f(model.getShellCenterX(), model.getShellCenterY());
 
-            model.setShellPosition(model.getShellBase().getX() + model.getShotRouteVectorX() * delta / CLOCK_PER_SEC,
-                    model.getShellBase().getY() - model.getShotRouteVectorY() * delta / CLOCK_PER_SEC);
+            model.setShellPosition(model.getShellBase().getX() + model.getShotRouteVectorX() * delta / PhysicConstants.CLOCK_PER_SEC,
+                    model.getShellBase().getY() - model.getShotRouteVectorY() * delta / PhysicConstants.CLOCK_PER_SEC);
 
 			Vector2f newVector = new Vector2f(model.getShellCenterX(), model.getShellCenterY());
 			float rotateAngle = (float) new Vector2f(newVector.getX() - oldVector.getX(), newVector.getY() - oldVector.getY()).getTheta() + 90;
 
 			model.setShellRotation(rotateAngle);
 
-            model.setShotRouteVectorY(model.getShotRouteVectorY() - PhysicConstants.GRAVITY * delta / CLOCK_PER_SEC);
+            model.setShotRouteVectorY(model.getShotRouteVectorY() - PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC);
 
             model.addShotPathPoint(model.getShellBase().getCenterX(), model.getShellBase().getCenterY());
 
             if (model.tankExcludesShell() && !model.isShellLeftTank())
             {
                 model.setShellLeftTank(true);
+                model.setTankDamaged(false);
             }
 
             if (model.isShellLeftTank() && model.shellBoundingWithTank())
             {
-                if (model.shellCollidesWithTank())
+                if (model.shellCollidesWithTank() && !model.isTankDamaged())
                 {
-                    setGameOver(true);
+                    model.setTankDamaged(true);
+                    model.setTankHitPoint(model.getTankHitPoint() - model.getShellDamage());
                 }
             }
 
             if (model.shellCollidesWithLevel() || !model.levelContainsShell())
             {
+                model.setTankDamaged(false);
                 model.setIsShooting(false);
                 model.setShellLeftTank(false);
 				model.setShellRotation(muzzleAngle);
 
-				/*
-                model.setShellPosition(
-                        model.getTankStartPositionX() + (model.getTankSimpleCenterX() - model.getTankStartWidth() / 2 - model.getTankStartPositionX())
-                                - (model.getTankStartPositionX() - model.getShellStartPositionX()),
-                        model.getTankStartPositionY() + (model.getTankSimpleCenterY() - model.getTankStartHeight() / 2 - model.getTankStartPositionY())
-                                - (model.getTankStartPositionY() - model.getShellStartPositionY()));
-                */
-				
-				//model.setShellPosition(model.getTankCannonRotationX(), model.getTankCannonRotationY());
-				model.setShellPosition(model.getTankCannonCenterX(), model.getTankCannonCenterY());
+				model.setShellPosition(model.getTankCannonSimpleCenterX() - model.getShellStartWidth() / 2, 
+				                       model.getTankCannonSimpleCenterY() - model.getShellStartHeight() / 2);
 				
 				model.shellRotate(shellCorrectionAngle);
-                //model.shellRotate(-model.getTankRotateAngle() + shellCorrectionAngle);
-                //model.shellRotate(model.getTankRotateAngle(),
-                 //       model.getTankCenterX(), model.getTankCenterY());
             }
-        }
+        }       
     }
     
     private void keyController(GameContainer gc, int delta)
@@ -102,7 +98,7 @@ public class GameController {
         
         if (gc.getInput().isKeyDown(Input.KEY_RIGHT))
         {
-            float rotateAngle = 45F * delta / CLOCK_PER_SEC;
+            float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
             
             model.tankRotate(rotateAngle);
             model.tankCannonRotate(rotateAngle, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
@@ -117,7 +113,7 @@ public class GameController {
         
         if (gc.getInput().isKeyDown(Input.KEY_LEFT))
         {
-            float rotateAngle = 45F * delta / CLOCK_PER_SEC;
+            float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
             
             model.tankRotate(-rotateAngle);
             model.tankCannonRotate(-rotateAngle, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
@@ -132,19 +128,19 @@ public class GameController {
         
         if (gc.getInput().isKeyDown(Input.KEY_UP))
         {
-            float rotateAngle = 45F * delta / CLOCK_PER_SEC;
+            float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
             
             if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
                     model.getMinAimingAngle()) > 0)
             {
                 model.setShotStartAngle(model.getShotStartAngle() - rotateAngle);
                 
-                model.tankCannonRotate(rotateAngle, model.getTankCannonRotationX(), model.getTankCannonRotationY());
+                model.tankCannonRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
                 
                 if (model.isShooting())
                     shellCorrectionAngle += rotateAngle;
                 else
-                    model.shellRotate(rotateAngle);                
+                    model.shellRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
             } else
             {
                 model.setShotStartAngle(model.getMinAimingAngle() - model.getTankRotateAngle());
@@ -152,19 +148,20 @@ public class GameController {
             
         } else if (gc.getInput().isKeyDown(Input.KEY_DOWN))
         {
-            float rotateAngle = 45F * delta / CLOCK_PER_SEC;
+            float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
             
             if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
                     model.getMaxAimingAngle()) < 0)
             {
                 model.setShotStartAngle(model.getShotStartAngle() + rotateAngle);
                 
-                model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationX(), model.getTankCannonRotationY());
+                model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
                 
                 if (model.isShooting())
                     shellCorrectionAngle -= rotateAngle;
                 else
-                    model.shellRotate(-rotateAngle);
+                    model.shellRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
+
             } else
             {
                 model.setShotStartAngle(model.getMaxAimingAngle() - model.getTankRotateAngle());
@@ -175,7 +172,7 @@ public class GameController {
         {
             if (Float.compare(model.getShortStartSpeed(), 5000) < 0)
             {
-                model.setShotStartSpeed(model.getShortStartSpeed() + 200F * delta / CLOCK_PER_SEC);
+                model.setShotStartSpeed(model.getShortStartSpeed() + 200F * delta / PhysicConstants.CLOCK_PER_SEC);
             } else
             {
                 model.setShotStartSpeed(5000);
@@ -186,7 +183,7 @@ public class GameController {
         {
             if (Float.compare(model.getShortStartSpeed(), 0) > 0)
             {
-                model.setShotStartSpeed(model.getShortStartSpeed() - 200F * delta / CLOCK_PER_SEC);
+                model.setShotStartSpeed(model.getShortStartSpeed() - 200F * delta / PhysicConstants.CLOCK_PER_SEC);
             } else
             {
                 model.setShotStartSpeed(0);
@@ -197,11 +194,11 @@ public class GameController {
         {
             model.setIsMoving(Move.BACK);
             
-            float movement = model.getMovePoint() * delta / CLOCK_PER_SEC;
+            float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
             
             model.setPositionX(model.getTankX() - movement);
             model.setTankCannonX(model.getTankCannonX() - movement);
-            model.setTankCannonRotationX(model.getTankCannonRotationX() - movement);
+            model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
             
             if (!model.isShooting())
                 model.setShellX(model.getShellBase().getX() - movement);
@@ -210,7 +207,7 @@ public class GameController {
             {
                 model.setPositionX(model.getTankBase().getX() + movement);
                 model.setTankCannonX(model.getTankCannonX() + movement);
-                model.setTankCannonRotationX(model.getTankCannonRotationX() + movement);
+                model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() + movement);
                 
                 if (!model.isShooting())
                     model.setShellX(model.getShellBase().getX() + movement);
@@ -221,11 +218,11 @@ public class GameController {
         {
             model.setIsMoving(Move.FORTH);
             
-            float movement = model.getMovePoint() * delta / CLOCK_PER_SEC;
+            float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
 
             model.setPositionX(model.getTankX() + movement);
             model.setTankCannonX(model.getTankCannonX() + movement);
-            model.setTankCannonRotationX(model.getTankCannonRotationX() + movement);
+            model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() + movement);
             
             if (!model.isShooting())
                 model.setShellX(model.getShellBase().getX() + movement);
@@ -234,7 +231,7 @@ public class GameController {
             {                
                 model.setPositionX(model.getTankBase().getX() - movement);
                 model.setTankCannonX(model.getTankCannonX() - movement);
-                model.setTankCannonRotationX(model.getTankCannonRotationX() - movement);
+                model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
 
                 if (!model.isShooting())
                     model.setShellX(model.getShellBase().getX() - movement);
@@ -243,11 +240,11 @@ public class GameController {
         
         if (gc.getInput().isKeyDown(Input.KEY_S))
         {
-            float movement = model.getMovePoint() * delta / CLOCK_PER_SEC;
+            float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
             
             model.setPositionY(model.getTankY() + movement);
             model.setTankCannonY(model.getTankCannonY() + movement);
-            model.setTankCannonRotationY(model.getTankCannonRotationY() + movement);
+            model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() + movement);
             
             if (!model.isShooting())
                 model.setShellY(model.getShellBase().getY() + movement);
@@ -256,7 +253,7 @@ public class GameController {
             {
                 model.setPositionY(model.getTankBase().getY() - movement);
                 model.setTankCannonY(model.getTankCannonY() - movement);
-                model.setTankCannonRotationY(model.getTankCannonRotationY() - movement);
+                model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() - movement);
                 
                 if (!model.isShooting())
                     model.setShellY(model.getShellBase().getY() - movement);
@@ -265,11 +262,11 @@ public class GameController {
         
         if (gc.getInput().isKeyDown(Input.KEY_W))
         {
-            float movement = model.getMovePoint() * delta / CLOCK_PER_SEC;
+            float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
             
             model.setPositionY(model.getTankY() - movement);
             model.setTankCannonY(model.getTankCannonY() - movement);
-            model.setTankCannonRotationY(model.getTankCannonRotationY() - movement);
+            model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() - movement);
                         
             if (!model.isShooting())
                 model.setShellY(model.getShellBase().getY() - movement);
@@ -278,7 +275,7 @@ public class GameController {
             {
                 model.setPositionY(model.getTankY() + movement);
                 model.setTankCannonY(model.getTankCannonY() + movement);
-                model.setTankCannonRotationY(model.getTankCannonRotationY() + movement);
+                model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() + movement);
                 
                 if (!model.isShooting())
                     model.setShellY(model.getShellBase().getY() + movement);

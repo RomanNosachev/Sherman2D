@@ -19,6 +19,8 @@ public class Shell extends DynamicGameObject {
     
     private boolean             isFlying = false;
     
+    private int                 damage;
+    
     public Shell()
     {
         base = new Polygon();
@@ -122,5 +124,15 @@ public class Shell extends DynamicGameObject {
     public void clearPath()
     {
         path.clear();
+    }
+
+    public int getDamage()
+    {
+        return damage;
+    }
+
+    public void setDamage(int damage)
+    {
+        this.damage = damage;
     }
 }

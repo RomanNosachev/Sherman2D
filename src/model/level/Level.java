@@ -10,7 +10,7 @@ import org.newdawn.slick.geom.Shape;
 
 public class Level {
     private Tank        actor;
-    private Field field;
+    private Field       field;
     
     private boolean     isShellLeftTank = false;
     
@@ -281,28 +281,29 @@ public class Level {
         actor.cannonRotate(angle, x, y);
     }
     
-    public void setTankCannonRotationX(float x)
+    public void setTankCannonRotationPointX(float x)
     {
-        actor.setCannonRotationX(x);
+        actor.setCannonRotationPointX(x);
     }
     
-    public void setTankCannonRotationY(float y)
+    public void setTankCannonRotationPointY(float y)
     {
-        actor.setCannonRotationY(y);
+        actor.setCannonRotationPointY(y);
     }
     
-    public float getTankCannonRotationX()
+    public float getTankCannonRotationPointX()
     {
-        return actor.getCannonRotationX();
+        return actor.getCannonRotationPointX();
     }
     
-    public float getTankCannonRotationY()
+    public float getTankCannonRotationPointY()
     {
-        return actor.getCannonRotationY();
+        return actor.getCannonRotationPointY();
     }
     
     public void tankRotate(float angle)
     {
+        
         actor.rotate(angle);
     }
     
@@ -486,10 +487,30 @@ public class Level {
     {
         return actor.getCannonY();
     }
-    
+
     public void setTankCannonY(float y)
     {
         actor.setCannonY(y);
+    }
+    
+    public float getTankCannonSimpleCenterX()
+    {
+        return actor.getCannonSimpleCenterX();
+    }
+    
+    public float getTankCannonSimpleCenterY()
+    {
+        return actor.getCannonSimpleCenterY();
+    }
+    
+    public float getTankCannonStartWidth()
+    {
+        return actor.getCannonStartWidth();
+    }
+    
+    public float getTankCannonStartHeight()
+    {
+        return actor.getCannonStartHeight();
     }
     
     public boolean isShellLeftTank()
@@ -500,5 +521,30 @@ public class Level {
     public void setShellLeftTank(boolean isShellLeftTank)
     {
         this.isShellLeftTank = isShellLeftTank;
+    }
+    
+    public void setTankHitPoint(int hp)
+    {
+        actor.setHitPoint(hp);
+    }
+    
+    public int getTankHitPoint()
+    {
+        return actor.getHitPoint();
+    }
+    
+    public int getShellDamage()
+    {
+        return actor.getShellDamage();
+    }
+
+    public boolean isTankDamaged()
+    {
+        return actor.isDamaged();
+    }
+
+    public void setTankDamaged(boolean tankDamaged)
+    {
+        actor.setDamaged(tankDamaged);
     }
 }

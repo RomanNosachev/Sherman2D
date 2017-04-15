@@ -11,14 +11,13 @@ import org.newdawn.slick.geom.Transform;
 
 public class Tank extends DynamicGameObject {
     private Shell       ammo;
-    
-    private Shape       cannonBase;
-    private Vector2f    cannonStartPos;
-    private Vector2f    cannonRotationPoint;
+    private Cannon      gun;      
+
     private float       speed;
     private float       minAimingAngle;
     private float       maxAimingAngle;
     private Move        isMoving = Move.STOP;
+    private boolean     isDamaged = false;
     
     public Tank()
     {
@@ -39,6 +38,37 @@ public class Tank extends DynamicGameObject {
         base.setLocation(position);
         ammo = new Shell(new Polygon());
         boundingRadius = base.getBoundingCircleRadius();
+    }
+    
+    @Override
+    public void rotate(float angle)
+    {
+        rotateAngle += angle;
+        base = new Polygon(base.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F,
+                simpleBase.getCenterX(), simpleBase.getCenterY())).getPoints());
+        simpleBase = new Polygon(simpleBase.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F,
+                simpleBase.getCenterX(), simpleBase.getCenterY())).getPoints());
+        
+        float[] coordArray = {gun.getRotationPointX(), gun.getRotationPointY()};
+        Shape newRotationPoint = new Polygon(coordArray);
+        
+        gun.setRotationPoint(newRotationPoint.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, 
+                simpleBase.getCenterX(), simpleBase.getCenterY())).getPoints());
+    }
+    
+    @Override
+    public void rotate(float angle, float x, float y)
+    {
+        rotateAngle += angle;
+        base = new Polygon(
+                base.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
+        simpleBase = new Polygon(
+                simpleBase.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
+        
+        float[] coordArray = {gun.getRotationPointX(), gun.getRotationPointY()};
+        Shape newRotationPoint = new Polygon(coordArray);
+        
+        gun.setRotationPoint(newRotationPoint.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
     }
     
     public void setShell(Shell ammo) throws IllegalArgumentException
@@ -78,7 +108,7 @@ public class Tank extends DynamicGameObject {
     
     public float getShellCenterY()
     {
-        return ammo.getSimpleCenterY();
+        return ammo.getCenterY();
     }
     
     public void setSpeed(float speed)
@@ -264,76 +294,99 @@ public class Tank extends DynamicGameObject {
         this.maxAimingAngle = maxAimingAngle;
     }
     
+    public void setCannon(Cannon gun)
+    {
+        this.gun = gun;
+    }
+    
     public Vector2f getCannonStartPosition()
     {
-        return cannonStartPos;
+        return gun.getStartPosition();
     }
     
     public Vector2f getCannonPosition()
     {
-        return cannonBase.getLocation();
+        return gun.getPosition();
     }
     
     public float getCannonStartX()
     {
-        return cannonStartPos.x;
+        return gun.getStartX();
     }
     
     public float getCannonStartY()
     {
-        return cannonStartPos.y;
+        return gun.getStartY();
     }
 
     public float getCannonX()
     {
-        return cannonBase.getX();
+        return gun.getX();
     }
     
     public float getCannonY()
     {
-        return cannonBase.getY();
+        return gun.getY();
     }
     
     public float getCannonCenterX()
     {
-        return cannonBase.getCenterX();
+        return gun.getCenterX();
     }
     
     public float getCannonCenterY()
     {
-        return cannonBase.getCenterY();
+        return gun.getCenterY();
     }
     
     public void setCannonX(float x)
     {
-        cannonBase.setX(x);
+        gun.setX(x);
     }
     
     public void setCannonY(float y)
     {
-        cannonBase.setY(y);
+        gun.setY(y);
     }
     
     public void setCannonPosition(Vector2f pos)
     {
-        cannonBase.setLocation(pos);
+        gun.setPosition(pos);
     }
-    
+
     public void setCannonStartPosition(Vector2f cannonPos)
     {
-        this.cannonStartPos = cannonPos;
-        cannonBase.setLocation(cannonPos);
+        gun.setStartPosition(cannonPos);
     }
-        
+    
+    public float getCannonSimpleCenterX()
+    {
+        return gun.getSimpleCenterX();
+    }
+    
+    public float getCannonSimpleCenterY()
+    {
+        return gun.getSimpleCenterY();
+    }
+    
+    public float getCannonStartWidth()
+    {
+        return gun.getStartWidth();
+    }
+    
+    public float getCannonStartHeight()
+    {
+        return gun.getStartHeight();
+    }
+    
     public void cannonRotate(float angle)
     {
-        cannonBase = new Polygon(cannonBase.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F,
-                cannonBase.getCenterX(), cannonBase.getCenterY())).getPoints());
+        gun.rotate(angle);
     }
     
     public void cannonRotate(float angle, float x, float y)
     {
-        cannonBase = new Polygon(cannonBase.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
+        gun.rotate(angle, x, y);
     }
     
     public void shellRotate(float angle)
@@ -353,41 +406,56 @@ public class Tank extends DynamicGameObject {
 
     public Shape getCannonBase()
     {
-        return cannonBase;
+        return gun.getBase();
     }
 
     public void setCannonBase(Shape cannonBase)
     {
-        this.cannonBase = cannonBase;
+        gun.setBase(cannonBase);
     }
 
     public Vector2f getCannonRotationPoint()
     {
-        return cannonRotationPoint;
+        return gun.getRotationPoint();
     }
 
-    public float getCannonRotationX()
+    public float getCannonRotationPointX()
     {
-        return cannonRotationPoint.x;
+        return gun.getRotationPointX();
     }
     
-    public float getCannonRotationY()
+    public float getCannonRotationPointY()
     {
-        return cannonRotationPoint.y;
+        return gun.getRotationPointY();
     }
 
-    public void setCannonRotationX(float x)
+    public void setCannonRotationPointX(float x)
     {
-        cannonRotationPoint.x = x;
+        gun.setRotationPointX(x);
     }
     
-    public void setCannonRotationY(float y)
+    public void setCannonRotationPointY(float y)
     {
-        cannonRotationPoint.y = y;
+        gun.setRotationPointY(y);
     }
     
     public void setCannonRotationPoint(Vector2f cannonRotationPoint)
     {
-        this.cannonRotationPoint = cannonRotationPoint;
+        gun.setRotationPoint(cannonRotationPoint);
+    }
+    
+    public int getShellDamage()
+    {
+        return ammo.getDamage();
+    }
+
+    public boolean isDamaged()
+    {
+        return isDamaged;
+    }
+
+    public void setDamaged(boolean isDamaged)
+    {
+        this.isDamaged = isDamaged;
     }
 }

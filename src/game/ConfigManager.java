@@ -3,10 +3,12 @@ package game;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 
 public class ConfigManager {
@@ -119,14 +121,6 @@ public class ConfigManager {
         return shellPolygonPoints;
     }
     
-    public Vector2f loadShellStartPosition()
-    {
-        String[] shellStartPositionStrArray = config.getProperty("ShellStartPosition").split(", ");
-        
-        return new Vector2f(Float.parseFloat(shellStartPositionStrArray[0]),
-                Float.parseFloat(shellStartPositionStrArray[1]));
-    }
-    
     public float loadShellStartSpeed()
     {
         return Float.parseFloat(config.getProperty("ShellStartSpeed"));
@@ -150,5 +144,29 @@ public class ConfigManager {
     public float loadTankMaxAimingAngle()
     {
         return Float.parseFloat(config.getProperty("TankMaxAimingAngle"));
+    }
+    
+    public int loadShellDamage()
+    {
+        return Integer.parseInt(config.getProperty("ShellDamage"));
+    }
+    
+    public int loadTankMaxHitPoint()
+    {
+        return Integer.parseInt(config.getProperty("TankMaxHitPoint"));
+    }
+    
+    public Sound loadTankMovingSound() throws SlickException
+    {
+        return new Sound(config.getProperty("TankMovingSound"));
+    }
+    
+    public ArrayList<Sound> loadTankHitSound() throws SlickException
+    {
+        ArrayList<Sound> soundSheet = new ArrayList<>();
+        soundSheet.add(new Sound(config.getProperty("TankHitSound")));
+        soundSheet.add(new Sound(config.getProperty("TankHitSound1")));
+
+        return soundSheet;
     }
 }

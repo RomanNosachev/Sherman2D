@@ -1,4 +1,4 @@
-package view;
+package view.field;
 
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
@@ -8,6 +8,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import model.field.Field;
+import view.renderer.Renderer;
 
 public class FieldRenderer implements Renderer {
     

@@ -1,4 +1,4 @@
-package view;
+package view.renderer;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;

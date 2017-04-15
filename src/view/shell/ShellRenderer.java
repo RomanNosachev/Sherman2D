@@ -1,4 +1,4 @@
-package view;
+package view.shell;
 
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Line;
 
 import model.shell.Shell;
+import view.dynamicRenderer.DynamicRenderer;
 
 public class ShellRenderer extends DynamicRenderer {
     private Shell renderingObject;
@@ -36,9 +37,13 @@ public class ShellRenderer extends DynamicRenderer {
     {
         drawShotParameters(g);
         drawPath(g);
-        drawBase(g, renderingObject.getBase());
-        drawBoundingSphere(g, renderingObject);
-        drawSprite(g);
+        
+        if (renderingObject.isFlying())
+        {
+            drawBase(g, renderingObject.getBase());
+            drawBoundingSphere(g, renderingObject);
+            drawSprite(g);
+        }
     }
     
     public void drawSprite(Graphics g)
@@ -50,8 +55,8 @@ public class ShellRenderer extends DynamicRenderer {
     public void drawShotParameters(Graphics g)
     {
         g.setColor(Color.white);
-        g.drawString("Speed: " + Float.toString(renderingObject.getStartSpeed()), 20, Display.getHeight() - 30);    
-        g.drawString("Angle: " + Float.toString(renderingObject.getStartAngle() % 180), 190, Display.getHeight() - 30);
+        g.drawString("Speed: " + Float.toString(renderingObject.getStartSpeed()), 20, Display.getHeight() - infoStringHeight);    
+        g.drawString("Angle: " + Float.toString(renderingObject.getStartAngle() % 180), 190, Display.getHeight() - infoStringHeight);
     }
     
     public void drawPath(Graphics g)

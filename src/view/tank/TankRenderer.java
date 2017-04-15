@@ -1,6 +1,8 @@
-package view;
+package view.tank;
 
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -9,6 +11,7 @@ import org.newdawn.slick.SpriteSheet;
 
 import model.tank.Move;
 import model.tank.Tank;
+import view.dynamicRenderer.DynamicRenderer;
 
 public class TankRenderer extends DynamicRenderer {
     private Tank      renderingObject;
@@ -51,10 +54,21 @@ public class TankRenderer extends DynamicRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
+        drawHitPoint(g);
         drawBase(g, renderingObject.getBase());
         drawBase(g, renderingObject.getCannonBase());
         drawBoundingSphere(g, renderingObject);
         drawAnimation(g);
+    }
+    
+    public void drawHitPoint(Graphics g)
+    {
+        if (renderingObject.isDamaged())
+            g.setColor(Color.red);
+        else
+            g.setColor(Color.white);
+        
+        g.drawString("HP: " + Integer.toString(renderingObject.getHitPoint()), Display.getWidth() - 100, Display.getHeight() - infoStringHeight);
     }
     
     public void drawAnimation(Graphics g)
@@ -67,14 +81,12 @@ public class TankRenderer extends DynamicRenderer {
             if (--selectSheet <= 0)
                 selectSheet = sheetCount - 1;
             
-        frame = animation.getImage(selectSheet);
-        frame.setRotation(renderingObject.getRotateAngle());
-        frame.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
-        
         cannon.setRotation(90 - renderingObject.getShellStartAngle());
         cannon.drawCentered(renderingObject.getCannonCenterX(), 
                             renderingObject.getCannonCenterY());
         
-        System.out.println(renderingObject.getShellCenterX() + "  " + renderingObject.getShellCenterY());
+        frame = animation.getImage(selectSheet);
+        frame.setRotation(renderingObject.getRotateAngle());
+        frame.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());        
     }
 }

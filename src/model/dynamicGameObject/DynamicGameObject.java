@@ -20,6 +20,9 @@ public abstract class DynamicGameObject implements GameObject {
     protected float    boundingRadius;
     protected float    rotateAngle = 0;
     
+    protected int      hitPoint;
+    protected int      maxHitPoint;
+    
     public Shape getSimpleBase()
     {
         return simpleBase;
@@ -51,6 +54,11 @@ public abstract class DynamicGameObject implements GameObject {
         simpleBase.setLocation(simpleBase.getX() - (base.getX() - pos.x), simpleBase.getY() - (base.getY() - pos.y));
         
         base.setLocation(pos.x, pos.y);
+    }
+
+    public Vector2f getPosition()
+    {
+        return base.getLocation();
     }
     
     public Vector2f getStartPosition()
@@ -248,5 +256,26 @@ public abstract class DynamicGameObject implements GameObject {
     public float getWidth()
     {
         return base.getWidth();
+    }
+    
+    public int getHitPoint()
+    {
+        return hitPoint;
+    }
+
+    public void setHitPoint(int hitPoint)
+    {
+        this.hitPoint = hitPoint;
+    }
+
+    public int getMaxHitPoint()
+    {
+        return maxHitPoint;
+    }
+
+    public void setMaxHitPoint(int maxHitPoint)
+    {
+        this.maxHitPoint = maxHitPoint;
+        hitPoint = maxHitPoint;
     }
 }

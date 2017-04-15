@@ -32,9 +32,19 @@ public class ShellBuilder implements DynamicGameObjectBuilder {
         shell.rotate(90 - angle);
     }
     
+    public void buildStartCenterPosition(Vector2f pos)
+    {
+        shell.setStartPosition(new Vector2f(pos.x + shell.getStartWidth() / 2, pos.y + shell.getStartHeight() / 2));
+    }
+    
     public void buildStartPosition(Vector2f pos)
     {
         shell.setStartPosition(pos);
+    }
+    
+    public void buildDamage(int damage)
+    {
+        shell.setDamage(damage);
     }
     
     @Override

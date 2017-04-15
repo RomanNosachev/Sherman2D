@@ -21,9 +21,10 @@ import model.shell.ShellSheduler;
 import model.tank.Tank;
 import model.tank.TankBuilder;
 import model.tank.TankSheduler;
-import view.ShellRenderer;
-import view.FieldRenderer;
-import view.TankRenderer;
+import view.tank.TankPlayer;
+import view.tank.TankRenderer;
+import view.field.FieldRenderer;
+import view.shell.ShellRenderer;
 
 public class Game extends BasicGame {
     private Level               level;
@@ -37,6 +38,8 @@ public class Game extends BasicGame {
     private TankRenderer        actorRenderer;
     private ShellRenderer       shellRenderer;
     
+    private TankPlayer          actorPlayer;
+    
     public Game(String title)
     {
         super(title);
@@ -48,6 +51,8 @@ public class Game extends BasicGame {
         fieldRenderer.render(gc, g);
         shellRenderer.render(gc, g);
         actorRenderer.render(gc, g);
+        
+        actorPlayer.play(gc);
     }
     
     @Override
@@ -74,13 +79,18 @@ public class Game extends BasicGame {
             actorRenderer = new TankRenderer(actor);
             actorRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
             actorRenderer.setCannonSprite(configManager.loadTankCannonSprite());
-            actorRenderer.init(gc);
+            actorRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             
             shellRenderer = new ShellRenderer(shell);
             shellRenderer.setSprite(configManager.loadShellSprite());
+            shellRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             
             fieldRenderer = new FieldRenderer(field);
             fieldRenderer.setSprite(configManager.loadBackground());
+            
+            actorPlayer = new TankPlayer(actor);
+            actorPlayer.setMove(configManager.loadTankMovingSound());
+            actorPlayer.setHit(configManager.loadTankHitSound());
         } catch (IOException e)
         {
             e.printStackTrace();

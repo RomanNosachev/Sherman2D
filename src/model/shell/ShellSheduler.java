@@ -7,9 +7,9 @@ public class ShellSheduler {
     {
         builder.buildObject();
         builder.buildBase(configManager.loadShellPolygonPoints());
-        builder.buildStartPosition(configManager.loadTankCannonRotationPoint());
         builder.buildStartAngle(configManager.loadShellStartAngle());
         builder.buildStartSpeed(configManager.loadShellStartSpeed());
+        builder.buildDamage(configManager.loadShellDamage());
         
         return (Shell) builder.getObject();
     }

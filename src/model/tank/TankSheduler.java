@@ -9,6 +9,7 @@ public class TankSheduler {
         builder.buildObject();
         
         builder.buildBase(configManager.loadTankPolygonPoints());
+        builder.buildCannon();
         builder.buildCannonBase(configManager.loadTankCannonPolygonPoints(), configManager.loadShellStartAngle());
         builder.buildCannonStartPosition(configManager.loadTankCannonStartPosition());
         builder.buildCannonRotationPoint(configManager.loadTankCannonRotationPoint());
@@ -20,6 +21,7 @@ public class TankSheduler {
         builder.buildTankSpeed(configManager.loadTankSpeed());
         builder.buildTankMaxAimingAngle(configManager.loadTankMaxAimingAngle());
         builder.buildTankMinAimingAngle(configManager.loadTankMinAimingAngle());
+        builder.buildTankMaxHitPoint(configManager.loadTankMaxHitPoint());
                 
         return (Tank) builder.getObject();
     }

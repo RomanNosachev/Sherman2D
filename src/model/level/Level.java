@@ -51,9 +51,14 @@ public class Level {
         return actor.isMoving();
     }
     
-    public void setIsShooting(boolean fl)
+    public void setShellCollides(boolean collides)
     {
-        actor.setIsShooting(fl);
+        actor.setShellCollides(collides);
+    }
+    
+    public void setShooting(boolean fl)
+    {
+        actor.setShooting(fl);
     }
     
     public void setShellPosition(Vector2f pos)
@@ -546,5 +551,15 @@ public class Level {
     public void setTankDamaged(boolean tankDamaged)
     {
         actor.setDamaged(tankDamaged);
+    }
+    
+    public void setShellCollisionPoint(Vector2f point)
+    {
+        actor.setShellCollisionPoint(point);
+    }
+    
+    public Vector2f getShellPathBack()
+    {
+        return actor.getShellPathBack();
     }
 }

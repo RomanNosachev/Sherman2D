@@ -131,9 +131,9 @@ public class Tank extends DynamicGameObject {
         return isMoving;
     }
     
-    public void setIsShooting(boolean fl)
+    public void setShooting(boolean fl)
     {
-        ammo.setIsFlying(fl);
+        ammo.setFlying(fl);
     }
     
     public void setIsMoving(Move fl)
@@ -163,7 +163,7 @@ public class Tank extends DynamicGameObject {
     
     public void shot()
     {
-        setIsShooting(true);
+        setShooting(true);
         ammo.setRouteVector();
         ammo.clearPath();
         ammo.addPathPoint(ammo.getBase().getCenterX(), ammo.getBase().getCenterY());
@@ -457,5 +457,20 @@ public class Tank extends DynamicGameObject {
     public void setDamaged(boolean isDamaged)
     {
         this.isDamaged = isDamaged;
+    }
+      
+    public void setShellCollides(boolean collides)
+    {
+        ammo.setCollides(collides);
+    }
+    
+    public void setShellCollisionPoint(Vector2f point)
+    {
+        ammo.setCollisionPoint(point);
+    }
+    
+    public Vector2f getShellPathBack()
+    {
+        return ammo.getPathPoint(ammo.getPathSize() - 1);
     }
 }

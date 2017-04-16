@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -16,10 +19,13 @@ public class GameController {
     
     private float            shellCorrectionAngle;
     private float            muzzleAngle;
+    
+    private Timer            explosiveTimer;
         
     public GameController(Level model)
     {
         this.model = model;
+        explosiveTimer = new Timer();
     }
     
     public void init(GameContainer gc) throws SlickException
@@ -72,8 +78,22 @@ public class GameController {
             if (model.shellCollidesWithLevel() || !model.levelContainsShell())
             {
                 model.setTankDamaged(false);
-                model.setIsShooting(false);
+                model.setShooting(false);
                 model.setShellLeftTank(false);
+                model.setShellCollides(true);
+                
+                model.setShellCollisionPoint(model.getShellPathBack());
+
+                explosiveTimer = new Timer();
+                explosiveTimer.purge();
+                explosiveTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run()
+                    {
+                        model.setShellCollides(false);
+                    }
+                }, 300);
+                
 				model.setShellRotation(muzzleAngle);
 
 				model.setShellPosition(model.getTankCannonSimpleCenterX() - model.getShellStartWidth() / 2, 

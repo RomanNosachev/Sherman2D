@@ -16,24 +16,25 @@ import view.dynamicRenderer.DynamicRenderer;
 public class TankRenderer extends DynamicRenderer {
     private Tank      renderingObject;
     
-    private Animation animation;
+    private Animation movingTank;
     private Image     frame;
     private Image     cannon; 
-    private int       sheetCount;
-    private int       selectSheet;
     
+    private int       movingTankSpriteCount;
+    private int       selectTankSprite;
+
     public TankRenderer(Tank rObject)
     {
         renderingObject = rObject;
         boundingRadius = renderingObject.getBoundingCircleRadius();
     }
     
-    public void setSpriteSheet(Image sprite, int count)
+    public void setSpriteSheet(Image sheet, int spriteCount) throws SlickException
     {
-        animation = new Animation(new SpriteSheet(sprite, sprite.getWidth() / count, (int) renderingObject.getHeight()), 1);
-        sheetCount = count;
-        selectSheet = count / 2;
-        frame = animation.getImage(selectSheet);
+        movingTank = new Animation(new SpriteSheet(sheet, sheet.getWidth() / spriteCount, (int) renderingObject.getHeight()), 1);
+        movingTankSpriteCount = spriteCount;
+        selectTankSprite = spriteCount / 2;
+        frame = movingTank.getImage(selectTankSprite);
     }
     
     public void setSprite(Image sprite)
@@ -74,19 +75,19 @@ public class TankRenderer extends DynamicRenderer {
     public void drawAnimation(Graphics g)
     {
         if (renderingObject.isMoving() == Move.BACK)
-            if (++selectSheet >= sheetCount)
-                selectSheet = 0;
+            if (++selectTankSprite >= movingTankSpriteCount)
+                selectTankSprite = 0;
             
         if (renderingObject.isMoving() == Move.FORTH)
-            if (--selectSheet <= 0)
-                selectSheet = sheetCount - 1;
+            if (--selectTankSprite <= 0)
+                selectTankSprite = movingTankSpriteCount - 1;
             
         cannon.setRotation(90 - renderingObject.getShellStartAngle());
         cannon.drawCentered(renderingObject.getCannonCenterX(), 
                             renderingObject.getCannonCenterY());
         
-        frame = animation.getImage(selectSheet);
+        frame = movingTank.getImage(selectTankSprite);
         frame.setRotation(renderingObject.getRotateAngle());
-        frame.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());        
+        frame.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());  
     }
 }

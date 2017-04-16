@@ -169,4 +169,14 @@ public class ConfigManager {
 
         return soundSheet;
     }
+    
+    public Image loadShellExplosionSpriteSheet() throws SlickException
+    {
+        return new Image(config.getProperty("ShellExplosionSpriteSheet"));
+    }
+    
+    public int loadShellExplosionSpriteSheetCount()
+    {
+        return Integer.parseInt(config.getProperty("ShellExplosionSpriteSheetCount"));
+    }
 }

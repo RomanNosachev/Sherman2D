@@ -16,8 +16,10 @@ public class Shell extends DynamicGameObject {
     private float               startAngle;
     
     private Vector2f            routeVector;
+    private Vector2f            collisionPoint;
     
-    private boolean             isFlying = false;
+    private boolean             flying = false;
+    private boolean             collides = false;
     
     private int                 damage;
     
@@ -37,12 +39,12 @@ public class Shell extends DynamicGameObject {
     
     public boolean isFlying()
     {
-        return isFlying;
+        return flying;
     }
     
-    public void setIsFlying(boolean fl)
+    public void setFlying(boolean fl)
     {
-        isFlying = fl;
+        flying = fl;
     }
     
     public void setStartSpeed(float speed)
@@ -134,5 +136,25 @@ public class Shell extends DynamicGameObject {
     public void setDamage(int damage)
     {
         this.damage = damage;
+    }
+
+    public boolean isCollides()
+    {
+        return collides;
+    }
+
+    public void setCollides(boolean collides)
+    {
+        this.collides = collides;
+    }
+
+    public Vector2f getCollisionPoint()
+    {
+        return collisionPoint;
+    }
+
+    public void setCollisionPoint(Vector2f collisionPoint)
+    {
+        this.collisionPoint = collisionPoint;
     }
 }

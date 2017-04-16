@@ -1,20 +1,23 @@
 package view.shell;
 
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Line;
 
 import model.shell.Shell;
 import view.dynamicRenderer.DynamicRenderer;
 
 public class ShellRenderer extends DynamicRenderer {
-    private Shell renderingObject;
+    private Shell       renderingObject;
     
-    private Image sprite;
+    private Image       shellSprite;
+    private Animation   explosion;
     
     public ShellRenderer(Shell rObject)
     {
@@ -22,9 +25,15 @@ public class ShellRenderer extends DynamicRenderer {
         boundingRadius = rObject.getBoundingCircleRadius();
     }
     
+    public void setExplosionSpriteSheet(Image sheet, int spriteCount)
+    {
+        explosion = new Animation(new SpriteSheet(sheet, sheet.getWidth() / spriteCount, sheet.getHeight()), 50);
+        explosion.setCurrentFrame(0);
+    }
+    
     public void setSprite(Image sprite)
     {
-        this.sprite = sprite;
+        shellSprite = sprite;
     }
     
     @Override
@@ -44,12 +53,21 @@ public class ShellRenderer extends DynamicRenderer {
             drawBoundingSphere(g, renderingObject);
             drawSprite(g);
         }
+        
+        if (renderingObject.isCollides())
+            drawExplosionAnimation();
+    }
+    
+    public void drawExplosionAnimation()
+    {
+        explosion.draw(renderingObject.getCollisionPoint().x - explosion.getWidth() / 2,
+                renderingObject.getCollisionPoint().y - explosion.getHeight());
     }
     
     public void drawSprite(Graphics g)
     {
-        sprite.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
-        sprite.setRotation(renderingObject.getRotateAngle());
+        shellSprite.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
+        shellSprite.setRotation(renderingObject.getRotateAngle());
     }
     
     public void drawShotParameters(Graphics g)

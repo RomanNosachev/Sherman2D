@@ -2,6 +2,7 @@ package game;
 
 import java.io.IOException;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -84,6 +85,8 @@ public class Game extends BasicGame {
             shellRenderer = new ShellRenderer(shell);
             shellRenderer.setSprite(configManager.loadShellSprite());
             shellRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
+            shellRenderer.setExplosionSpriteSheet(configManager.loadShellExplosionSpriteSheet(), 
+                    configManager.loadShellExplosionSpriteSheetCount());
             
             fieldRenderer = new FieldRenderer(field);
             fieldRenderer.setSprite(configManager.loadBackground());
@@ -91,7 +94,8 @@ public class Game extends BasicGame {
             actorPlayer = new TankPlayer(actor);
             actorPlayer.setMove(configManager.loadTankMovingSound());
             actorPlayer.setHit(configManager.loadTankHitSound());
-        } catch (IOException e)
+        } 
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -103,15 +107,26 @@ public class Game extends BasicGame {
         controller.update(gc, delta);
         
         if (controller.isGameOver())
+        {
             gc.exit();
+        }
     };
     
     public static void main(String args[]) throws SlickException
     {
-        AppGameContainer app = new AppGameContainer(new Game("Sherman2D"));
-        app.setDisplayMode(800, 600, false);
-        app.setAlwaysRender(true);
-        app.setTargetFrameRate(100);
-        app.start();
+        try
+        {
+            AppGameContainer app = new AppGameContainer(new Game("Sherman2D"));
+            app.setDisplayMode(800, 600, false);
+            app.setAlwaysRender(true);
+            app.setTargetFrameRate(100);
+                
+            app.start();
+        } 
+        catch (Exception e)
+        {
+            Sys.alert(e.getClass().getName() + ": ", e.getMessage());
+        }
+        
     }
 }

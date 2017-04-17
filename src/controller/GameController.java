@@ -4,7 +4,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -28,22 +27,15 @@ public class GameController {
         explosiveTimer = new Timer();
     }
     
-    public void init(GameContainer gc) throws SlickException
-    {
-        
-    }
-    
-    public void update(GameContainer gc, int delta) throws SlickException
-    {                
+    public void mainLoop(GameContainer gc, int delta) throws SlickException
+    {                        
         if (model.getTankHitPoint() <= 0)
         {
             setGameOver(true);
         }
         
-        model.setIsMoving(Move.STOP);
+        //model.setIsMoving(Move.STOP);
         
-        keyController(gc, delta);
-
         if (model.isShooting())
         {
 			Vector2f oldVector = new Vector2f(model.getShellCenterX(), model.getShellCenterY());
@@ -85,14 +77,13 @@ public class GameController {
                 model.setShellCollisionPoint(model.getShellPathBack());
 
                 explosiveTimer = new Timer();
-                explosiveTimer.purge();
                 explosiveTimer.schedule(new TimerTask() {
                     @Override
                     public void run()
                     {
                         model.setShellCollides(false);
                     }
-                }, 300);
+                }, 180);
                 
 				model.setShellRotation(muzzleAngle);
 
@@ -103,203 +94,206 @@ public class GameController {
             }
         }       
     }
-    
-    private void keyController(GameContainer gc, int delta)
+
+    public void shot()
     {
-        if (gc.getInput().isKeyPressed(Input.KEY_SPACE))
+        if (!model.isShooting())
         {
-            if (!model.isShooting())
-            {
-            	muzzleAngle = model.getShellRotateAngle();
-                model.shot();
-                shellCorrectionAngle = 0;
-            }
+            muzzleAngle = model.getShellRotateAngle();
+            model.shot();
+            shellCorrectionAngle = 0;
         }
+    }
+    
+    public void rotateLeft(int delta)
+    {
+        float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
         
-        if (gc.getInput().isKeyDown(Input.KEY_RIGHT))
-        {
-            float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            
-            model.tankRotate(rotateAngle);
-            model.tankCannonRotate(rotateAngle, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
-            model.setShotStartAngle(model.getShotStartAngle() - rotateAngle);
-            
-            if (model.isShooting())
-                shellCorrectionAngle += rotateAngle;
-            else
-                model.shellRotate(rotateAngle, model.getTankSimpleCenterX(),
-                        model.getTankSimpleCenterY());
-        }
+        model.tankRotate(-rotateAngle);
+        model.tankCannonRotate(-rotateAngle, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
+        model.setShotStartAngle(model.getShotStartAngle() + rotateAngle);
         
-        if (gc.getInput().isKeyDown(Input.KEY_LEFT))
+        if (model.isShooting())
+            shellCorrectionAngle -= rotateAngle;
+        else
+            model.shellRotate(-rotateAngle, model.getTankSimpleCenterX(),
+                    model.getTankSimpleCenterY());
+    }
+    
+    public void rotateRight(int delta)
+    {
+        float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
+        
+        model.tankRotate(rotateAngle);
+        model.tankCannonRotate(rotateAngle, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
+        model.setShotStartAngle(model.getShotStartAngle() - rotateAngle);
+        
+        if (model.isShooting())
+            shellCorrectionAngle += rotateAngle;
+        else
+            model.shellRotate(rotateAngle, model.getTankSimpleCenterX(),
+                    model.getTankSimpleCenterY());
+    }
+    
+    public void upGun(int delta)
+    {
+        float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
+        
+        if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
+                model.getMaxAimingAngle()) < 0)
         {
-            float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            
-            model.tankRotate(-rotateAngle);
-            model.tankCannonRotate(-rotateAngle, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
             model.setShotStartAngle(model.getShotStartAngle() + rotateAngle);
+            
+            model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
             
             if (model.isShooting())
                 shellCorrectionAngle -= rotateAngle;
             else
-                model.shellRotate(-rotateAngle, model.getTankSimpleCenterX(),
-                        model.getTankSimpleCenterY());
-        }
-        
-        if (gc.getInput().isKeyDown(Input.KEY_UP))
-        {
-            float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            
-            if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
-                    model.getMinAimingAngle()) > 0)
-            {
-                model.setShotStartAngle(model.getShotStartAngle() - rotateAngle);
-                
-                model.tankCannonRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-                
-                if (model.isShooting())
-                    shellCorrectionAngle += rotateAngle;
-                else
-                    model.shellRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
-            } else
-            {
-                model.setShotStartAngle(model.getMinAimingAngle() - model.getTankRotateAngle());
-            }
-            
-        } else if (gc.getInput().isKeyDown(Input.KEY_DOWN))
-        {
-            float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            
-            if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
-                    model.getMaxAimingAngle()) < 0)
-            {
-                model.setShotStartAngle(model.getShotStartAngle() + rotateAngle);
-                
-                model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-                
-                if (model.isShooting())
-                    shellCorrectionAngle -= rotateAngle;
-                else
-                    model.shellRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
+                model.shellRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
 
-            } else
-            {
-                model.setShotStartAngle(model.getMaxAimingAngle() - model.getTankRotateAngle());
-            }
-        }
-        
-        if (gc.getInput().isKeyDown(Input.KEY_ADD))
+        } else
         {
-            if (Float.compare(model.getShortStartSpeed(), 5000) < 0)
-            {
-                model.setShotStartSpeed(model.getShortStartSpeed() + 200F * delta / PhysicConstants.CLOCK_PER_SEC);
-            } else
-            {
-                model.setShotStartSpeed(5000);
-            }
+            model.setShotStartAngle(model.getMaxAimingAngle() - model.getTankRotateAngle());
         }
+    }
+    
+    public void downGun(int delta)
+    {
+        float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
         
-        if (gc.getInput().isKeyDown(Input.KEY_SUBTRACT))
+        if (Float.compare(model.getShotStartAngle() + model.getTankRotateAngle(),
+                model.getMinAimingAngle()) > 0)
         {
-            if (Float.compare(model.getShortStartSpeed(), 0) > 0)
-            {
-                model.setShotStartSpeed(model.getShortStartSpeed() - 200F * delta / PhysicConstants.CLOCK_PER_SEC);
-            } else
-            {
-                model.setShotStartSpeed(0);
-            }
+            model.setShotStartAngle(model.getShotStartAngle() - rotateAngle);
+            
+            model.tankCannonRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
+            
+            if (model.isShooting())
+                shellCorrectionAngle += rotateAngle;
+            else
+                model.shellRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
+        } else
+        {
+            model.setShotStartAngle(model.getMinAimingAngle() - model.getTankRotateAngle());
         }
-        
-        if (gc.getInput().isKeyDown(Input.KEY_A))
+    }
+    
+    public void addShotPower(int delta)
+    {
+        if (Float.compare(model.getShortStartSpeed(), 5000) < 0)
         {
-            model.setIsMoving(Move.BACK);
-            
-            float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
-            
-            model.setPositionX(model.getTankX() - movement);
-            model.setTankCannonX(model.getTankCannonX() - movement);
-            model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
-            
-            if (!model.isShooting())
-                model.setShellX(model.getShellBase().getX() - movement);
-            
-            if (model.tankCollidesWithLevel())
-            {
-                model.setPositionX(model.getTankBase().getX() + movement);
-                model.setTankCannonX(model.getTankCannonX() + movement);
-                model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() + movement);
-                
-                if (!model.isShooting())
-                    model.setShellX(model.getShellBase().getX() + movement);
-            }
+            model.setShotStartSpeed(model.getShortStartSpeed() + 200F * delta / PhysicConstants.CLOCK_PER_SEC);
+        } else
+        {
+            model.setShotStartSpeed(5000);
         }
-        
-        if (gc.getInput().isKeyDown(Input.KEY_D))
+    }
+    
+    public void subShotPower(int delta)
+    {
+        if (Float.compare(model.getShortStartSpeed(), 0) > 0)
         {
-            model.setIsMoving(Move.FORTH);
-            
-            float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
-
-            model.setPositionX(model.getTankX() + movement);
+            model.setShotStartSpeed(model.getShortStartSpeed() - 200F * delta / PhysicConstants.CLOCK_PER_SEC);
+        } else
+        {
+            model.setShotStartSpeed(0);
+        }
+    }
+    
+    public void moveLeft(int delta)
+    {
+        model.setIsMoving(Move.BACK);
+        
+        float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
+        
+        model.setPositionX(model.getTankX() - movement);
+        model.setTankCannonX(model.getTankCannonX() - movement);
+        model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
+        
+        if (!model.isShooting())
+            model.setShellX(model.getShellBase().getX() - movement);
+        
+        if (model.tankCollidesWithLevel())
+        {
+            model.setPositionX(model.getTankBase().getX() + movement);
             model.setTankCannonX(model.getTankCannonX() + movement);
             model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() + movement);
             
             if (!model.isShooting())
                 model.setShellX(model.getShellBase().getX() + movement);
-            
-            if (model.tankCollidesWithLevel())
-            {                
-                model.setPositionX(model.getTankBase().getX() - movement);
-                model.setTankCannonX(model.getTankCannonX() - movement);
-                model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
-
-                if (!model.isShooting())
-                    model.setShellX(model.getShellBase().getX() - movement);
-            }
         }
+    }
+    
+    public void moveRight(int delta)
+    {
+        model.setIsMoving(Move.FORTH);
         
-        if (gc.getInput().isKeyDown(Input.KEY_S))
+        float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
+
+        model.setPositionX(model.getTankX() + movement);
+        model.setTankCannonX(model.getTankCannonX() + movement);
+        model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() + movement);
+        
+        if (!model.isShooting())
+            model.setShellX(model.getShellBase().getX() + movement);
+        
+        if (model.tankCollidesWithLevel())
+        {                
+            model.setPositionX(model.getTankBase().getX() - movement);
+            model.setTankCannonX(model.getTankCannonX() - movement);
+            model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
+
+            if (!model.isShooting())
+                model.setShellX(model.getShellBase().getX() - movement);
+        }
+    }
+    
+    public void stop()
+    {
+        model.setIsMoving(Move.STOP);
+    }
+    
+    public void moveUp(int delta)
+    {
+        float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
+        
+        model.setPositionY(model.getTankY() - movement);
+        model.setTankCannonY(model.getTankCannonY() - movement);
+        model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() - movement);
+                    
+        if (!model.isShooting())
+            model.setShellY(model.getShellBase().getY() - movement);
+        
+        if (model.tankCollidesWithLevel())
         {
-            float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
-            
             model.setPositionY(model.getTankY() + movement);
             model.setTankCannonY(model.getTankCannonY() + movement);
             model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() + movement);
             
             if (!model.isShooting())
                 model.setShellY(model.getShellBase().getY() + movement);
-            
-            if (model.tankCollidesWithLevel())
-            {
-                model.setPositionY(model.getTankBase().getY() - movement);
-                model.setTankCannonY(model.getTankCannonY() - movement);
-                model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() - movement);
-                
-                if (!model.isShooting())
-                    model.setShellY(model.getShellBase().getY() - movement);
-            }
         }
+    }
+    
+    public void moveDown(int delta)
+    {
+        float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
         
-        if (gc.getInput().isKeyDown(Input.KEY_W))
+        model.setPositionY(model.getTankY() + movement);
+        model.setTankCannonY(model.getTankCannonY() + movement);
+        model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() + movement);
+        
+        if (!model.isShooting())
+            model.setShellY(model.getShellBase().getY() + movement);
+        
+        if (model.tankCollidesWithLevel())
         {
-            float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
-            
-            model.setPositionY(model.getTankY() - movement);
+            model.setPositionY(model.getTankBase().getY() - movement);
             model.setTankCannonY(model.getTankCannonY() - movement);
             model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() - movement);
-                        
+            
             if (!model.isShooting())
                 model.setShellY(model.getShellBase().getY() - movement);
-            
-            if (model.tankCollidesWithLevel())
-            {
-                model.setPositionY(model.getTankY() + movement);
-                model.setTankCannonY(model.getTankCannonY() + movement);
-                model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() + movement);
-                
-                if (!model.isShooting())
-                    model.setShellY(model.getShellBase().getY() + movement);
-            }
         }
     }
     

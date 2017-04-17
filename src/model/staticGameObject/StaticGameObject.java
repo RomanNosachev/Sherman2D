@@ -5,6 +5,8 @@ import org.newdawn.slick.geom.Shape;
 import model.gameObject.GameObject;
 
 public class StaticGameObject implements GameObject {
+    private static final long serialVersionUID = -7882741326275027819L;
+    
     protected Shape base;
     
     @Override

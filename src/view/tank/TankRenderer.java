@@ -56,9 +56,9 @@ public class TankRenderer extends DynamicRenderer {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         drawHitPoint(g);
-        drawBase(g, renderingObject.getBase());
-        drawBase(g, renderingObject.getCannonBase());
-        drawBoundingSphere(g, renderingObject);
+        //drawBase(g, renderingObject.getBase());
+        //drawBase(g, renderingObject.getCannonBase());
+        //drawBoundingSphere(g, renderingObject);
         drawAnimation(g);
     }
     
@@ -73,7 +73,7 @@ public class TankRenderer extends DynamicRenderer {
     }
     
     public void drawAnimation(Graphics g)
-    {
+    {        
         if (renderingObject.isMoving() == Move.BACK)
             if (++selectTankSprite >= movingTankSpriteCount)
                 selectTankSprite = 0;

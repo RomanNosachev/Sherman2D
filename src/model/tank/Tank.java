@@ -10,6 +10,8 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
 public class Tank extends DynamicGameObject {
+    private static final long serialVersionUID = -3579494870824274339L;
+    
     private Shell       ammo;
     private Cannon      gun;      
 

@@ -8,7 +8,7 @@ import model.tank.Tank;
 
 import org.newdawn.slick.geom.Shape;
 
-public class Level {
+public class Level {    
     private Tank        actor;
     private Field       field;
     

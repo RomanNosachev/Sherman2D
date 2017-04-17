@@ -10,6 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import controller.GameController;
+import controller.KeyController;
 import model.field.Field;
 import model.field.FieldBuilder;
 import model.field.FieldSheduler;
@@ -33,6 +34,7 @@ public class Game extends BasicGame {
     private Tank                actor;
     private Shell               shell;
     
+    private KeyController       input;
     private GameController      controller;
     
     private FieldRenderer       fieldRenderer;
@@ -60,7 +62,7 @@ public class Game extends BasicGame {
     public void init(GameContainer gc) throws SlickException
     {
         try
-        {
+        {        
             ConfigManager configManager = new ConfigManager("config.ini");
             
             FieldSheduler fieldSheduler = new FieldSheduler();
@@ -74,8 +76,9 @@ public class Game extends BasicGame {
             
             LevelSheduler levelSheduler = new LevelSheduler();
             level = levelSheduler.createLevel(new LevelBuilder(), field, actor);
-            
+
             controller = new GameController(level);
+            input = new KeyController(controller);
             
             actorRenderer = new TankRenderer(actor);
             actorRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
@@ -98,13 +101,14 @@ public class Game extends BasicGame {
         catch (IOException e)
         {
             e.printStackTrace();
-        }
+        } 
     }
     
     @Override
     public void update(GameContainer gc, int delta) throws SlickException
     {
-        controller.update(gc, delta);
+        input.inputHandle(gc, delta);
+        controller.mainLoop(gc, delta);
         
         if (controller.isGameOver())
         {

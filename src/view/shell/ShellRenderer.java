@@ -27,7 +27,7 @@ public class ShellRenderer extends DynamicRenderer {
     
     public void setExplosionSpriteSheet(Image sheet, int spriteCount)
     {
-        explosion = new Animation(new SpriteSheet(sheet, sheet.getWidth() / spriteCount, sheet.getHeight()), 50);
+        explosion = new Animation(new SpriteSheet(sheet, sheet.getWidth() / spriteCount, sheet.getHeight()), 30);
         explosion.setCurrentFrame(0);
     }
     
@@ -49,8 +49,8 @@ public class ShellRenderer extends DynamicRenderer {
         
         if (renderingObject.isFlying())
         {
-            drawBase(g, renderingObject.getBase());
-            drawBoundingSphere(g, renderingObject);
+            //drawBase(g, renderingObject.getBase());
+            //drawBoundingSphere(g, renderingObject);
             drawSprite(g);
         }
         
@@ -66,8 +66,8 @@ public class ShellRenderer extends DynamicRenderer {
     
     public void drawSprite(Graphics g)
     {
-        shellSprite.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
         shellSprite.setRotation(renderingObject.getRotateAngle());
+        shellSprite.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
     }
     
     public void drawShotParameters(Graphics g)
@@ -79,7 +79,7 @@ public class ShellRenderer extends DynamicRenderer {
     
     public void drawPath(Graphics g)
     {
-        g.setColor(Color.red);
+        g.setColor(new Color(170, 170, 170));
         
         for (int i = 0; i < renderingObject.getPathSize() - 1; i++)
         {

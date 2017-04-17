@@ -1,14 +1,4 @@
-/game/
-/controller/
-/model/
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-/controller/
-/game/
->>>>>>> refs/remotes/origin/master
-=======
-/controller/
-/game/
->>>>>>> refs/remotes/origin/master
 /view/
+/controller/
+/game/
+/model/

@@ -9,6 +9,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import model.gameObject.GameObject;
 
+@SuppressWarnings("serial")
 public abstract class DynamicGameObject implements GameObject {
     protected Shape    base;
     protected Shape    simpleBase;

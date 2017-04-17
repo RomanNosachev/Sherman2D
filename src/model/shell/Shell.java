@@ -10,6 +10,8 @@ import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 
 public class Shell extends DynamicGameObject {
+    private static final long serialVersionUID = 5640440536160496891L;
+
     private ArrayList<Vector2f> path;
     
     private float               startSpeed;

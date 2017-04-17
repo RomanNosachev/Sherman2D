@@ -7,6 +7,7 @@ import org.newdawn.slick.geom.Shape;
 import model.staticGameObject.StaticGameObject;
 
 public class Field extends StaticGameObject {
+    private static final long serialVersionUID = 6584930782547834554L;
     
     private float floorHeight;
     

@@ -1,8 +1,10 @@
 package model.gameObject;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.geom.Shape;
 
-public interface GameObject {
+public interface GameObject extends Serializable {
     Shape getBase();
     
     boolean collidesWith(Shape s) throws IllegalArgumentException;

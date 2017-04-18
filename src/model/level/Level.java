@@ -2,6 +2,7 @@ package model.level;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import model.camera.Camera;
 import model.field.Field;
 import model.tank.Move;
 import model.tank.Tank;
@@ -11,6 +12,7 @@ import org.newdawn.slick.geom.Shape;
 public class Level {    
     private Tank        actor;
     private Field       field;
+    private Camera      camera;
     
     private boolean     isShellLeftTank = false;
     
@@ -18,12 +20,14 @@ public class Level {
     {
         actor = new Tank();
         field = new Field();
+        camera = new Camera(new Vector2f(0, 0));
     }
     
     public Level(Tank actor, Field field)
     {
         this.actor = actor;
         this.field = field;
+        camera = new Camera(new Vector2f(actor.getStartPosition()));
     }
     
     public void setTank(Tank tank)
@@ -84,21 +88,27 @@ public class Level {
     public void setPosition(Vector2f pos)
     {
         actor.setPosition(pos);
+        camera.setX(pos.x - actor.getStartX());
+        camera.setY(pos.y - actor.getStartY());
     }
     
     public void setPosition(float x, float y)
     {
         actor.setPosition(x, y);
+        camera.setX(x - actor.getStartX());
+        camera.setY(y - actor.getStartY());
     }
     
     public void setPositionX(float x)
     {
         actor.setX(x);
+        camera.setX(x - actor.getStartX());
     }
     
     public void setPositionY(float y)
     {
         actor.setY(y);
+        camera.setY(y - actor.getStartY());
     }
     
     public float getMinAimingAngle()
@@ -561,5 +571,25 @@ public class Level {
     public Vector2f getShellPathBack()
     {
         return actor.getShellPathBack();
+    }
+    
+    public void setCamera(Camera cam)
+    {
+        camera = cam;
+    }
+    
+    public Camera getCamera()
+    {
+        return camera;
+    }
+    
+    public float getCameraX()
+    {
+        return camera.getX();
+    }
+    
+    public float getCameraY()
+    {
+        return camera.getY();
     }
 }

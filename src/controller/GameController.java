@@ -33,9 +33,7 @@ public class GameController {
         {
             setGameOver(true);
         }
-        
-        //model.setIsMoving(Move.STOP);
-        
+                
         if (model.isShooting())
         {
 			Vector2f oldVector = new Vector2f(model.getShellCenterX(), model.getShellCenterY());

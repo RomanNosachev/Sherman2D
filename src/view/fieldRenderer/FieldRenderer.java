@@ -1,4 +1,4 @@
-package view.field;
+package view.fieldRenderer;
 
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
@@ -7,35 +7,41 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import model.camera.Camera;
 import model.field.Field;
-import view.renderer.Renderer;
+import view.staticRenderer.StaticRenderer;
 
-public class FieldRenderer implements Renderer {
-    
+public class FieldRenderer extends StaticRenderer {
     private Field renderingObject;
     
     private Image       background;
+    
+    public FieldRenderer()
+    {
+        renderingObject = new Field();
+    }
     
     public FieldRenderer(Field rObject)
     {
         renderingObject = rObject;
     }
 
+    public void setCamera(Camera cam)
+    {
+        camera = cam;
+    }
+    
     public void setSprite(Image sprite)
     {
         background = sprite;
     }
     
     @Override
-    public void init(GameContainer gc) throws SlickException
-    {
-    }
-    
-    @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
+        g.translate(-camera.getX(), -camera.getY());
         background.draw(0, 0);
-        // drawDebugLines(g, 50);
+        //drawDebugLines(g, 50);
         g.setColor(Color.green);
         g.draw(renderingObject.getBase());
     }

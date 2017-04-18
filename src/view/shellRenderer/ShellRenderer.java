@@ -1,4 +1,4 @@
-package view.shell;
+package view.shellRenderer;
 
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Animation;
@@ -19,6 +19,11 @@ public class ShellRenderer extends DynamicRenderer {
     private Image       shellSprite;
     private Animation   explosion;
     
+    public ShellRenderer()
+    {
+        renderingObject = new Shell();
+    }
+    
     public ShellRenderer(Shell rObject)
     {
         renderingObject = rObject;
@@ -34,11 +39,6 @@ public class ShellRenderer extends DynamicRenderer {
     public void setSprite(Image sprite)
     {
         shellSprite = sprite;
-    }
-    
-    @Override
-    public void init(GameContainer gc) throws SlickException
-    {
     }
     
     @Override
@@ -59,7 +59,7 @@ public class ShellRenderer extends DynamicRenderer {
     }
     
     public void drawExplosionAnimation()
-    {
+    {        
         explosion.draw(renderingObject.getCollisionPoint().x - explosion.getWidth() / 2,
                 renderingObject.getCollisionPoint().y - explosion.getHeight());
     }
@@ -73,8 +73,10 @@ public class ShellRenderer extends DynamicRenderer {
     public void drawShotParameters(Graphics g)
     {
         g.setColor(Color.white);
-        g.drawString("Speed: " + Float.toString(renderingObject.getStartSpeed()), 20, Display.getHeight() - infoStringHeight);    
-        g.drawString("Angle: " + Float.toString(renderingObject.getStartAngle() % 180), 190, Display.getHeight() - infoStringHeight);
+        g.drawString("Speed: " + Float.toString(renderingObject.getStartSpeed()), 
+                20 + camera.getX(), Display.getHeight() - infoStringHeight + camera.getY());    
+        g.drawString("Angle: " + Float.toString(renderingObject.getStartAngle() % 180), 
+                190 + camera.getX(), Display.getHeight() - infoStringHeight + camera.getY());
     }
     
     public void drawPath(Graphics g)

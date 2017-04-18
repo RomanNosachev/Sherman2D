@@ -23,10 +23,11 @@ import model.shell.ShellSheduler;
 import model.tank.Tank;
 import model.tank.TankBuilder;
 import model.tank.TankSheduler;
-import view.tank.TankPlayer;
-import view.tank.TankRenderer;
-import view.field.FieldRenderer;
-import view.shell.ShellRenderer;
+import view.fieldRenderer.FieldRenderer;
+import view.levelRenderer.LevelRenderer;
+import view.shellRenderer.ShellRenderer;
+import view.tankRenderer.TankPlayer;
+import view.tankRenderer.TankRenderer;
 
 public class Game extends BasicGame {
     private Level               level;
@@ -37,6 +38,7 @@ public class Game extends BasicGame {
     private KeyController       input;
     private GameController      controller;
     
+    private LevelRenderer       levelRenderer;
     private FieldRenderer       fieldRenderer;
     private TankRenderer        actorRenderer;
     private ShellRenderer       shellRenderer;
@@ -51,9 +53,7 @@ public class Game extends BasicGame {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
-        fieldRenderer.render(gc, g);
-        shellRenderer.render(gc, g);
-        actorRenderer.render(gc, g);
+        levelRenderer.render(gc, g);
         
         actorPlayer.play(gc);
     }
@@ -97,6 +97,12 @@ public class Game extends BasicGame {
             actorPlayer = new TankPlayer(actor);
             actorPlayer.setMove(configManager.loadTankMovingSound());
             actorPlayer.setHit(configManager.loadTankHitSound());
+            
+            levelRenderer = new LevelRenderer(level);
+            levelRenderer.setFieldRenderer(fieldRenderer);
+            levelRenderer.setTankRenderer(actorRenderer);
+            levelRenderer.setShellRenderer(shellRenderer);
+            levelRenderer.setCamera(level.getCamera());
         } 
         catch (IOException e)
         {

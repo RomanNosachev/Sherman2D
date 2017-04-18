@@ -6,15 +6,16 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Shape;
 
+import model.camera.Camera;
 import model.dynamicGameObject.DynamicGameObject;
 import view.renderer.Renderer;
 
 public abstract class DynamicRenderer implements Renderer {
-    protected float boundingRadius;
-    protected float infoStringHeight;
+    protected Camera    camera;
     
-    public abstract void init(GameContainer gc) throws SlickException;
-    
+    protected float     boundingRadius;
+    protected float     infoStringHeight;
+        
     public abstract void render(GameContainer gc, Graphics g) throws SlickException;
     
     public void setInfoStringHeight(float height)
@@ -25,6 +26,11 @@ public abstract class DynamicRenderer implements Renderer {
     public float getInfoStringHeight()
     {
         return infoStringHeight;
+    }
+    
+    public void setCamera(Camera cam)
+    {
+        camera = cam;
     }
     
     public void drawBoundingSphere(Graphics g, DynamicGameObject object)

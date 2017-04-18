@@ -1,4 +1,4 @@
-package view.tank;
+package view.tankRenderer;
 
 import java.util.ArrayList;
 import java.util.Random;

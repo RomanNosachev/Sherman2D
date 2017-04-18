@@ -1,4 +1,4 @@
-package view.tank;
+package view.tankRenderer;
 
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Animation;
@@ -23,6 +23,11 @@ public class TankRenderer extends DynamicRenderer {
     private int       movingTankSpriteCount;
     private int       selectTankSprite;
 
+    public TankRenderer()
+    {
+        renderingObject = new Tank();
+    }
+    
     public TankRenderer(Tank rObject)
     {
         renderingObject = rObject;
@@ -48,11 +53,6 @@ public class TankRenderer extends DynamicRenderer {
     }
     
     @Override
-    public void init(GameContainer gc) throws SlickException
-    {
-    }
-    
-    @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         drawHitPoint(g);
@@ -69,7 +69,8 @@ public class TankRenderer extends DynamicRenderer {
         else
             g.setColor(Color.white);
         
-        g.drawString("HP: " + Integer.toString(renderingObject.getHitPoint()), Display.getWidth() - 100, Display.getHeight() - infoStringHeight);
+        g.drawString("HP: " + Integer.toString(renderingObject.getHitPoint()), 
+                Display.getWidth() - 100 + camera.getX(), Display.getHeight() - infoStringHeight + camera.getY());
     }
     
     public void drawAnimation(Graphics g)

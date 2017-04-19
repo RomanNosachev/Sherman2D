@@ -1,8 +1,6 @@
 package view.tankRenderer;
 
-import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Animation;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -55,24 +53,12 @@ public class TankRenderer extends DynamicRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
-        drawHitPoint(g);
         //drawBase(g, renderingObject.getBase());
         //drawBase(g, renderingObject.getCannonBase());
         //drawBoundingSphere(g, renderingObject);
         drawAnimation(g);
     }
-    
-    public void drawHitPoint(Graphics g)
-    {
-        if (renderingObject.isDamaged())
-            g.setColor(Color.red);
-        else
-            g.setColor(Color.white);
-        
-        g.drawString("HP: " + Integer.toString(renderingObject.getHitPoint()), 
-                Display.getWidth() - 100 + camera.getX(), Display.getHeight() - infoStringHeight + camera.getY());
-    }
-    
+
     public void drawAnimation(Graphics g)
     {        
         if (renderingObject.isMoving() == Move.BACK)

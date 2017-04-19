@@ -38,15 +38,15 @@ public class GameController {
         {
 			Vector2f oldVector = new Vector2f(model.getShellCenterX(), model.getShellCenterY());
 
-            model.setShellPosition(model.getShellBase().getX() + model.getShotRouteVectorX() * delta / PhysicConstants.CLOCK_PER_SEC,
-                    model.getShellBase().getY() - model.getShotRouteVectorY() * delta / PhysicConstants.CLOCK_PER_SEC);
+            model.setShellPosition(model.getShellBase().getX() + model.getShotDirectionX() * delta / PhysicConstants.CLOCK_PER_SEC,
+                    model.getShellBase().getY() - model.getShotDirectionY() * delta / PhysicConstants.CLOCK_PER_SEC);
 
 			Vector2f newVector = new Vector2f(model.getShellCenterX(), model.getShellCenterY());
 			float rotateAngle = (float) new Vector2f(newVector.getX() - oldVector.getX(), newVector.getY() - oldVector.getY()).getTheta() + 90;
 
 			model.setShellRotation(rotateAngle);
 
-            model.setShotRouteVectorY(model.getShotRouteVectorY() - PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC);
+            model.setShotDirectionY(model.getShotDirectionY() - PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC);
 
             model.addShotPathPoint(model.getShellBase().getCenterX(), model.getShellBase().getCenterY());
 
@@ -178,9 +178,9 @@ public class GameController {
     
     public void addShotPower(int delta)
     {
-        if (Float.compare(model.getShortStartSpeed(), 5000) < 0)
+        if (Float.compare(model.getShotStartSpeed(), 5000) < 0)
         {
-            model.setShotStartSpeed(model.getShortStartSpeed() + 200F * delta / PhysicConstants.CLOCK_PER_SEC);
+            model.setShotStartSpeed(model.getShotStartSpeed() + 200F * delta / PhysicConstants.CLOCK_PER_SEC);
         } else
         {
             model.setShotStartSpeed(5000);
@@ -189,9 +189,9 @@ public class GameController {
     
     public void subShotPower(int delta)
     {
-        if (Float.compare(model.getShortStartSpeed(), 0) > 0)
+        if (Float.compare(model.getShotStartSpeed(), 0) > 0)
         {
-            model.setShotStartSpeed(model.getShortStartSpeed() - 200F * delta / PhysicConstants.CLOCK_PER_SEC);
+            model.setShotStartSpeed(model.getShotStartSpeed() - 200F * delta / PhysicConstants.CLOCK_PER_SEC);
         } else
         {
             model.setShotStartSpeed(0);

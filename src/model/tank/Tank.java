@@ -166,7 +166,7 @@ public class Tank extends DynamicGameObject {
     public void shot()
     {
         setShooting(true);
-        ammo.setRouteVector();
+        ammo.setDirection();
         ammo.clearPath();
         ammo.addPathPoint(ammo.getBase().getCenterX(), ammo.getBase().getCenterY());
     }
@@ -181,19 +181,19 @@ public class Tank extends DynamicGameObject {
         ammo.addPathPoint(x, y);
     }
     
-    public void setShotRouteVector(float x, float y)
+    public void setShotDirection(float x, float y)
     {
-        ammo.setRouteVector(x, y);
+        ammo.setDirection(x, y);
     }
     
-    public void setShotRouteVectorX(float x)
+    public void setShotDirectionX(float x)
     {
-        ammo.setRouteVectorX(x);
+        ammo.setDirectionX(x);
     }
     
-    public void setShotRouteVectorY(float y)
+    public void setShotDirectionY(float y)
     {
-        ammo.setRouteVectorY(y);
+        ammo.setDirectionY(y);
     }
     
     public int getShotPathSize()
@@ -206,19 +206,19 @@ public class Tank extends DynamicGameObject {
         return ammo.getPathPoint(index);
     }
     
-    public Vector2f getShotRouteVector()
+    public Vector2f getShotDirection()
     {
-        return ammo.getRouteVector();
+        return ammo.getDirection();
     }
     
-    public float getShotRouteVectorX()
+    public float getShotDirectionX()
     {
-        return ammo.getRouteVectorX();
+        return ammo.getDirectionX();
     }
     
-    public float getShotRouteVectorY()
+    public float getShotDirectionY()
     {
-        return ammo.getRouteVectorY();
+        return ammo.getDirectionY();
     }
     
     public float getShellRotateAngle()
@@ -244,6 +244,16 @@ public class Tank extends DynamicGameObject {
     public float getShellStartWidth()
     {
         return ammo.getStartWidth();
+    }
+    
+    public void setShellStartPosition(Vector2f pos)
+    {
+        ammo.setStartPosition(pos);
+    }
+    
+    public void setShellStartPosition(float x, float y)
+    {
+        ammo.setStartPosition(new Vector2f(x, y));
     }
     
     public float getShellStartHeight()

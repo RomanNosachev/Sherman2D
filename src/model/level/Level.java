@@ -12,7 +12,8 @@ import org.newdawn.slick.geom.Shape;
 public class Level {    
     private Tank        actor;
     private Field       field;
-    private Camera      camera;
+    private Camera      actorCamera;
+    private Camera      shellCamera;
     
     private boolean     isShellLeftTank = false;
     
@@ -20,14 +21,16 @@ public class Level {
     {
         actor = new Tank();
         field = new Field();
-        camera = new Camera(new Vector2f(0, 0));
+        actorCamera = new Camera(new Vector2f(0, 0));
+        shellCamera = new Camera(new Vector2f(0, 0));
     }
     
     public Level(Tank actor, Field field)
     {
         this.actor = actor;
         this.field = field;
-        camera = new Camera(new Vector2f(actor.getStartPosition()));
+        actorCamera = new Camera(new Vector2f(actor.getStartPosition()));
+        shellCamera = new Camera(new Vector2f(actor.getShellStartPosition()));
     }
     
     public void setTank(Tank tank)
@@ -68,47 +71,53 @@ public class Level {
     public void setShellPosition(Vector2f pos)
     {
         actor.setShellPosition(pos);
+        shellCamera.setX(pos.x - actor.getShellStartPositionX());
+        shellCamera.setY(pos.y - actor.getShellStartPositionY());
     }
     
     public void setShellPosition(float x, float y)
     {
         actor.setShellPosition(x, y);
+        shellCamera.setX(x - actor.getShellStartPositionX());
+        shellCamera.setY(y - actor.getShellStartPositionY());
     }
     
     public void setShellX(float x)
     {
         actor.setShellX(x);
+        shellCamera.setX(x - actor.getShellStartPositionX());
     }
     
     public void setShellY(float y)
     {
         actor.setShellY(y);
+        shellCamera.setY(y - actor.getShellStartPositionY());
     }
     
     public void setPosition(Vector2f pos)
     {
         actor.setPosition(pos);
-        camera.setX(pos.x - actor.getStartX());
-        camera.setY(pos.y - actor.getStartY());
+        actorCamera.setX(pos.x - actor.getStartX());
+        actorCamera.setY(pos.y - actor.getStartY());
     }
     
     public void setPosition(float x, float y)
     {
         actor.setPosition(x, y);
-        camera.setX(x - actor.getStartX());
-        camera.setY(y - actor.getStartY());
+        actorCamera.setX(x - actor.getStartX());
+        actorCamera.setY(y - actor.getStartY());
     }
     
     public void setPositionX(float x)
     {
         actor.setX(x);
-        camera.setX(x - actor.getStartX());
+        actorCamera.setX(x - actor.getStartX());
     }
     
     public void setPositionY(float y)
     {
         actor.setY(y);
-        camera.setY(y - actor.getStartY());
+        actorCamera.setY(y - actor.getStartY());
     }
     
     public float getMinAimingAngle()
@@ -126,7 +135,7 @@ public class Level {
         actor.setShotStartSpeed(speed);
     }
     
-    public float getShortStartSpeed()
+    public float getShotStartSpeed()
     {
         return actor.getShotStartSpeed();
     }
@@ -161,34 +170,34 @@ public class Level {
         return actor.getMovePoint();
     }
     
-    public void setShotRouteVector(float x, float y)
+    public void setShotDirection(float x, float y)
     {
-        actor.setShotRouteVector(x, y);
+        actor.setShotDirection(x, y);
     }
     
-    public void setShotRouteVectorX(float x)
+    public void setShotDirectionX(float x)
     {
-        actor.setShotRouteVectorX(x);
+        actor.setShotDirectionX(x);
     }
     
-    public void setShotRouteVectorY(float y)
+    public void setShotDirectionY(float y)
     {
-        actor.setShotRouteVectorY(y);
+        actor.setShotDirectionY(y);
     }
     
-    public Vector2f getShotRouteVector()
+    public Vector2f getShotDirection()
     {
-        return actor.getShotRouteVector();
+        return actor.getShotDirection();
     }
     
-    public float getShotRouteVectorX()
+    public float getShotDirectionX()
     {
-        return actor.getShotRouteVectorX();
+        return actor.getShotDirectionX();
     }
     
-    public float getShotRouteVectorY()
+    public float getShotDirectionY()
     {
-        return actor.getShotRouteVectorY();
+        return actor.getShotDirectionY();
     }
     
     public void addShotPathPoint(Vector2f pos)
@@ -572,24 +581,28 @@ public class Level {
     {
         return actor.getShellPathBack();
     }
-    
-    public void setCamera(Camera cam)
-    {
-        camera = cam;
-    }
-    
+ 
     public Camera getCamera()
     {
-        return camera;
+        if (actor.isShooting() && actor.isMoving() == Move.STOP)
+            return shellCamera;
+        
+        return actorCamera;
     }
     
     public float getCameraX()
     {
-        return camera.getX();
+        if (actor.isShooting() && actor.isMoving() == Move.STOP)
+            return shellCamera.getX();
+        
+        return actorCamera.getX();
     }
     
     public float getCameraY()
     {
-        return camera.getY();
+        if (actor.isShooting() && actor.isMoving() == Move.STOP)
+            return shellCamera.getY();
+        
+        return actorCamera.getY();
     }
 }

@@ -1,6 +1,5 @@
 package view.shellRenderer;
 
-import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -44,7 +43,6 @@ public class ShellRenderer extends DynamicRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
-        drawShotParameters(g);
         drawPath(g);
         
         if (renderingObject.isFlying())
@@ -69,16 +67,7 @@ public class ShellRenderer extends DynamicRenderer {
         shellSprite.setRotation(renderingObject.getRotateAngle());
         shellSprite.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());
     }
-    
-    public void drawShotParameters(Graphics g)
-    {
-        g.setColor(Color.white);
-        g.drawString("Speed: " + Float.toString(renderingObject.getStartSpeed()), 
-                20 + camera.getX(), Display.getHeight() - infoStringHeight + camera.getY());    
-        g.drawString("Angle: " + Float.toString(renderingObject.getStartAngle() % 180), 
-                190 + camera.getX(), Display.getHeight() - infoStringHeight + camera.getY());
-    }
-    
+
     public void drawPath(Graphics g)
     {
         g.setColor(new Color(170, 170, 170));

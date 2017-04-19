@@ -27,7 +27,7 @@ public class TankBuilder implements DynamicGameObjectBuilder {
     {
         tank.setStartPosition(pos);
         tank.setCannonRotationPoint(new Vector2f(tank.getCannonRotationPointX() + pos.x, tank.getCannonRotationPointY() + pos.y));
-        tank.setShellPosition(tank.getCannonCenterX() - tank.getShellStartWidth() / 2, 
+        tank.setShellStartPosition(tank.getCannonCenterX() - tank.getShellStartWidth() / 2, 
                               tank.getCannonCenterY() - tank.getShellStartHeight() / 2);
     }
     
@@ -47,9 +47,9 @@ public class TankBuilder implements DynamicGameObjectBuilder {
         tank.cannonRotate(90 - angle, tank.getCannonCenterX(), tank.getCannonCenterY());
     }
     
-    public void buildCannonStartPosition(Vector2f cannonPos)
+    public void buildCannonStartPosition(Vector2f pos)
     {
-        tank.setCannonStartPosition(cannonPos);
+        tank.setCannonStartPosition(pos);
     }
     
     public void buildShell(Shell ammo)

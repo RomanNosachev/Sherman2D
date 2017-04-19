@@ -17,7 +17,7 @@ public class Shell extends DynamicGameObject {
     private float               startSpeed;
     private float               startAngle;
     
-    private Vector2f            routeVector;
+    private Vector2f            direction;
     private Vector2f            collisionPoint;
     
     private boolean             flying = false;
@@ -69,39 +69,39 @@ public class Shell extends DynamicGameObject {
         return startAngle;
     }
     
-    public void setRouteVector(float x, float y)
+    public void setDirection(float x, float y)
     {
-        routeVector = new Vector2f(x, y);
+        direction = new Vector2f(x, y);
     }
     
-    public void setRouteVectorX(float x)
+    public void setDirectionX(float x)
     {
-        routeVector.x = x;
+        direction.x = x;
     }
     
-    public void setRouteVectorY(float y)
+    public void setDirectionY(float y)
     {
-        routeVector.y = y;
+        direction.y = y;
     }
     
-    public Vector2f getRouteVector()
+    public Vector2f getDirection()
     {
-        return routeVector;
+        return direction;
     }
     
-    public float getRouteVectorX()
+    public float getDirectionX()
     {
-        return routeVector.getX();
+        return direction.getX();
     }
     
-    public float getRouteVectorY()
+    public float getDirectionY()
     {
-        return routeVector.getY();
+        return direction.getY();
     }
     
-    public void setRouteVector()
+    public void setDirection()
     {
-        routeVector = new Vector2f((float) (startSpeed * Math.cos(startAngle * Math.PI / 180)),
+        direction = new Vector2f((float) (startSpeed * Math.cos(startAngle * Math.PI / 180)),
                 (float) (startSpeed * Math.sin(startAngle * Math.PI / 180)));
     }
     

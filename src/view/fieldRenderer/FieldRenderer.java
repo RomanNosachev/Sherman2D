@@ -14,7 +14,7 @@ import view.staticRenderer.StaticRenderer;
 public class FieldRenderer extends StaticRenderer {
     private Field renderingObject;
     
-    private Image       background;
+    private Image background;
     
     public FieldRenderer()
     {
@@ -39,7 +39,6 @@ public class FieldRenderer extends StaticRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
-        g.translate(-camera.getX(), -camera.getY());
         background.draw(0, 0);
         //drawDebugLines(g, 50);
         g.setColor(Color.green);

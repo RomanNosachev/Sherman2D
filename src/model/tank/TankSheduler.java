@@ -8,14 +8,14 @@ public class TankSheduler {
     {
         builder.buildObject();
         
+        builder.buildShell(shell);
+        
         builder.buildBase(configManager.loadTankPolygonPoints());
         builder.buildCannon();
         builder.buildCannonBase(configManager.loadTankCannonPolygonPoints(), configManager.loadShellStartAngle());
         builder.buildCannonStartPosition(configManager.loadTankCannonStartPosition());
         builder.buildCannonRotationPoint(configManager.loadTankCannonRotationPoint());
-        
-        builder.buildShell(shell);
-        
+                
         builder.buildStartPosition(configManager.loadTankStartPosition());
         
         builder.buildTankSpeed(configManager.loadTankSpeed());

@@ -83,11 +83,9 @@ public class Game extends BasicGame {
             actorRenderer = new TankRenderer(actor);
             actorRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
             actorRenderer.setCannonSprite(configManager.loadTankCannonSprite());
-            actorRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             
             shellRenderer = new ShellRenderer(shell);
             shellRenderer.setSprite(configManager.loadShellSprite());
-            shellRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             shellRenderer.setExplosionSpriteSheet(configManager.loadShellExplosionSpriteSheet(), 
                     configManager.loadShellExplosionSpriteSheetCount());
             
@@ -99,10 +97,10 @@ public class Game extends BasicGame {
             actorPlayer.setHit(configManager.loadTankHitSound());
             
             levelRenderer = new LevelRenderer(level);
+            levelRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             levelRenderer.setFieldRenderer(fieldRenderer);
             levelRenderer.setTankRenderer(actorRenderer);
             levelRenderer.setShellRenderer(shellRenderer);
-            levelRenderer.setCamera(level.getCamera());
         } 
         catch (IOException e)
         {

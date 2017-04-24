@@ -5,6 +5,8 @@ import org.newdawn.slick.geom.Vector2f;
 import model.dynamicGameObject.DynamicGameObject;
 import model.shell.Shell;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
@@ -12,25 +14,27 @@ import org.newdawn.slick.geom.Transform;
 public class Tank extends DynamicGameObject {
     private static final long serialVersionUID = -3579494870824274339L;
     
-    private Shell       ammo;
-    private Cannon      gun;      
+    private ArrayList<Shell>    ammo;
+    private Cannon              gun;      
 
-    private float       speed;
-    private float       minAimingAngle;
-    private float       maxAimingAngle;
-    private Move        isMoving = Move.STOP;
-    private boolean     isDamaged = false;
+    private float               speed;
+    private float               minAimingAngle;
+    private float               maxAimingAngle;
+    
+    private Move                isMoving = Move.STOP;
+    private boolean             isDamaged = false;
     
     public Tank()
     {
         base = new Polygon();
-        ammo = new Shell();
+        ammo = new ArrayList<Shell>();
     }
         
     public Tank(Shape base) throws IllegalArgumentException
     {
         setBase(base);
-        ammo = new Shell(new Polygon());
+        ammo = new ArrayList<Shell>(); 
+        ammo.add(new Shell(new Polygon()));
         boundingRadius = base.getBoundingCircleRadius();
     }
     
@@ -38,7 +42,8 @@ public class Tank extends DynamicGameObject {
     {
         setBase(base);
         base.setLocation(position);
-        ammo = new Shell(new Polygon());
+        ammo = new ArrayList<Shell>(); 
+        ammo.add(new Shell(new Polygon()));
         boundingRadius = base.getBoundingCircleRadius();
     }
     
@@ -73,44 +78,52 @@ public class Tank extends DynamicGameObject {
         gun.setRotationPoint(newRotationPoint.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
     }
     
-    public void setShell(Shell ammo) throws IllegalArgumentException
+    public void addShell(Shell shell) throws IllegalArgumentException
     {
-        this.ammo = ammo;
+        ammo.add(shell);
+        //this.ammo = ammo;
     }
     
-    public void setShellBase(Shape ammoBase) throws IllegalArgumentException
+    public void setShellBase(int index, Shape ammoBase) throws IllegalArgumentException
     {
-        ammo = new Shell(ammoBase);
+       ammo.set(index, new Shell(ammoBase)); 
+        //ammo = new Shell(ammoBase);
     }
     
-    public void setShellPosition(Vector2f pos) throws IllegalArgumentException
+    public void setShellPosition(int index, Vector2f pos) throws IllegalArgumentException
     {
-        ammo.setPosition(pos);
+        ammo.get(index).setPosition(pos);
+        //ammo.setPosition(pos);
     }
     
-    public void setShellPosition(float x, float y)
+    public void setShellPosition(int index, float x, float y)
     {
-        ammo.setPosition(x, y);
+        ammo.get(index).setPosition(new Vector2f(x, y));
+        //ammo.setPosition(x, y);
     }
     
-    public void setShellX(float x)
+    public void setShellX(int index, float x)
     {
-        ammo.setX(x);
+        ammo.get(index).setX(x);
+        //ammo.setX(x);
     }
     
-    public void setShellY(float y)
+    public void setShellY(int index, float y)
     {
-        ammo.setY(y);
+        ammo.get(index).setY(y);
+        //ammo.setY(y);
     }
     
-    public float getShellCenterX()
+    public float getShellCenterX(int index)
     {
-        return ammo.getCenterX();
+        return ammo.get(index).getCenterX();
+        //return ammo.getCenterX();
     }
     
-    public float getShellCenterY()
+    public float getShellCenterY(int index)
     {
-        return ammo.getCenterY();
+        return ammo.get(index).getCenterY();
+        //return ammo.getCenterY();
     }
     
     public void setSpeed(float speed)
@@ -122,20 +135,20 @@ public class Tank extends DynamicGameObject {
     {
         return speed;
     }
-    
-    public boolean isShooting()
+
+    public boolean isShellFlying(int index)
     {
-        return ammo.isFlying();
+        return ammo.get(index).isFlying();
     }
     
     public Move isMoving()
     {
         return isMoving;
     }
-    
-    public void setShooting(boolean fl)
+
+    public void setShellFlying(int index, boolean fl)
     {
-        ammo.setFlying(fl);
+        ammo.get(index).setFlying(fl);
     }
     
     public void setIsMoving(Move fl)
@@ -143,147 +156,150 @@ public class Tank extends DynamicGameObject {
         isMoving = fl;
     }
     
-    public void setShotStartSpeed(float speed)
+    public void setShotStartSpeed(int index, float speed)
     {
-        ammo.setStartSpeed(speed);
+        ammo.get(index).setStartSpeed(speed);
     }
     
-    public float getShotStartSpeed()
+    public float getShotStartSpeed(int index)
     {
-        return ammo.getStartSpeed();
+        return ammo.get(index).getStartSpeed();
     }
     
-    public void setShotStartAngle(float angle)
+    public void setShotStartAngle(int index, float angle)
     {
-        ammo.setStartAngle(angle);
+        ammo.get(index).setStartAngle(angle);
     }
     
-    public float getShotStartAngle()
+    public float getShotStartAngle(int index)
     {
-        return ammo.getStartAngle();
+        return ammo.get(index).getStartAngle();
     }
     
     public void shot()
     {
-        setShooting(true);
-        ammo.setDirection();
-        ammo.clearPath();
-        ammo.addPathPoint(ammo.getBase().getCenterX(), ammo.getBase().getCenterY());
+        Shell buffer = (Shell) ammo.get(getShellCount() - 1).clone();
+        
+        ammo.get(getShellCount() - 1).setFlying(true);
+        ammo.get(getShellCount() - 1).setDirection();
+        ammo.get(getShellCount() - 1).clearPath();
+        ammo.get(getShellCount() - 1).addPathPoint(ammo.get(getShellCount() - 1).getCenterX(), ammo.get(getShellCount() - 1).getCenterY());
+        ammo.add(buffer);
     }
     
-    public void addShotPathPoint(Vector2f pos)
+    public void addShotPathPoint(int index, Vector2f pos)
     {
-        ammo.addPathPoint(pos);
+        ammo.get(index).addPathPoint(pos);
     }
     
-    public void addShotPathPoint(float x, float y)
+    public void addShotPathPoint(int index, float x, float y)
     {
-        ammo.addPathPoint(x, y);
+        ammo.get(index).addPathPoint(x, y);
     }
     
-    public void setShotDirection(float x, float y)
+    public void setShotDirection(int index, float x, float y)
     {
-        ammo.setDirection(x, y);
+        ammo.get(index).setDirection(x, y);
     }
     
-    public void setShotDirectionX(float x)
+    public void setShotDirectionX(int index, float x)
     {
-        ammo.setDirectionX(x);
+        ammo.get(index).setDirectionX(x);
     }
     
-    public void setShotDirectionY(float y)
+    public void setShotDirectionY(int index, float y)
     {
-        ammo.setDirectionY(y);
+        ammo.get(index).setDirectionY(y);
     }
     
-    public int getShotPathSize()
+    public int getShotPathSize(int index)
     {
-        return ammo.getPathSize();
+        return ammo.get(index).getPathSize();
     }
     
-    public Vector2f getShotPathPoint(int index)
+    public Vector2f getShotPathPoint(int index, int pointIndex)
     {
-        return ammo.getPathPoint(index);
+        return ammo.get(index).getPathPoint(pointIndex);
     }
     
-    public Vector2f getShotDirection()
+    public Vector2f getShotDirection(int index)
     {
-        return ammo.getDirection();
+        return ammo.get(index).getDirection();
     }
     
-    public float getShotDirectionX()
+    public float getShotDirectionX(int index)
     {
-        return ammo.getDirectionX();
+        return ammo.get(index).getDirectionX();
     }
     
-    public float getShotDirectionY()
+    public float getShotDirectionY(int index)
     {
-        return ammo.getDirectionY();
+        return ammo.get(index).getDirectionY();
     }
     
-    public float getShellRotateAngle()
+    public float getShellRotateAngle(int index)
     {
-        return ammo.getRotateAngle();
+        return ammo.get(index).getRotateAngle();
     }
     
-    public float getShellStartAngle()
+    public float getShellStartAngle(int index)
     {
-        return ammo.getStartAngle();
+        return ammo.get(index).getStartAngle();
     }
     
-    public Shape getShellBase()
+    public Shape getShellBase(int index)
     {
-        return ammo.getBase();
+        return ammo.get(index).getBase();
     }
     
-    public Shape getShellBoundingCircle()
+    public Shape getShellBoundingCircle(int index)
     {
-        return ammo.getBoundingCircle();
+        return ammo.get(index).getBoundingCircle();
     }
     
-    public float getShellStartWidth()
+    public float getShellStartWidth(int index)
     {
-        return ammo.getStartWidth();
+        return ammo.get(index).getStartWidth();
     }
     
-    public void setShellStartPosition(Vector2f pos)
+    public void setShellStartPosition(int index, Vector2f pos)
     {
-        ammo.setStartPosition(pos);
+        ammo.get(index).setStartPosition(pos);
     }
     
-    public void setShellStartPosition(float x, float y)
+    public void setShellStartPosition(int index, float x, float y)
     {
-        ammo.setStartPosition(new Vector2f(x, y));
+        ammo.get(index).setStartPosition(new Vector2f(x, y));
     }
     
-    public float getShellStartHeight()
+    public float getShellStartHeight(int index)
     {
-        return ammo.getStartHeight();
+        return ammo.get(index).getStartHeight();
     }
     
-    public Vector2f getShellStartPosition()
+    public Vector2f getShellStartPosition(int index)
     {
-        return ammo.getStartPosition();
+        return ammo.get(index).getStartPosition();
     }
     
-    public float getShellStartPositionX()
+    public float getShellStartPositionX(int index)
     {
-        return ammo.getStartX();
+        return ammo.get(index).getStartX();
     }
     
-    public float getShellStartPositionY()
+    public float getShellStartPositionY(int index)
     {
-        return ammo.getStartY();
+        return ammo.get(index).getStartY();
     }
     
-    public float getShellSimpleCenterX()
+    public float getShellSimpleCenterX(int index)
     {
-        return ammo.getSimpleCenterX();
+        return ammo.get(index).getSimpleCenterX();
     }
     
-    public float getShellSimpleCenterY()
+    public float getShellSimpleCenterY(int index)
     {
-        return ammo.getSimpleCenterY();
+        return ammo.get(index).getSimpleCenterY();
     }
     
     public float getMinAimingAngle()
@@ -401,19 +417,19 @@ public class Tank extends DynamicGameObject {
         gun.rotate(angle, x, y);
     }
     
-    public void shellRotate(float angle)
+    public void shellRotate(int index, float angle)
     {
-        ammo.rotate(angle);
+        ammo.get(index).rotate(angle);
     }
     
-    public void shellRotate(float angle, float x, float y)
+    public void shellRotate(int index, float angle, float x, float y)
     {
-        ammo.rotate(angle, x, y);
+        ammo.get(index).rotate(angle, x, y);
     }
     
-    public void setShellRotateAngle(float angle)
+    public void setShellRotateAngle(int index, float angle)
     {
-        ammo.setRotateAngle(angle);
+        ammo.get(index).setRotateAngle(angle);
     }
 
     public Shape getCannonBase()
@@ -456,9 +472,9 @@ public class Tank extends DynamicGameObject {
         gun.setRotationPoint(cannonRotationPoint);
     }
     
-    public int getShellDamage()
+    public int getShellDamage(int index)
     {
-        return ammo.getDamage();
+        return ammo.get(index).getDamage();
     }
 
     public boolean isDamaged()
@@ -471,18 +487,33 @@ public class Tank extends DynamicGameObject {
         this.isDamaged = isDamaged;
     }
       
-    public void setShellCollides(boolean collides)
+    public void setShellCollides(int index, boolean collides)
     {
-        ammo.setCollides(collides);
+        ammo.get(index).setCollides(collides);
     }
     
-    public void setShellCollisionPoint(Vector2f point)
+    public void setShellCollisionPoint(int index, Vector2f point)
     {
-        ammo.setCollisionPoint(point);
+        ammo.get(index).setCollisionPoint(point);
     }
     
-    public Vector2f getShellPathBack()
+    public Vector2f getShellPathBack(int index)
     {
-        return ammo.getPathPoint(ammo.getPathSize() - 1);
+        return ammo.get(index).getPathPoint(ammo.get(index).getPathSize() - 1);
+    }
+    
+    public int getShellCount()
+    {
+        return ammo.size();
+    }
+    
+    public Shell getShell(int index)
+    {
+        return ammo.get(index);
+    }
+    
+    public void removeShell(int index)
+    {
+        ammo.remove(index);
     }
 }

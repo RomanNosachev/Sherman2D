@@ -6,13 +6,10 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Shape;
 
-import model.camera.Camera;
 import model.dynamicGameObject.DynamicGameObject;
 import view.renderer.Renderer;
 
-public abstract class DynamicRenderer implements Renderer {
-    protected Camera    camera;
-    
+public abstract class DynamicRenderer implements Renderer {    
     protected float     boundingRadius;
     protected float     infoStringHeight;
         
@@ -27,12 +24,7 @@ public abstract class DynamicRenderer implements Renderer {
     {
         return infoStringHeight;
     }
-    
-    public void setCamera(Camera cam)
-    {
-        camera = cam;
-    }
-    
+
     public void drawBoundingSphere(Graphics g, DynamicGameObject object)
     {
         g.setColor(Color.lightGray);

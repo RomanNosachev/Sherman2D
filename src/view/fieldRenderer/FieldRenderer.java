@@ -39,9 +39,10 @@ public class FieldRenderer extends StaticRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
+        g.setBackground(new Color(246, 233, 217));
         background.draw(0, 0);
         //drawDebugLines(g, 50);
-        g.setColor(Color.green);
+        g.setColor(new Color(104, 82, 47));
         g.draw(renderingObject.getBase());
     }
     

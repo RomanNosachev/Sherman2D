@@ -18,14 +18,14 @@ public class LevelRenderer {
     
     private FieldRenderer   fieldRenderer;
     private TankRenderer    tankRenderer;
-    private ShellRenderer   shellRenderer;
     
     public LevelRenderer()
     {
         level = new Level();
         fieldRenderer = new FieldRenderer();
         tankRenderer = new TankRenderer();
-        shellRenderer = new ShellRenderer();
+        tankRenderer.setShellRenderer(new ShellRenderer());
+        //shellRenderer = new ShellRenderer();
     }
     
     public void render(GameContainer gc, Graphics g) throws SlickException
@@ -33,7 +33,7 @@ public class LevelRenderer {
         g.translate(-level.getCameraX(), -level.getCameraY());
         fieldRenderer.render(gc, g);
         tankRenderer.render(gc, g);
-        shellRenderer.render(gc, g);
+        //shellRenderer.render(gc, g);
         drawInfo(g);
     }
 
@@ -46,9 +46,9 @@ public class LevelRenderer {
     public void drawShotInfo(Graphics g)
     {
         g.setColor(Color.white);
-        g.drawString("Speed: " + Float.toString(level.getShotStartSpeed()), 
+        g.drawString("Speed: " + Float.toString(level.getShotStartSpeed(level.getShellCount() - 1)), 
                 20 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());    
-        g.drawString("Angle: " + Float.toString(level.getShotStartAngle() % 180), 
+        g.drawString("Angle: " + Float.toString(level.getShotStartAngle(level.getShellCount() - 1) % 180), 
                 190 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());
     }
     
@@ -87,12 +87,13 @@ public class LevelRenderer {
     public void setTankRenderer(TankRenderer tr)
     {
         tankRenderer = tr;
-        tr.setCamera(level.getCamera());
+        //tr.setCamera(level.getCamera());
     }
     
     public void setShellRenderer(ShellRenderer sr)
     {
-        shellRenderer = sr;
-        sr.setCamera(level.getCamera());
+        tankRenderer.setShellRenderer(sr);
+        //shellRenderer = sr;
+        //sr.setCamera(level.getCamera());
     }
 }

@@ -11,7 +11,6 @@ import org.newdawn.slick.geom.Shape;
 
 public class Shell 
 extends DynamicGameObject 
-implements Cloneable
 {
     private static final long serialVersionUID = 5640440536160496891L;
 
@@ -47,7 +46,9 @@ implements Cloneable
     {
         try 
         {
-            return (Shell) super.clone();
+            Shell clon = (Shell) super.clone();
+            clon.setBase(new Polygon(base.getPoints()));
+            return clon;
         }
         catch (CloneNotSupportedException e) 
         {

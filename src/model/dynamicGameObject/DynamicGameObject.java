@@ -10,7 +10,10 @@ import org.newdawn.slick.geom.Vector2f;
 import model.gameObject.GameObject;
 
 @SuppressWarnings("serial")
-public abstract class DynamicGameObject implements GameObject {
+public abstract class DynamicGameObject 
+implements GameObject,
+           Cloneable 
+{
     protected Shape    base;
     protected Shape    simpleBase;
     
@@ -23,6 +26,21 @@ public abstract class DynamicGameObject implements GameObject {
     
     protected int      hitPoint;
     protected int      maxHitPoint;
+    
+    /*
+    @Override
+    public DynamicGameObject clone()
+    {
+        try 
+        {
+            return (DynamicGameObject) super.clone();
+        }
+        catch (CloneNotSupportedException e) 
+        {
+            throw new InternalError();
+        }
+    }
+    */
     
     public Shape getSimpleBase()
     {

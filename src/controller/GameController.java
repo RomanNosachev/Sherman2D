@@ -14,10 +14,8 @@ import model.tank.Move;
 public class GameController {
     private Level            model;
     
-    private boolean          gameOver      = false;
-    
-    private float            muzzleAngle;
-    
+    private boolean          gameOver = false;
+        
     private Timer            explosiveTimer;
         
     public GameController(Level model)
@@ -32,7 +30,7 @@ public class GameController {
         {
             setGameOver(true);
         }
-                
+                        
         for (int shellIndex = 0; shellIndex < model.getShellCount() - 1; shellIndex++)
         {
             if (model.isShellFlying(shellIndex))
@@ -82,14 +80,9 @@ public class GameController {
                         public void run()
                         {
                             model.setShellCollides(timerShellIndex, false);
-                            model.removeShell(timerShellIndex);
+                            //model.removeShell(timerShellIndex);
                         }
-                    }, 180);
-                    
-                    //model.setShellRotation(shellIndex, muzzleAngle);
-
-                    //model.setShellPosition(shellIndex, model.getTankCannonSimpleCenterX() - model.getShellStartWidth(shellIndex) / 2, 
-                    //                       model.getTankCannonSimpleCenterY() - model.getShellStartHeight(shellIndex) / 2);       
+                    }, 180);      
                 }
             }
         }
@@ -97,7 +90,6 @@ public class GameController {
 
     public void shot()
     {
-        muzzleAngle = model.getShellRotateAngle(model.getShellBackIndex());
         model.shot();
     }
     

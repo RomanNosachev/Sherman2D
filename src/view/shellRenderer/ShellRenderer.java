@@ -48,9 +48,10 @@ public class ShellRenderer extends DynamicRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {        
+        drawBase(g, renderingObject.getBase());
+        
         if (renderingObject.isFlying())
         {
-            //drawBase(g, renderingObject.getBase());
             //drawBoundingSphere(g, renderingObject);
             //drawPath(g);
             drawSprite(g);

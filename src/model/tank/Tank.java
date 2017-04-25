@@ -81,49 +81,41 @@ public class Tank extends DynamicGameObject {
     public void addShell(Shell shell) throws IllegalArgumentException
     {
         ammo.add(shell);
-        //this.ammo = ammo;
     }
     
     public void setShellBase(int index, Shape ammoBase) throws IllegalArgumentException
     {
        ammo.set(index, new Shell(ammoBase)); 
-        //ammo = new Shell(ammoBase);
     }
     
     public void setShellPosition(int index, Vector2f pos) throws IllegalArgumentException
     {
         ammo.get(index).setPosition(pos);
-        //ammo.setPosition(pos);
     }
     
     public void setShellPosition(int index, float x, float y)
     {
         ammo.get(index).setPosition(new Vector2f(x, y));
-        //ammo.setPosition(x, y);
     }
     
     public void setShellX(int index, float x)
     {
         ammo.get(index).setX(x);
-        //ammo.setX(x);
     }
     
     public void setShellY(int index, float y)
     {
         ammo.get(index).setY(y);
-        //ammo.setY(y);
     }
     
     public float getShellCenterX(int index)
     {
         return ammo.get(index).getCenterX();
-        //return ammo.getCenterX();
     }
     
     public float getShellCenterY(int index)
     {
         return ammo.get(index).getCenterY();
-        //return ammo.getCenterY();
     }
     
     public void setSpeed(float speed)
@@ -177,14 +169,14 @@ public class Tank extends DynamicGameObject {
     }
     
     public void shot()
-    {
+    {        
         Shell buffer = (Shell) ammo.get(getShellCount() - 1).clone();
-        
+                        
         ammo.get(getShellCount() - 1).setFlying(true);
         ammo.get(getShellCount() - 1).setDirection();
         ammo.get(getShellCount() - 1).clearPath();
         ammo.get(getShellCount() - 1).addPathPoint(ammo.get(getShellCount() - 1).getCenterX(), ammo.get(getShellCount() - 1).getCenterY());
-        ammo.add(buffer);
+        ammo.add(buffer);                
     }
     
     public void addShotPathPoint(int index, Vector2f pos)

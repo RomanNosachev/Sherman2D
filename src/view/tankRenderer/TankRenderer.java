@@ -60,12 +60,12 @@ public class TankRenderer extends DynamicRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {        
-        for (int i = 0; i < renderingObject.getShellCount() - 1; i++)
+        for (int i = 0; i < renderingObject.getShellCount(); i++)
         {
             shellRenderer.setShell(renderingObject.getShell(i));
             shellRenderer.render(gc, g);
         }
-        
+
         drawAnimation(g);
     }
 

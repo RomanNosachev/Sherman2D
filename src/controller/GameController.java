@@ -1,14 +1,12 @@
 package controller;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
 import model.PhysicConstants;
 import model.level.Level;
+import model.tank.Climb;
 import model.tank.Move;
 
 public class GameController {
@@ -16,23 +14,24 @@ public class GameController {
     
     private boolean          gameOver = false;
         
-    private Timer            explosiveTimer;
-        
     public GameController(Level model)
     {
         this.model = model;
-        explosiveTimer = new Timer();
     }
     
     public void mainLoop(GameContainer gc, int delta) throws SlickException
-    {                        
+    {              
+        System.out.println(model.isMoving() + " " + model.isClimbing());
+                
+        gravity(delta);
+        
         if (model.getTankHitPoint() <= 0)
         {
             setGameOver(true);
         }
                         
         for (int shellIndex = 0; shellIndex < model.getShellCount() - 1; shellIndex++)
-        {
+        {            
             if (model.isShellFlying(shellIndex))
             {
                 Vector2f oldVector = new Vector2f(model.getShellCenterX(shellIndex), model.getShellCenterY(shellIndex));
@@ -71,19 +70,13 @@ public class GameController {
                     model.setShellLeftTank(false);
                     model.setShellCollides(shellIndex, true);
                     
-                    model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));
- 
-                    final int timerShellIndex = shellIndex;
-                    explosiveTimer = new Timer();
-                    explosiveTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run()
-                        {
-                            model.setShellCollides(timerShellIndex, false);
-                            //model.removeShell(timerShellIndex);
-                        }
-                    }, 180);      
+                    model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));    
                 }
+            }
+            else
+            {
+                model.removeShell(shellIndex);
+                shellIndex--;
             }
         }
     }
@@ -165,21 +158,43 @@ public class GameController {
     
     public void subShotPower(int delta)
     {
-        if (Float.compare(model.getShotStartSpeed(model.getShellBackIndex()), 0) > 0)
+        if (Float.compare(model.getShotStartSpeed(model.getShellBackIndex()), 200) > 0)
         {
             model.setShotStartSpeed(model.getShellBackIndex(), model.getShotStartSpeed(model.getShellBackIndex()) - 200F * delta / PhysicConstants.CLOCK_PER_SEC);
         } else
         {
-            model.setShotStartSpeed(model.getShellBackIndex(), 0);
+            model.setShotStartSpeed(model.getShellBackIndex(), 200);
         }
     }
     
-    public void moveLeft(int delta)
-    {
-        model.setIsMoving(Move.BACK);
-        
+    public void moveBack(int delta)
+    {        
         float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
+                
+        for (int i = 0; i < movement; i++)
+        {                
+            model.moveX(-1);
+            
+            if (model.tankCollidesWithLevel())
+            {
+                model.moveX(1);
+                                        
+                model.setClimbing(Climb.UP);
+                model.moveY(-1);
+                        
+                if (model.tankCollidesWithLevel())
+                {
+                    model.setClimbing(Climb.STRAIGHT);
+                    model.moveY(1);
+                }
+            }
+            else
+            {
+                model.setMoving(Move.BACK);
+            }
+        }
         
+        /*
         model.setPositionX(model.getTankX() - movement);
         model.setTankCannonX(model.getTankCannonX() - movement);
         model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
@@ -194,38 +209,46 @@ public class GameController {
             
             model.setShellX(model.getShellBackIndex(), model.getShellX(model.getShellBackIndex()) + movement);
         }
+        */
     }
     
-    public void moveRight(int delta)
-    {
-        model.setIsMoving(Move.FORTH);
-        
+    public void moveForth(int delta)
+    {        
         float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
-
-        model.setPositionX(model.getTankX() + movement);
-        model.setTankCannonX(model.getTankCannonX() + movement);
-        model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() + movement);
         
-        model.setShellX(model.getShellBackIndex(), model.getShellX(model.getShellBackIndex()) + movement);
-        
-        if (model.tankCollidesWithLevel())
+        for (int i = 0; i < movement; i++)
         {                
-            model.setPositionX(model.getTankBase().getX() - movement);
-            model.setTankCannonX(model.getTankCannonX() - movement);
-            model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
-
-            model.setShellX(model.getShellBackIndex(), model.getShellX(model.getShellBackIndex()) - movement);
+            model.moveX(1);
+            
+            if (model.tankCollidesWithLevel())
+            {
+                model.moveX(-1);
+                                        
+                model.setClimbing(Climb.UP);
+                model.moveY(-1);
+                        
+                if (model.tankCollidesWithLevel())
+                {
+                    model.setClimbing(Climb.STRAIGHT);
+                    model.moveY(1);
+                }
+            }
+            else
+            {
+                model.setMoving(Move.FORTH);
+            }
         }
     }
     
     public void stop()
     {
-        model.setIsMoving(Move.STOP);
+        model.setMoving(Move.STOP);
+        model.setClimbing(Climb.STRAIGHT);
     }
     
     public void moveUp(int delta)
     {
-        float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
+        float movement = model.getMovePoint() * 10 * delta / PhysicConstants.CLOCK_PER_SEC;
         
         model.setPositionY(model.getTankY() - movement);
         model.setTankCannonY(model.getTankCannonY() - movement);
@@ -261,6 +284,23 @@ public class GameController {
             
             model.setShellY(model.getShellBackIndex(), model.getShellY(model.getShellBackIndex()) - movement);
         }
+    }
+    
+    public void gravity(int delta)
+    {
+        for (int i = 0; i < PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC; i++)
+        {
+            model.moveY(1);
+            
+            if (model.tankCollidesWithLevel())
+            {
+                model.moveY(-1);
+            }
+            else
+            {
+                model.setClimbing(Climb.DOWN);
+            }
+        } 
     }
     
     public boolean isGameOver()

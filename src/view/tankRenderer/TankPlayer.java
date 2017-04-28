@@ -37,7 +37,7 @@ public class TankPlayer implements Player {
     @Override
     public void play(GameContainer gc) throws SlickException
     {
-        if (playingObject.isMoving() == Move.FORTH || playingObject.isMoving() == Move.BACK)
+        if (playingObject.isMoving() != Move.STOP)
         {
             if (!move.playing())
                 move.play();

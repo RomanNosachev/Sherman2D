@@ -1,5 +1,8 @@
 package view.shellRenderer;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -8,6 +11,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Line;
+import org.newdawn.slick.geom.Vector2f;
 
 import model.shell.Shell;
 import view.dynamicRenderer.DynamicRenderer;
@@ -17,6 +21,8 @@ public class ShellRenderer extends DynamicRenderer {
     
     private Image       shellSprite;
     private Animation   explosion;
+    private Vector2f    explosionPosition;
+    private boolean     explodes = false;
     
     public ShellRenderer()
     {
@@ -47,24 +53,40 @@ public class ShellRenderer extends DynamicRenderer {
     
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
-    {        
-        drawBase(g, renderingObject.getBase());
-        
+    {                
         if (renderingObject.isFlying())
         {
-            //drawBoundingSphere(g, renderingObject);
-            //drawPath(g);
             drawSprite(g);
         }
+        else
+        {
+            if (renderingObject.isCollides())
+            {                
+                explosion.restart();
+                explosionPosition = renderingObject.getCollisionPoint();
+                explodes = true;
+                
+                Timer explosionTimer = new Timer(true);
+                explosionTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run()
+                    {
+                        explodes = false;
+                    }
+                }, explosion.getDuration(explosion.getFrame()) * explosion.getFrameCount());
+            }
+        }
         
-        if (renderingObject.isCollides())
+        if (explodes)
+        {
             drawExplosionAnimation();
+        }
     }
     
     public void drawExplosionAnimation()
     {        
-        explosion.draw(renderingObject.getCollisionPoint().x - explosion.getWidth() / 2,
-                renderingObject.getCollisionPoint().y - explosion.getHeight());
+        explosion.draw(explosionPosition.x - explosion.getWidth() / 2,
+                explosionPosition.y - explosion.getHeight());
     }
     
     public void drawSprite(Graphics g)

@@ -4,6 +4,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import model.camera.Camera;
 import model.field.Field;
+import model.tank.Climb;
 import model.tank.Move;
 import model.tank.Tank;
 
@@ -53,9 +54,9 @@ public class Level {
         actor.setShellFlying(index, fl);
     }
     
-    public void setIsMoving(Move fl)
+    public void setMoving(Move fl)
     {
-        actor.setIsMoving(fl);
+        actor.setMoving(fl);
     }
     
     public Move isMoving()
@@ -63,9 +64,24 @@ public class Level {
         return actor.isMoving();
     }
     
+    public void setClimbing(Climb fl)
+    {
+        actor.setClimbing(fl);
+    }
+    
+    public Climb isClimbing()
+    {
+        return actor.isClimbing();
+    }
+    
     public void setShellCollides(int index, boolean collides)
     {
         actor.setShellCollides(index, collides);
+    }
+    
+    public boolean isShellCollides(int index)
+    {
+        return actor.isShellCollides(index);
     }
 
     public void setShellPosition(int index, Vector2f pos)
@@ -624,5 +640,25 @@ public class Level {
     public void removeShell(int index)
     {
         actor.removeShell(index);
+    }
+    
+    public void moveX(float movement)
+    {
+        actor.setX(actor.getX() + movement);
+        actor.setCannonX(actor.getCannonX() + movement);
+        actor.setCannonRotationPointX(actor.getCannonRotationPointX() + movement);
+        actor.setShellBackX(actor.getShellBackX() + movement);
+        
+        actorCamera.setX(actorCamera.getX() + movement);
+    }
+    
+    public void moveY(float movement)
+    {
+        actor.setY(actor.getY() + movement);
+        actor.setCannonY(actor.getCannonY() + movement);
+        actor.setCannonRotationPointY(actor.getCannonRotationPointY() + movement);
+        actor.setShellBackY(actor.getShellBackY() + movement);
+        
+        actorCamera.setY(actorCamera.getY() + movement);
     }
 }

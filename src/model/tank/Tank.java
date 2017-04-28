@@ -21,8 +21,9 @@ public class Tank extends DynamicGameObject {
     private float               minAimingAngle;
     private float               maxAimingAngle;
     
-    private Move                isMoving = Move.STOP;
-    private boolean             isDamaged = false;
+    private Move                moving = Move.STOP;
+    private Climb               climbing = Climb.STRAIGHT;
+    private boolean             damaged = false;
     
     public Tank()
     {
@@ -135,7 +136,7 @@ public class Tank extends DynamicGameObject {
     
     public Move isMoving()
     {
-        return isMoving;
+        return moving;
     }
 
     public void setShellFlying(int index, boolean fl)
@@ -143,9 +144,9 @@ public class Tank extends DynamicGameObject {
         ammo.get(index).setFlying(fl);
     }
     
-    public void setIsMoving(Move fl)
+    public void setMoving(Move fl)
     {
-        isMoving = fl;
+        moving = fl;
     }
     
     public void setShotStartSpeed(int index, float speed)
@@ -471,17 +472,22 @@ public class Tank extends DynamicGameObject {
 
     public boolean isDamaged()
     {
-        return isDamaged;
+        return damaged;
     }
 
     public void setDamaged(boolean isDamaged)
     {
-        this.isDamaged = isDamaged;
+        this.damaged = isDamaged;
     }
       
     public void setShellCollides(int index, boolean collides)
     {
         ammo.get(index).setCollides(collides);
+    }
+    
+    public boolean isShellCollides(int index)
+    {
+        return ammo.get(index).isCollides();
     }
     
     public void setShellCollisionPoint(int index, Vector2f point)
@@ -504,8 +510,43 @@ public class Tank extends DynamicGameObject {
         return ammo.get(index);
     }
     
+    public Shell getShellBack()
+    {
+        return ammo.get(ammo.size() - 1);
+    }
+    
+    public void setShellBackY(float y)
+    {
+        ammo.get(ammo.size() - 1).setY(y);
+    }
+    
+    public void setShellBackX(float x)
+    {
+        ammo.get(ammo.size() - 1).setX(x);
+    }
+    
+    public float getShellBackX()
+    {
+        return ammo.get(ammo.size() - 1).getX();
+    }
+    
+    public float getShellBackY()
+    {
+        return ammo.get(ammo.size() - 1).getY();
+    }
+    
     public void removeShell(int index)
     {
         ammo.remove(index);
+    }
+
+    public Climb isClimbing()
+    {
+        return climbing;
+    }
+
+    public void setClimbing(Climb climbing)
+    {
+        this.climbing = climbing;
     }
 }

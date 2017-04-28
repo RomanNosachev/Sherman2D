@@ -46,7 +46,7 @@ public class Game extends BasicGame {
     private TankPlayer          actorPlayer;
     
     public Game(String title)
-    {
+    { 
         super(title);
     }
     
@@ -55,7 +55,7 @@ public class Game extends BasicGame {
     {
         levelRenderer.render(gc, g);
         
-        //actorPlayer.play(gc);
+        actorPlayer.play(gc);
     }
     
     @Override
@@ -63,7 +63,7 @@ public class Game extends BasicGame {
     {
         try
         {        
-            ConfigManager configManager = new ConfigManager("config.ini");
+            ConfigManager configManager = new ConfigManager("physic.ini");
             
             FieldSheduler fieldSheduler = new FieldSheduler();
             field = fieldSheduler.createStaticLevel(new FieldBuilder(), configManager);

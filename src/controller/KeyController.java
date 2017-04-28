@@ -21,7 +21,7 @@ public class KeyController {
         
         if (gc.getInput().isKeyDown(Input.KEY_LEFT))
             controller.rotateLeft(delta);
-        
+
         if (gc.getInput().isKeyDown(Input.KEY_UP))
             controller.upGun(delta);
         
@@ -37,9 +37,9 @@ public class KeyController {
         if (gc.getInput().isKeyDown(Input.KEY_D) != gc.getInput().isKeyDown(Input.KEY_A))
         {
             if (gc.getInput().isKeyDown(Input.KEY_D))
-                controller.moveRight(delta);
+                controller.moveForth(delta);
             else 
-                controller.moveLeft(delta);
+                controller.moveBack(delta);
         }
         else 
         {

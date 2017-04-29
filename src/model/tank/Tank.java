@@ -510,6 +510,11 @@ public class Tank extends DynamicGameObject {
         return ammo.get(index);
     }
     
+    public int getShellBackIndex()
+    {
+        return ammo.size() - 1;
+    }
+    
     public Shell getShellBack()
     {
         return ammo.get(ammo.size() - 1);

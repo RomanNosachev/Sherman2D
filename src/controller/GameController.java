@@ -20,10 +20,11 @@ public class GameController {
     }
     
     public void mainLoop(GameContainer gc, int delta) throws SlickException
-    {              
+    {             
         System.out.println(model.isMoving() + " " + model.isClimbing());
                 
         gravity(delta);
+        stabilize(delta);
         
         if (model.getTankHitPoint() <= 0)
         {
@@ -86,28 +87,40 @@ public class GameController {
         model.shot();
     }
     
-    public void rotateLeft(int delta)
+    public boolean rotateLeft(int delta)
     {
         float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
         
-        model.tankRotate(-rotateAngle);
-        model.tankCannonRotate(-rotateAngle, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
-        model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) + rotateAngle);
-
-        model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankSimpleCenterX(),
-                model.getTankSimpleCenterY());
+        for (int i = 0; i < rotateAngle; i++)
+        {
+            model.rotate(-1);
+            
+            if (model.tankCollidesWithLevel())
+            {
+                model.rotate(1);
+                return false;
+            }
+        }
+        
+        return true;
     }
     
-    public void rotateRight(int delta)
+    public boolean rotateRight(int delta)
     {
         float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
         
-        model.tankRotate(rotateAngle);
-        model.tankCannonRotate(rotateAngle, model.getTankSimpleCenterX(), model.getTankSimpleCenterY());
-        model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) - rotateAngle);
+        for (int i = 0; i < rotateAngle; i++)
+        {
+            model.rotate(1);
+            
+            if (model.tankCollidesWithLevel())
+            {
+                model.rotate(-1);
+                return false;
+            }
+        }
         
-        model.shellRotate(model.getShellBackIndex(), rotateAngle, model.getTankSimpleCenterX(),
-                model.getTankSimpleCenterY());
+        return true;
     }
     
     public void upGun(int delta)
@@ -193,23 +206,6 @@ public class GameController {
                 model.setMoving(Move.BACK);
             }
         }
-        
-        /*
-        model.setPositionX(model.getTankX() - movement);
-        model.setTankCannonX(model.getTankCannonX() - movement);
-        model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() - movement);
-        
-        model.setShellX(model.getShellBackIndex(), model.getShellX(model.getShellBackIndex()) - movement);
-        
-        if (model.tankCollidesWithLevel())
-        {
-            model.setPositionX(model.getTankBase().getX() + movement);
-            model.setTankCannonX(model.getTankCannonX() + movement);
-            model.setTankCannonRotationPointX(model.getTankCannonRotationPointX() + movement);
-            
-            model.setShellX(model.getShellBackIndex(), model.getShellX(model.getShellBackIndex()) + movement);
-        }
-        */
     }
     
     public void moveForth(int delta)
@@ -263,7 +259,7 @@ public class GameController {
             model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() + movement);
             
             model.setShellY(model.getShellBackIndex(), model.getShellY(0) + movement);
-        }
+        }        
     }
     
     public void moveDown(int delta)
@@ -283,6 +279,30 @@ public class GameController {
             model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() - movement);
             
             model.setShellY(model.getShellBackIndex(), model.getShellY(model.getShellBackIndex()) - movement);
+        }        
+    }
+    
+    public void stabilize(int delta)
+    {        
+        if ((model.isMoving() == Move.FORTH && model.isClimbing() == Climb.UP)
+                || (model.isMoving() == Move.BACK && model.isClimbing() == Climb.DOWN))
+        {            
+                rotateLeft(delta);            
+        }
+        else
+        {
+            if ((model.isMoving() == Move.BACK && model.isClimbing() == Climb.UP)
+                    || (model.isMoving() == Move.FORTH && model.isClimbing() == Climb.DOWN))
+            {
+                   rotateRight(delta);
+            }
+            else
+            {
+                if (Float.compare(model.getTankRotateAngle(), -2) > 0)
+                    rotateLeft(delta);
+                else if (Float.compare(model.getTankRotateAngle(), 2) < 0)
+                    rotateRight(delta);
+            }
         }
     }
     
@@ -294,13 +314,13 @@ public class GameController {
             
             if (model.tankCollidesWithLevel())
             {
-                model.moveY(-1);
+                model.moveY(-1);                
             }
             else
             {
                 model.setClimbing(Climb.DOWN);
             }
-        } 
+        }         
     }
     
     public boolean isGameOver()

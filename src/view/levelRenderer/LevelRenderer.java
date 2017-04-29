@@ -1,5 +1,6 @@
 package view.levelRenderer;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -15,6 +16,7 @@ public class LevelRenderer {
     private Level level;
     
     private float infoStringHeight = 0;
+    private float scale = 1;
     
     private FieldRenderer   fieldRenderer;
     private TankRenderer    tankRenderer;
@@ -25,18 +27,30 @@ public class LevelRenderer {
         fieldRenderer = new FieldRenderer();
         tankRenderer = new TankRenderer();
         tankRenderer.setShellRenderer(new ShellRenderer());
-        //shellRenderer = new ShellRenderer();
     }
     
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
+        scale(g);
         g.translate(-level.getCameraX(), -level.getCameraY());
         fieldRenderer.render(gc, g);
         tankRenderer.render(gc, g);
-        //shellRenderer.render(gc, g);
         drawInfo(g);
     }
 
+    public void scale(Graphics g)
+    {
+        int dWheal = Mouse.getDWheel();
+        
+        if (dWheal > 0)
+            scale += 0.1;
+
+        if (dWheal < 0)
+            scale -= 0.1;
+       
+        g.scale(scale, scale);
+    }
+    
     public void drawInfo(Graphics g)
     {
         drawShotInfo(g);
@@ -87,13 +101,10 @@ public class LevelRenderer {
     public void setTankRenderer(TankRenderer tr)
     {
         tankRenderer = tr;
-        //tr.setCamera(level.getCamera());
     }
     
     public void setShellRenderer(ShellRenderer sr)
     {
         tankRenderer.setShellRenderer(sr);
-        //shellRenderer = sr;
-        //sr.setCamera(level.getCamera());
     }
 }

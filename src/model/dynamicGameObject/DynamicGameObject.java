@@ -169,7 +169,7 @@ implements GameObject,
     {
         return base.intersects(s);
     }
-    
+
     @Override
     public boolean isContains(GameObject object) throws IllegalArgumentException
     {

@@ -66,6 +66,7 @@ public class TankRenderer extends DynamicRenderer {
             shellRenderer.render(gc, g);
         }
 
+        drawBase(g, renderingObject.getBase());
         drawAnimation(g);
     }
 

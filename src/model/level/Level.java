@@ -600,25 +600,16 @@ public class Level {
  
     public Camera getCamera()
     {
-        //if (actor.isShooting() && actor.isMoving() == Move.STOP)
-        //    return shellCamera;
-        
         return actorCamera;
     }
     
     public float getCameraX()
     {
-        //if (actor.isShooting() && actor.isMoving() == Move.STOP)
-        //    return shellCamera.getX();
-        
         return actorCamera.getX();
     }
     
     public float getCameraY()
     {
-        //if (actor.isShooting() && actor.isMoving() == Move.STOP)
-        //    return shellCamera.getY();
-        
         return actorCamera.getY();
     }
     
@@ -660,5 +651,33 @@ public class Level {
         actor.setShellBackY(actor.getShellBackY() + movement);
         
         actorCamera.setY(actorCamera.getY() + movement);
+    }
+    
+    public void rotate(float rotateAngle)
+    {
+        actor.rotate(rotateAngle);
+        actor.cannonRotate(rotateAngle, actor.getSimpleCenterX(), actor.getSimpleCenterY());
+        actor.setShotStartAngle(actor.getShellBackIndex(), actor.getShotStartAngle(actor.getShellBackIndex()) - rotateAngle);
+        actor.shellRotate(actor.getShellBackIndex(), rotateAngle, actor.getSimpleCenterX(), actor.getSimpleCenterY());
+    }
+    
+    public float getTankMinX()
+    {
+        return actor.getMinX();
+    }
+    
+    public float getTankMinY()
+    {
+        return actor.getMinY();
+    }
+    
+    public float getTankMaxX()
+    {
+        return actor.getMaxX();
+    }
+    
+    public float getTankMaxY()
+    {
+        return actor.getMaxY();
     }
 }

@@ -63,7 +63,7 @@ public class Game extends BasicGame {
     {
         try
         {        
-            ConfigManager configManager = new ConfigManager("physic.ini");
+            ConfigManager configManager = new ConfigManager("physicSC.ini");
             
             FieldSheduler fieldSheduler = new FieldSheduler();
             field = fieldSheduler.createStaticLevel(new FieldBuilder(), configManager);

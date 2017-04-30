@@ -10,16 +10,18 @@ import org.newdawn.slick.SpriteSheet;
 import model.tank.Move;
 import model.tank.Tank;
 import view.dynamicRenderer.DynamicRenderer;
+import view.shellRenderer.ShellRenderer;
 
 public class TankRenderer extends DynamicRenderer {
-    private Tank      renderingObject;
+    private Tank            renderingObject;
+    private ShellRenderer   shellRenderer;
     
-    private Animation movingTank;
-    private Image     frame;
-    private Image     cannon; 
+    private Animation       movingTank;
+    private Image           frame;
+    private Image           cannon; 
     
-    private int       movingTankSpriteCount;
-    private int       selectTankSprite;
+    private int             movingTankSpriteCount;
+    private int             selectTankSprite;
 
     public TankRenderer()
     {
@@ -30,6 +32,11 @@ public class TankRenderer extends DynamicRenderer {
     {
         renderingObject = rObject;
         boundingRadius = renderingObject.getBoundingCircleRadius();
+    }
+    
+    public void setShellRenderer(ShellRenderer sRenderer)
+    {
+        shellRenderer = sRenderer;
     }
     
     public void setSpriteSheet(Image sheet, int spriteCount) throws SlickException
@@ -52,10 +59,14 @@ public class TankRenderer extends DynamicRenderer {
     
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
-    {
-        //drawBase(g, renderingObject.getBase());
-        //drawBase(g, renderingObject.getCannonBase());
-        //drawBoundingSphere(g, renderingObject);
+    {        
+        for (int i = 0; i < renderingObject.getShellCount(); i++)
+        {
+            shellRenderer.setShell(renderingObject.getShell(i));
+            shellRenderer.render(gc, g);
+        }
+
+        drawBase(g, renderingObject.getBase());
         drawAnimation(g);
     }
 
@@ -69,7 +80,7 @@ public class TankRenderer extends DynamicRenderer {
             if (--selectTankSprite <= 0)
                 selectTankSprite = movingTankSpriteCount - 1;
             
-        cannon.setRotation(90 - renderingObject.getShellStartAngle());
+        cannon.setRotation(90 - renderingObject.getShellStartAngle(renderingObject.getShellCount() - 1));
         cannon.drawCentered(renderingObject.getCannonCenterX(), 
                             renderingObject.getCannonCenterY());
         

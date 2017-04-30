@@ -1,5 +1,6 @@
 package view.levelRenderer;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -15,28 +16,41 @@ public class LevelRenderer {
     private Level level;
     
     private float infoStringHeight = 0;
+    private float scale = 1;
     
     private FieldRenderer   fieldRenderer;
     private TankRenderer    tankRenderer;
-    private ShellRenderer   shellRenderer;
     
     public LevelRenderer()
     {
         level = new Level();
         fieldRenderer = new FieldRenderer();
         tankRenderer = new TankRenderer();
-        shellRenderer = new ShellRenderer();
+        tankRenderer.setShellRenderer(new ShellRenderer());
     }
     
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
+        scale(g);
         g.translate(-level.getCameraX(), -level.getCameraY());
         fieldRenderer.render(gc, g);
         tankRenderer.render(gc, g);
-        shellRenderer.render(gc, g);
         drawInfo(g);
     }
 
+    public void scale(Graphics g)
+    {
+        int dWheal = Mouse.getDWheel();
+        
+        if (dWheal > 0)
+            scale += 0.1;
+
+        if (dWheal < 0)
+            scale -= 0.1;
+       
+        g.scale(scale, scale);
+    }
+    
     public void drawInfo(Graphics g)
     {
         drawShotInfo(g);
@@ -46,9 +60,9 @@ public class LevelRenderer {
     public void drawShotInfo(Graphics g)
     {
         g.setColor(Color.white);
-        g.drawString("Speed: " + Float.toString(level.getShotStartSpeed()), 
+        g.drawString("Speed: " + Float.toString(level.getShotStartSpeed(level.getShellCount() - 1)), 
                 20 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());    
-        g.drawString("Angle: " + Float.toString(level.getShotStartAngle() % 180), 
+        g.drawString("Angle: " + Float.toString(level.getShotStartAngle(level.getShellCount() - 1) % 180), 
                 190 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());
     }
     
@@ -87,12 +101,10 @@ public class LevelRenderer {
     public void setTankRenderer(TankRenderer tr)
     {
         tankRenderer = tr;
-        tr.setCamera(level.getCamera());
     }
     
     public void setShellRenderer(ShellRenderer sr)
     {
-        shellRenderer = sr;
-        sr.setCamera(level.getCamera());
+        tankRenderer.setShellRenderer(sr);
     }
 }

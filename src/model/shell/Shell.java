@@ -9,7 +9,9 @@ import model.dynamicGameObject.DynamicGameObject;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 
-public class Shell extends DynamicGameObject {
+public class Shell 
+extends DynamicGameObject 
+{
     private static final long serialVersionUID = 5640440536160496891L;
 
     private ArrayList<Vector2f> path;
@@ -24,7 +26,7 @@ public class Shell extends DynamicGameObject {
     private boolean             collides = false;
     
     private int                 damage;
-    
+        
     public Shell()
     {
         base = new Polygon();
@@ -37,6 +39,21 @@ public class Shell extends DynamicGameObject {
         this.base = base;
         path = new ArrayList<Vector2f>();
         boundingRadius = base.getBoundingCircleRadius();
+    }
+    
+    @Override
+    public Shell clone()
+    {
+        try 
+        {
+            Shell clon = (Shell) super.clone();
+            clon.setBase(new Polygon(base.getPoints()));
+            return clon;
+        }
+        catch (CloneNotSupportedException e) 
+        {
+            throw new InternalError();
+        }
     }
     
     public boolean isFlying()

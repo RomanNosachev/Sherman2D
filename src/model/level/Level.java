@@ -4,6 +4,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import model.camera.Camera;
 import model.field.Field;
+import model.tank.Climb;
 import model.tank.Move;
 import model.tank.Tank;
 
@@ -30,7 +31,7 @@ public class Level {
         this.actor = actor;
         this.field = field;
         actorCamera = new Camera(new Vector2f(actor.getStartPosition()));
-        shellCamera = new Camera(new Vector2f(actor.getShellStartPosition()));
+        shellCamera = new Camera(new Vector2f(actor.getShellStartPosition(0)));
     }
     
     public void setTank(Tank tank)
@@ -42,15 +43,20 @@ public class Level {
     {
         this.field = field;
     }
-    
-    public boolean isShooting()
+
+    public boolean isShellFlying(int index)
     {
-        return actor.isShooting();
+        return actor.isShellFlying(index);
     }
     
-    public void setIsMoving(Move fl)
+    public void setShellFlying(int index, boolean fl)
     {
-        actor.setIsMoving(fl);
+        actor.setShellFlying(index, fl);
+    }
+    
+    public void setMoving(Move fl)
+    {
+        actor.setMoving(fl);
     }
     
     public Move isMoving()
@@ -58,40 +64,50 @@ public class Level {
         return actor.isMoving();
     }
     
-    public void setShellCollides(boolean collides)
+    public void setClimbing(Climb fl)
     {
-        actor.setShellCollides(collides);
+        actor.setClimbing(fl);
     }
     
-    public void setShooting(boolean fl)
+    public Climb isClimbing()
     {
-        actor.setShooting(fl);
+        return actor.isClimbing();
     }
     
-    public void setShellPosition(Vector2f pos)
+    public void setShellCollides(int index, boolean collides)
     {
-        actor.setShellPosition(pos);
-        shellCamera.setX(pos.x - actor.getShellStartPositionX());
-        shellCamera.setY(pos.y - actor.getShellStartPositionY());
+        actor.setShellCollides(index, collides);
     }
     
-    public void setShellPosition(float x, float y)
+    public boolean isShellCollides(int index)
     {
-        actor.setShellPosition(x, y);
-        shellCamera.setX(x - actor.getShellStartPositionX());
-        shellCamera.setY(y - actor.getShellStartPositionY());
+        return actor.isShellCollides(index);
+    }
+
+    public void setShellPosition(int index, Vector2f pos)
+    {
+        actor.setShellPosition(index, pos);
+        shellCamera.setX(pos.x - actor.getShellStartPositionX(index));
+        shellCamera.setY(pos.y - actor.getShellStartPositionY(index));
     }
     
-    public void setShellX(float x)
+    public void setShellPosition(int index, float x, float y)
     {
-        actor.setShellX(x);
-        shellCamera.setX(x - actor.getShellStartPositionX());
+        actor.setShellPosition(index, x, y);
+        shellCamera.setX(x - actor.getShellStartPositionX(index));
+        shellCamera.setY(y - actor.getShellStartPositionY(index));
     }
     
-    public void setShellY(float y)
+    public void setShellX(int index, float x)
     {
-        actor.setShellY(y);
-        shellCamera.setY(y - actor.getShellStartPositionY());
+        actor.setShellX(index, x);
+        shellCamera.setX(x - actor.getShellStartPositionX(index));
+    }
+    
+    public void setShellY(int index, float y)
+    {
+        actor.setShellY(index, y);
+        shellCamera.setY(y - actor.getShellStartPositionY(index));
     }
     
     public void setPosition(Vector2f pos)
@@ -130,29 +146,29 @@ public class Level {
         return actor.getMaxAimingAngle();
     }
     
-    public void setShotStartSpeed(float speed)
+    public void setShotStartSpeed(int index, float speed)
     {
-        actor.setShotStartSpeed(speed);
+        actor.setShotStartSpeed(index, speed);
     }
     
-    public float getShotStartSpeed()
+    public float getShotStartSpeed(int index)
     {
-        return actor.getShotStartSpeed();
+        return actor.getShotStartSpeed(index);
     }
     
-    public void setShotStartAngle(float angle)
+    public void setShotStartAngle(int index, float angle)
     {
-        actor.setShotStartAngle(angle);
+        actor.setShotStartAngle(index, angle);
     }
     
-    public float getShellRotateAngle()
+    public float getShellRotateAngle(int index)
     {
-        return actor.getShellRotateAngle();
+        return actor.getShellRotateAngle(index);
     }
     
-    public float getShotStartAngle()
+    public float getShotStartAngle(int index)
     {
-        return actor.getShotStartAngle();
+        return actor.getShotStartAngle(index);
     }
     
     public void shot()
@@ -170,64 +186,64 @@ public class Level {
         return actor.getMovePoint();
     }
     
-    public void setShotDirection(float x, float y)
+    public void setShotDirection(int index, float x, float y)
     {
-        actor.setShotDirection(x, y);
+        actor.setShotDirection(index, x, y);
     }
     
-    public void setShotDirectionX(float x)
+    public void setShotDirectionX(int index, float x)
     {
-        actor.setShotDirectionX(x);
+        actor.setShotDirectionX(index, x);
     }
     
-    public void setShotDirectionY(float y)
+    public void setShotDirectionY(int index, float y)
     {
-        actor.setShotDirectionY(y);
+        actor.setShotDirectionY(index, y);
     }
     
-    public Vector2f getShotDirection()
+    public Vector2f getShotDirection(int index)
     {
-        return actor.getShotDirection();
+        return actor.getShotDirection(index);
     }
     
-    public float getShotDirectionX()
+    public float getShotDirectionX(int index)
     {
-        return actor.getShotDirectionX();
+        return actor.getShotDirectionX(index);
     }
     
-    public float getShotDirectionY()
+    public float getShotDirectionY(int index)
     {
-        return actor.getShotDirectionY();
+        return actor.getShotDirectionY(index);
     }
     
-    public void addShotPathPoint(Vector2f pos)
+    public void addShotPathPoint(int index, Vector2f pos)
     {
-        actor.addShotPathPoint(pos);
+        actor.addShotPathPoint(index, pos);
     }
     
-    public int getShotPathSize()
+    public int getShotPathSize(int index)
     {
-        return actor.getShotPathSize();
+        return actor.getShotPathSize(index);
     }
     
-    public Vector2f getShotPathPoint(int index)
+    public Vector2f getShotPathPoint(int index, int pointIndex)
     {
-        return actor.getShotPathPoint(index);
+        return actor.getShotPathPoint(index, pointIndex);
     }
     
-    public void addShotPathPoint(float x, float y)
+    public void addShotPathPoint(int index, float x, float y)
     {
-        actor.addShotPathPoint(x, y);
+        actor.addShotPathPoint(index, x, y);
     }
     
-    public boolean shellBoundingWithTank()
+    public boolean shellBoundingWithTank(int index)
     {
-        return actor.boundingWith(actor.getShellBoundingCircle());
+        return actor.boundingWith(actor.getShellBoundingCircle(index));
     }
     
-    public boolean shellCollidesWithTank()
+    public boolean shellCollidesWithTank(int index)
     {
-        return actor.collidesWith(actor.getShellBase());
+        return actor.collidesWith(actor.getShellBase(index));
     }
     
     public boolean tankBoundingWithLevel()
@@ -235,9 +251,9 @@ public class Level {
         return actor.boundingWith(field.getBase());
     }
     
-    public boolean shellBoundingWithLevel()
+    public boolean shellBoundingWithLevel(int index)
     {
-        return field.collidesWith(actor.getShellBoundingCircle());
+        return field.collidesWith(actor.getShellBoundingCircle(index));
     }
     
     public boolean tankCollidesWithLevel()
@@ -245,44 +261,44 @@ public class Level {
         return actor.collidesWith(field.getBase());
     }
     
-    public boolean shellCollidesWithLevel()
+    public boolean shellCollidesWithLevel(int index)
     {
-        return field.collidesWith(actor.getShellBase());
+        return field.collidesWith(actor.getShellBase(index));
     }
     
-    public boolean tankContainsShell()
+    public boolean tankContainsShell(int index)
     {
-        return actor.isContains(actor.getShellBase());
+        return actor.isContains(actor.getShellBase(index));
     }
     
-    public boolean levelContainsShell()
+    public boolean levelContainsShell(int index)
     {
-        return field.isContains(actor.getShellBase());
+        return field.isContains(actor.getShellBase(index));
     }
     
-    public boolean tankExcludesShell()
+    public boolean tankExcludesShell(int index)
     {
-        return !actor.collidesWith(actor.getShellBase()) && !actor.isContains(getShellBase());
+        return !actor.collidesWith(actor.getShellBase(index)) && !actor.isContains(getShellBase(index));
     }
     
-    public void shellRotate(float angle)
+    public void shellRotate(int index, float angle)
     {
-        actor.shellRotate(angle);
+        actor.shellRotate(index, angle);
     }
     
-    public void shellRotate(float angle, float x, float y)
+    public void shellRotate(int index, float angle, float x, float y)
     {
-        actor.shellRotate(angle, x, y);
+        actor.shellRotate(index, angle, x, y);
     }
     
-    public void setShellRotation(float angle)
+    public void setShellRotation(int index, float angle)
     {
-        actor.shellRotate(angle - actor.getShellRotateAngle());
+        actor.shellRotate(index, angle - actor.getShellRotateAngle(index));
     }
     
-    public void setShellRotation(float angle, float x, float y)
+    public void setShellRotation(int index, float angle, float x, float y)
     {
-        actor.shellRotate(angle - actor.getShellRotateAngle(), x, y);
+        actor.shellRotate(index, angle - actor.getShellRotateAngle(index), x, y);
     }
     
     public void tankCannonRotate(float angle)
@@ -331,10 +347,10 @@ public class Level {
         actor.rotate(angle);
     }
     
-    public void tankRotate(float angle, float x, float y)
+    public void tankRotate(int index, float angle, float x, float y)
     {
         actor.rotate(angle, x, y);
-        actor.setShotStartAngle(actor.getShotStartAngle() - angle);
+        actor.setShotStartAngle(index, actor.getShotStartAngle(index) - angle);
     }
     
     public float getTankRotateAngle()
@@ -352,24 +368,24 @@ public class Level {
         return actor.getWidth();
     }
     
-    public float getShellStartWidth()
+    public float getShellStartWidth(int index)
     {
-        return actor.getShellStartWidth();
+        return actor.getShellStartWidth(index);
     }
     
-    public float getShellStartHeight()
+    public float getShellStartHeight(int index)
     {
-        return actor.getShellStartHeight();
+        return actor.getShellStartHeight(index);
     }
     
-    public float getShellX()
+    public float getShellX(int index)
     {
-        return actor.getShellBase().getX();
+        return actor.getShellBase(index).getX();
     }
     
-    public float getShellY()
+    public float getShellY(int index)
     {
-        return actor.getShellBase().getY();
+        return actor.getShellBase(index).getY();
     }
     
     public float getTankX()
@@ -432,29 +448,29 @@ public class Level {
         actor.setCannonStartPosition(cannonPos);
     }
     
-    public float getShellCenterX()
+    public float getShellCenterX(int index)
     {
-        return actor.getShellBase().getCenterX();
+        return actor.getShellCenterX(index);
     }
     
-    public float getShellCenterY()
+    public float getShellCenterY(int index)
     {
-        return actor.getShellBase().getCenterY();
+        return actor.getShellCenterY(index);
     }
     
-    public Vector2f getShellStartPosition()
+    public Vector2f getShellStartPosition(int index)
     {
-        return actor.getShellStartPosition();
+        return actor.getShellStartPosition(index);
     }
     
-    public float getShellStartPositionX()
+    public float getShellStartPositionX(int index)
     {
-        return actor.getShellStartPositionX();
+        return actor.getShellStartPositionX(index);
     }
     
-    public float getShellStartPositionY()
+    public float getShellStartPositionY(int index)
     {
-        return actor.getShellStartPositionY();
+        return actor.getShellStartPositionY(index);
     }
     
     public float getTankSimpleCenterY()
@@ -492,9 +508,9 @@ public class Level {
         return actor.getSimpleBase();
     }
     
-    public Shape getShellBase()
+    public Shape getShellBase(int index)
     {
-        return actor.getShellBase();
+        return actor.getShellBase(index);
     }
     
     public float getTankCannonX()
@@ -557,9 +573,9 @@ public class Level {
         return actor.getHitPoint();
     }
     
-    public int getShellDamage()
+    public int getShellDamage(int index)
     {
-        return actor.getShellDamage();
+        return actor.getShellDamage(index);
     }
 
     public boolean isTankDamaged()
@@ -572,37 +588,96 @@ public class Level {
         actor.setDamaged(tankDamaged);
     }
     
-    public void setShellCollisionPoint(Vector2f point)
+    public void setShellCollisionPoint(int index, Vector2f point)
     {
-        actor.setShellCollisionPoint(point);
+        actor.setShellCollisionPoint(index, point);
     }
     
-    public Vector2f getShellPathBack()
+    public Vector2f getShellPathBack(int index)
     {
-        return actor.getShellPathBack();
+        return actor.getShellPathBack(index);
     }
  
     public Camera getCamera()
     {
-        if (actor.isShooting() && actor.isMoving() == Move.STOP)
-            return shellCamera;
-        
         return actorCamera;
     }
     
     public float getCameraX()
     {
-        if (actor.isShooting() && actor.isMoving() == Move.STOP)
-            return shellCamera.getX();
-        
         return actorCamera.getX();
     }
     
     public float getCameraY()
     {
-        if (actor.isShooting() && actor.isMoving() == Move.STOP)
-            return shellCamera.getY();
-        
         return actorCamera.getY();
+    }
+    
+    public Vector2f getShellPathBegin(int index)
+    {
+        return actor.getShotPathPoint(index, 0);
+    }
+    
+    public int getShellCount()
+    {
+        return actor.getShellCount();
+    }
+    
+    public int getShellBackIndex()
+    {
+        return actor.getShellCount() - 1;
+    }
+    
+    public void removeShell(int index)
+    {
+        actor.removeShell(index);
+    }
+    
+    public void moveX(float movement)
+    {
+        actor.setX(actor.getX() + movement);
+        actor.setCannonX(actor.getCannonX() + movement);
+        actor.setCannonRotationPointX(actor.getCannonRotationPointX() + movement);
+        actor.setShellBackX(actor.getShellBackX() + movement);
+        
+        actorCamera.setX(actorCamera.getX() + movement);
+    }
+    
+    public void moveY(float movement)
+    {
+        actor.setY(actor.getY() + movement);
+        actor.setCannonY(actor.getCannonY() + movement);
+        actor.setCannonRotationPointY(actor.getCannonRotationPointY() + movement);
+        actor.setShellBackY(actor.getShellBackY() + movement);
+        
+        actorCamera.setY(actorCamera.getY() + movement);
+    }
+    
+    public void rotate(float rotateAngle)
+    {
+        actor.rotate(rotateAngle);
+        actor.cannonRotate(rotateAngle, actor.getSimpleCenterX(), actor.getSimpleCenterY());
+        actor.setShotStartAngle(actor.getShellBackIndex(), actor.getShotStartAngle(actor.getShellBackIndex()) - rotateAngle);
+        actor.shellRotate(actor.getShellBackIndex(), rotateAngle, actor.getSimpleCenterX(), actor.getSimpleCenterY());
+    }
+    
+    public float getTankMinX()
+    {
+        return actor.getMinX();
+    }
+    
+    public float getTankMinY()
+    {
+        return actor.getMinY();
+    }
+    
+    public float getTankMaxX()
+    {
+        return actor.getMaxX();
+    }
+    
+    public float getTankMaxY()
+    {
+        return actor.getMaxY();
     }
 }

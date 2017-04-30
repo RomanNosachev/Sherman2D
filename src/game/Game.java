@@ -46,7 +46,7 @@ public class Game extends BasicGame {
     private TankPlayer          actorPlayer;
     
     public Game(String title)
-    {
+    { 
         super(title);
     }
     
@@ -63,7 +63,7 @@ public class Game extends BasicGame {
     {
         try
         {        
-            ConfigManager configManager = new ConfigManager("config.ini");
+            ConfigManager configManager = new ConfigManager("physicSC.ini");
             
             FieldSheduler fieldSheduler = new FieldSheduler();
             field = fieldSheduler.createStaticLevel(new FieldBuilder(), configManager);
@@ -80,15 +80,16 @@ public class Game extends BasicGame {
             controller = new GameController(level);
             input = new KeyController(controller);
             
-            actorRenderer = new TankRenderer(actor);
-            actorRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
-            actorRenderer.setCannonSprite(configManager.loadTankCannonSprite());
-            
             shellRenderer = new ShellRenderer(shell);
             shellRenderer.setSprite(configManager.loadShellSprite());
             shellRenderer.setExplosionSpriteSheet(configManager.loadShellExplosionSpriteSheet(), 
                     configManager.loadShellExplosionSpriteSheetCount());
             
+            actorRenderer = new TankRenderer(actor);
+            actorRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
+            actorRenderer.setCannonSprite(configManager.loadTankCannonSprite());
+            actorRenderer.setShellRenderer(shellRenderer);
+   
             fieldRenderer = new FieldRenderer(field);
             fieldRenderer.setSprite(configManager.loadBackground());
             
@@ -100,7 +101,6 @@ public class Game extends BasicGame {
             levelRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             levelRenderer.setFieldRenderer(fieldRenderer);
             levelRenderer.setTankRenderer(actorRenderer);
-            levelRenderer.setShellRenderer(shellRenderer);
         } 
         catch (IOException e)
         {

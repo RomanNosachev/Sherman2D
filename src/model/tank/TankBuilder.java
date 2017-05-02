@@ -26,6 +26,7 @@ public class TankBuilder implements DynamicGameObjectBuilder {
     public void buildStartPosition(Vector2f pos)
     {
         tank.setStartPosition(pos);
+        tank.setCannonStartPosition(new Vector2f(tank.getCannonX() + pos.x, tank.getCannonY() + pos.y));
         tank.setCannonRotationPoint(new Vector2f(tank.getCannonRotationPointX() + pos.x, tank.getCannonRotationPointY() + pos.y));
         tank.setShellStartPosition(0, tank.getCannonCenterX() - tank.getShellStartHeight(0) / 2, 
                               tank.getCannonCenterY() - tank.getShellStartWidth(0) / 2);        

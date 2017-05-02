@@ -13,12 +13,13 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
+import model.dynamicGameObject.DynamicGameObject;
 import model.shell.Shell;
 import view.dynamicRenderer.DynamicRenderer;
 
-public class ShellRenderer extends DynamicRenderer {
-    private Shell       renderingObject;
-    
+public class ShellRenderer 
+extends DynamicRenderer 
+{    
     private Image       shellSprite;
     private Animation   explosion;
     private Vector2f    explosionPosition;
@@ -29,15 +30,16 @@ public class ShellRenderer extends DynamicRenderer {
         renderingObject = new Shell();
     }
     
-    public ShellRenderer(Shell rObject)
+    public ShellRenderer(DynamicGameObject rObject)
     {
-        renderingObject = rObject;
+        renderingObject = (Shell) rObject;
         boundingRadius = rObject.getBoundingCircleRadius();
     }
     
-    public void setShell(Shell shell)
+    @Override
+    public void setRenderingObject(DynamicGameObject object)
     {
-        renderingObject = shell;
+        renderingObject = (Shell) object;
     }
     
     public void setExplosionSpriteSheet(Image sheet, int spriteCount)
@@ -54,16 +56,16 @@ public class ShellRenderer extends DynamicRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {                
-        if (renderingObject.isFlying())
+        if (((Shell) renderingObject).isFlying())
         {
             drawSprite(g);
         }
         else
         {
-            if (renderingObject.isCollides())
+            if (((Shell) renderingObject).isCollides())
             {                
                 explosion.restart();
-                explosionPosition = renderingObject.getCollisionPoint();
+                explosionPosition = ((Shell) renderingObject).getCollisionPoint();
                 explodes = true;
                 
                 Timer explosionTimer = new Timer(true);
@@ -99,10 +101,10 @@ public class ShellRenderer extends DynamicRenderer {
     {
         g.setColor(new Color(170, 170, 170));
         
-        for (int i = 0; i < renderingObject.getPathSize(); i++)
+        for (int i = 0; i < ((Shell) renderingObject).getPathSize(); i++)
         {
-            g.draw(new Line(renderingObject.getPathPoint(i).getX(), renderingObject.getPathPoint(i).getY(),
-                    renderingObject.getPathPoint(i + 1).getX(), renderingObject.getPathPoint(i + 1).getY()));
+            g.draw(new Line(((Shell) renderingObject).getPathPoint(i).getX(), ((Shell) renderingObject).getPathPoint(i).getY(),
+                    ((Shell) renderingObject).getPathPoint(i + 1).getX(), ((Shell) renderingObject).getPathPoint(i + 1).getY()));
         }
     }
 }

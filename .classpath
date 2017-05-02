@@ -12,5 +12,6 @@
 	<classpathentry exported="true" kind="lib" path="D:/Grandfather/Documents/Eclipse/Sherman2D/lib/lwjgl.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/Grandfather/Documents/Eclipse/Sherman2D/lib/lwjgl_util.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/Grandfather/Documents/Eclipse/Sherman2D/lib/slick.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/Eclipse/freetts-1.2/bin/HelloWorld.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

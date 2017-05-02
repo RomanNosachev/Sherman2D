@@ -7,7 +7,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import model.dynamicGameObject.DynamicGameObject;
 import model.level.Level;
+import view.dynamicRenderer.BarrelRenderer;
+import view.dynamicRenderer.BoxRenderer;
 import view.fieldRenderer.FieldRenderer;
 import view.shellRenderer.ShellRenderer;
 import view.tankRenderer.TankRenderer;
@@ -20,6 +23,8 @@ public class LevelRenderer {
     
     private FieldRenderer   fieldRenderer;
     private TankRenderer    tankRenderer;
+    private BoxRenderer     boxRenderer;
+    private BarrelRenderer  barrelRenderer;
     
     public LevelRenderer()
     {
@@ -35,6 +40,18 @@ public class LevelRenderer {
         g.translate(-level.getCameraX(), -level.getCameraY());
         fieldRenderer.render(gc, g);
         tankRenderer.render(gc, g);
+        
+        for (DynamicGameObject object : level.getObjects())
+        {
+            g.draw(object.getBase());
+            
+            if (object.getClass() == boxRenderer.getRenderingObjectClass())
+            {
+                boxRenderer.setRenderingObject(object);
+                boxRenderer.render(gc, g);
+            }
+        }
+        
         drawInfo(g);
     }
 
@@ -59,7 +76,7 @@ public class LevelRenderer {
     
     public void drawShotInfo(Graphics g)
     {
-        g.setColor(Color.white);
+        g.setColor(new Color(25, 0, 200));
         g.drawString("Speed: " + Float.toString(level.getShotStartSpeed(level.getShellCount() - 1)), 
                 20 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());    
         g.drawString("Angle: " + Float.toString(level.getShotStartAngle(level.getShellCount() - 1) % 180), 
@@ -71,9 +88,9 @@ public class LevelRenderer {
         if (level.isTankDamaged())
             g.setColor(Color.red);
         else
-            g.setColor(Color.white);
+            g.setColor(new Color(25, 0, 200));
         
-        g.drawString("HP: " + Integer.toString(level.getTankHitPoint()), 
+        g.drawString("HP: " + Float.toString(level.getTankHitPoint()), 
                 Display.getWidth() - 100 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());
     }
     
@@ -95,7 +112,6 @@ public class LevelRenderer {
     public void setFieldRenderer(FieldRenderer fr)
     {
         fieldRenderer = fr;
-        fr.setCamera(level.getCamera());
     }
     
     public void setTankRenderer(TankRenderer tr)
@@ -106,5 +122,15 @@ public class LevelRenderer {
     public void setShellRenderer(ShellRenderer sr)
     {
         tankRenderer.setShellRenderer(sr);
+    }
+    
+    public void setBarrelRenderer(BarrelRenderer br)
+    {
+        barrelRenderer = br;
+    }
+    
+    public void setBoxRenderer(BoxRenderer br)
+    {
+        boxRenderer = br;
     }
 }

@@ -24,9 +24,13 @@ public class GameController {
         System.out.println(model.isMoving() + " " + model.isClimbing());
                 
         gravity(delta);
-        stabilize(delta);
         
         if (model.getTankHitPoint() <= 0)
+        {
+            setGameOver(true);
+        }
+        
+        if (model.getTankRotateAngle() > 135 || model.getTankRotateAngle() < -135)
         {
             setGameOver(true);
         }
@@ -89,7 +93,7 @@ public class GameController {
     
     public boolean rotateLeft(int delta)
     {
-        float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
+        float rotateAngle = 90F * delta / PhysicConstants.CLOCK_PER_SEC;
         
         for (int i = 0; i < rotateAngle; i++)
         {
@@ -107,7 +111,7 @@ public class GameController {
     
     public boolean rotateRight(int delta)
     {
-        float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
+        float rotateAngle = 90F * delta / PhysicConstants.CLOCK_PER_SEC;
         
         for (int i = 0; i < rotateAngle; i++)
         {
@@ -242,6 +246,7 @@ public class GameController {
         model.setClimbing(Climb.STRAIGHT);
     }
     
+    @Deprecated
     public void moveUp(int delta)
     {
         float movement = model.getMovePoint() * 10 * delta / PhysicConstants.CLOCK_PER_SEC;
@@ -262,6 +267,7 @@ public class GameController {
         }        
     }
     
+    @Deprecated
     public void moveDown(int delta)
     {
         float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
@@ -321,6 +327,8 @@ public class GameController {
                 model.setClimbing(Climb.DOWN);
             }
         }         
+        
+        stabilize(delta);
     }
     
     public boolean isGameOver()

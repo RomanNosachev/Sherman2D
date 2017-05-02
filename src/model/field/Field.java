@@ -1,7 +1,7 @@
 package model.field;
 
-import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.geom.Rectangle;
+import java.util.LinkedList;
+
 import org.newdawn.slick.geom.Shape;
 
 import model.staticGameObject.StaticGameObject;
@@ -9,31 +9,33 @@ import model.staticGameObject.StaticGameObject;
 public class Field extends StaticGameObject {
     private static final long serialVersionUID = 6584930782547834554L;
     
+    private LinkedList<StaticGameObject> objects;
     private float floorHeight;
     
     public Field()
     {
-        base = new Rectangle(0, 0, 0, 0);
+        super();
+        objects = new LinkedList<>();
     }
     
-    public Field(float floorHeight)
+    public Field(Shape PolygonShape)
     {
-        this.floorHeight = floorHeight;
-        base = new Rectangle(0, 0, 0, 0);
+       super(PolygonShape);
+    }
+
+    public LinkedList<StaticGameObject> getObjects()
+    {
+        return objects;
     }
     
-    public Field(float floorHeight, Shape PolygonShape)
+    public void addObject(StaticGameObject object)
     {
-        this.floorHeight = floorHeight;
-        base = PolygonShape;
+        objects.add(object);
     }
     
-    public Field(float floorHeigt, float[] PolygonPoints)
+    public void removeObject(int index)
     {
-        this.floorHeight = floorHeigt;
-        
-        if (PolygonPoints.length % 2 == 0)
-            base = new Polygon(PolygonPoints);
+        objects.remove(index);
     }
     
     public float getFloorHeight()

@@ -42,9 +42,9 @@ public class ShellBuilder implements DynamicGameObjectBuilder {
         shell.setStartPosition(pos);
     }
     
-    public void buildDamage(int damage)
+    public void buildDamage(float damage)
     {
-        shell.setDamage(damage);
+        shell.setPower(damage);
     }
     
     @Override

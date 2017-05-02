@@ -1,5 +1,6 @@
 package model.staticGameObject;
 
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 import model.gameObject.GameObject;
@@ -8,6 +9,16 @@ public class StaticGameObject implements GameObject {
     private static final long serialVersionUID = -7882741326275027819L;
     
     protected Shape base;
+    
+    public StaticGameObject()
+    {
+        base = new Rectangle(0, 0, 0, 0);
+    }
+    
+    public StaticGameObject(Shape base)
+    {
+        this.base = base;
+    }
     
     @Override
     public boolean collidesWith(Shape s) throws IllegalArgumentException

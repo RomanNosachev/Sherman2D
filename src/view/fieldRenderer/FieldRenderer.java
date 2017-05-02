@@ -7,14 +7,14 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import model.camera.Camera;
 import model.field.Field;
+import model.staticGameObject.StaticGameObject;
 import view.staticRenderer.StaticRenderer;
 
 public class FieldRenderer extends StaticRenderer {
-    private Field renderingObject;
-    
-    private Image background;
+    private Field           renderingObject;
+
+    private Image           background;
     
     public FieldRenderer()
     {
@@ -26,11 +26,6 @@ public class FieldRenderer extends StaticRenderer {
         renderingObject = rObject;
     }
 
-    public void setCamera(Camera cam)
-    {
-        camera = cam;
-    }
-    
     public void setSprite(Image sprite)
     {
         background = sprite;
@@ -41,9 +36,17 @@ public class FieldRenderer extends StaticRenderer {
     {
         g.setBackground(new Color(246, 233, 217));
         background.draw(0, 0);
-        //drawDebugLines(g, 50);
         g.setColor(new Color(104, 82, 47));
         g.draw(renderingObject.getBase());
+        drawObjects(g);
+    }
+    
+    public void drawObjects(Graphics g)
+    {
+        for (StaticGameObject object: renderingObject.getObjects())
+        {            
+            drawBase(g, object.getBase());
+        }
     }
     
     public void drawDebugLines(Graphics g, int size)

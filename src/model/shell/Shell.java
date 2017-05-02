@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import org.newdawn.slick.geom.Vector2f;
 
 import model.dynamicGameObject.DynamicGameObject;
+import model.gameObject.Explosivable;
 
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 
 public class Shell 
 extends DynamicGameObject 
+implements Explosivable
 {
     private static final long serialVersionUID = 5640440536160496891L;
 
@@ -25,7 +27,8 @@ extends DynamicGameObject
     private boolean             flying = false;
     private boolean             collides = false;
     
-    private int                 damage;
+    private float               damage;
+    private float               explosionRadius;
         
     public Shell()
     {
@@ -147,16 +150,6 @@ extends DynamicGameObject
         path.clear();
     }
 
-    public int getDamage()
-    {
-        return damage;
-    }
-
-    public void setDamage(int damage)
-    {
-        this.damage = damage;
-    }
-
     public boolean isCollides()
     {
         return collides;
@@ -175,5 +168,29 @@ extends DynamicGameObject
     public void setCollisionPoint(Vector2f collisionPoint)
     {
         this.collisionPoint = collisionPoint;
+    }
+
+    @Override
+    public float getRadius()
+    {
+        return explosionRadius;
+    }
+
+    @Override
+    public void setRadius(float radius)
+    {
+        explosionRadius = radius;
+    }
+
+    @Override
+    public float getPower()
+    {
+        return damage;
+    }
+
+    @Override
+    public void setPower(float power)
+    {
+        damage = power;
     }
 }

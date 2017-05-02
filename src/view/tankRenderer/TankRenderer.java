@@ -7,17 +7,18 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import model.dynamicGameObject.DynamicGameObject;
 import model.tank.Move;
 import model.tank.Tank;
 import view.dynamicRenderer.DynamicRenderer;
 import view.shellRenderer.ShellRenderer;
 
-public class TankRenderer extends DynamicRenderer {
-    private Tank            renderingObject;
+public class TankRenderer 
+extends DynamicRenderer 
+{
     private ShellRenderer   shellRenderer;
     
     private Animation       movingTank;
-    private Image           frame;
     private Image           cannon; 
     
     private int             movingTankSpriteCount;
@@ -28,9 +29,16 @@ public class TankRenderer extends DynamicRenderer {
         renderingObject = new Tank();
     }
     
-    public TankRenderer(Tank rObject)
+    public TankRenderer(DynamicGameObject rObject)
     {
-        renderingObject = rObject;
+        renderingObject = (Tank) rObject;
+        boundingRadius = renderingObject.getBoundingCircleRadius();
+    }
+    
+    @Override
+    public void setRenderingObject(DynamicGameObject object)
+    {
+        renderingObject = (Tank) object;
         boundingRadius = renderingObject.getBoundingCircleRadius();
     }
     
@@ -44,14 +52,9 @@ public class TankRenderer extends DynamicRenderer {
         movingTank = new Animation(new SpriteSheet(sheet, sheet.getWidth() / spriteCount, (int) renderingObject.getHeight()), 1);
         movingTankSpriteCount = spriteCount;
         selectTankSprite = spriteCount / 2;
-        frame = movingTank.getImage(selectTankSprite);
+        sprite = movingTank.getImage(selectTankSprite);
     }
-    
-    public void setSprite(Image sprite)
-    {
-        frame = sprite;
-    }
-    
+
     public void setCannonSprite(Image sprite)
     {
         cannon = sprite; 
@@ -60,32 +63,31 @@ public class TankRenderer extends DynamicRenderer {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException
     {        
-        for (int i = 0; i < renderingObject.getShellCount(); i++)
+        for (int i = 0; i < ((Tank) renderingObject).getShellCount(); i++)
         {
-            shellRenderer.setShell(renderingObject.getShell(i));
+            shellRenderer.setRenderingObject(((Tank) renderingObject).getShell(i));
             shellRenderer.render(gc, g);
         }
-
-        drawBase(g, renderingObject.getBase());
+        
         drawAnimation(g);
     }
 
     public void drawAnimation(Graphics g)
     {        
-        if (renderingObject.isMoving() == Move.BACK)
+        if (((Tank) renderingObject).isMoving() == Move.BACK)
             if (++selectTankSprite >= movingTankSpriteCount)
                 selectTankSprite = 0;
             
-        if (renderingObject.isMoving() == Move.FORTH)
+        if (((Tank) renderingObject).isMoving() == Move.FORTH)
             if (--selectTankSprite <= 0)
                 selectTankSprite = movingTankSpriteCount - 1;
             
-        cannon.setRotation(90 - renderingObject.getShellStartAngle(renderingObject.getShellCount() - 1));
-        cannon.drawCentered(renderingObject.getCannonCenterX(), 
-                            renderingObject.getCannonCenterY());
+        cannon.setRotation(90 - ((Tank) renderingObject).getShellStartAngle(((Tank) renderingObject).getShellCount() - 1));
+        cannon.drawCentered(((Tank) renderingObject).getCannonCenterX(), 
+                            ((Tank) renderingObject).getCannonCenterY());
         
-        frame = movingTank.getImage(selectTankSprite);
-        frame.setRotation(renderingObject.getRotateAngle());
-        frame.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());  
+        sprite = movingTank.getImage(selectTankSprite);
+        sprite.setRotation(renderingObject.getRotateAngle());
+        sprite.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());  
     }
 }

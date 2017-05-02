@@ -11,7 +11,9 @@ import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
-public class Tank extends DynamicGameObject {
+public class Tank 
+extends DynamicGameObject 
+{
     private static final long serialVersionUID = -3579494870824274339L;
     
     private ArrayList<Shell>    ammo;
@@ -465,9 +467,9 @@ public class Tank extends DynamicGameObject {
         gun.setRotationPoint(cannonRotationPoint);
     }
     
-    public int getShellDamage(int index)
+    public float getShellDamage(int index)
     {
-        return ammo.get(index).getDamage();
+        return ammo.get(index).getPower();
     }
 
     public boolean isDamaged()

@@ -1,13 +1,13 @@
 package view.staticRenderer;
 
-import model.camera.Camera;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Shape;
+
 import view.renderer.Renderer;
 
 public abstract class StaticRenderer implements Renderer {
-    protected Camera camera;
-
-    public void setCamera(Camera cam)
+    public void drawBase(Graphics g, Shape base)
     {
-        camera = cam;
+        g.draw(base);
     }
 }

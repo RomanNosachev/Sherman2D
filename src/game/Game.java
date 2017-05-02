@@ -8,9 +8,13 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 import controller.GameController;
 import controller.KeyController;
+import model.dynamicGameObject.Barrel;
+import model.dynamicGameObject.Box;
+import model.dynamicGameObject.DynamicGameObject;
 import model.field.Field;
 import model.field.FieldBuilder;
 import model.field.FieldSheduler;
@@ -23,6 +27,8 @@ import model.shell.ShellSheduler;
 import model.tank.Tank;
 import model.tank.TankBuilder;
 import model.tank.TankSheduler;
+import view.dynamicRenderer.BarrelRenderer;
+import view.dynamicRenderer.BoxRenderer;
 import view.fieldRenderer.FieldRenderer;
 import view.levelRenderer.LevelRenderer;
 import view.shellRenderer.ShellRenderer;
@@ -42,6 +48,8 @@ public class Game extends BasicGame {
     private FieldRenderer       fieldRenderer;
     private TankRenderer        actorRenderer;
     private ShellRenderer       shellRenderer;
+    private BoxRenderer         boxRenderer;
+    private BarrelRenderer      barrelRenderer;
     
     private TankPlayer          actorPlayer;
     
@@ -54,7 +62,6 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         levelRenderer.render(gc, g);
-        
         actorPlayer.play(gc);
     }
     
@@ -97,10 +104,26 @@ public class Game extends BasicGame {
             actorPlayer.setMove(configManager.loadTankMovingSound());
             actorPlayer.setHit(configManager.loadTankHitSound());
             
+            ////
+            DynamicGameObject a = new Barrel();
+            a.setBase(new Rectangle(50, 50, 50, 100));
+            DynamicGameObject b = new Box();
+            b.setBase(new Rectangle(100, 100, 100, 100));
+            
+            level.addObject(a);
+            level.addObject(b);
+            //////
+            
+            barrelRenderer = new BarrelRenderer(a);
+            boxRenderer = new BoxRenderer(b);
+            boxRenderer.setSprite(configManager.loadBoxSprite());
+            
             levelRenderer = new LevelRenderer(level);
             levelRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             levelRenderer.setFieldRenderer(fieldRenderer);
             levelRenderer.setTankRenderer(actorRenderer);
+            levelRenderer.setBarrelRenderer(barrelRenderer);
+            levelRenderer.setBoxRenderer(boxRenderer);
         } 
         catch (IOException e)
         {

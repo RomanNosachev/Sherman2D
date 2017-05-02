@@ -8,6 +8,7 @@ import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
 import model.gameObject.GameObject;
+import model.staticGameObject.StaticGameObject;
 
 @SuppressWarnings("serial")
 public abstract class DynamicGameObject 
@@ -24,24 +25,9 @@ implements GameObject,
     protected float    boundingRadius;
     protected float    rotateAngle = 0;
     
-    protected int      hitPoint;
-    protected int      maxHitPoint;
-    
-    /*
-    @Override
-    public DynamicGameObject clone()
-    {
-        try 
-        {
-            return (DynamicGameObject) super.clone();
-        }
-        catch (CloneNotSupportedException e) 
-        {
-            throw new InternalError();
-        }
-    }
-    */
-    
+    protected float    hitPoint;
+    protected float    maxHitPoint;
+
     public Shape getSimpleBase()
     {
         return simpleBase;
@@ -277,17 +263,17 @@ implements GameObject,
         return base.getWidth();
     }
     
-    public int getHitPoint()
+    public float getHitPoint()
     {
         return hitPoint;
     }
 
-    public void setHitPoint(int hitPoint)
+    public void setHitPoint(float f)
     {
-        this.hitPoint = hitPoint;
+        this.hitPoint = f;
     }
 
-    public int getMaxHitPoint()
+    public float getMaxHitPoint()
     {
         return maxHitPoint;
     }
@@ -296,5 +282,10 @@ implements GameObject,
     {
         this.maxHitPoint = maxHitPoint;
         hitPoint = maxHitPoint;
+    }
+    
+    public StaticGameObject toStaticGameObject()
+    {
+        return new StaticGameObject(base);
     }
 }

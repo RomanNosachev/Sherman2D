@@ -3,27 +3,33 @@ package model.level;
 import org.newdawn.slick.geom.Vector2f;
 
 import model.camera.Camera;
+import model.dynamicGameObject.DynamicGameObject;
 import model.field.Field;
 import model.tank.Climb;
 import model.tank.Move;
 import model.tank.Tank;
 
+import java.util.LinkedList;
+
 import org.newdawn.slick.geom.Shape;
 
 public class Level {    
-    private Tank        actor;
-    private Field       field;
-    private Camera      actorCamera;
-    private Camera      shellCamera;
+    private Tank                            actor;
+    private Field                           field;
+    private LinkedList<DynamicGameObject>   objects;
     
-    private boolean     isShellLeftTank = false;
+    private Camera                          actorCamera;
+    private Camera                          shellCamera;
     
+    private boolean                         isShellLeftTank = false;
+        
     public Level()
     {
         actor = new Tank();
         field = new Field();
         actorCamera = new Camera(new Vector2f(0, 0));
         shellCamera = new Camera(new Vector2f(0, 0));
+        objects = new LinkedList<>();
     }
     
     public Level(Tank actor, Field field)
@@ -32,6 +38,7 @@ public class Level {
         this.field = field;
         actorCamera = new Camera(new Vector2f(actor.getStartPosition()));
         shellCamera = new Camera(new Vector2f(actor.getShellStartPosition(0)));
+        objects = new LinkedList<>();
     }
     
     public void setTank(Tank tank)
@@ -563,17 +570,17 @@ public class Level {
         this.isShellLeftTank = isShellLeftTank;
     }
     
-    public void setTankHitPoint(int hp)
+    public void setTankHitPoint(float f)
     {
-        actor.setHitPoint(hp);
+        actor.setHitPoint(f);
     }
     
-    public int getTankHitPoint()
+    public float getTankHitPoint()
     {
         return actor.getHitPoint();
     }
     
-    public int getShellDamage(int index)
+    public float getShellDamage(int index)
     {
         return actor.getShellDamage(index);
     }
@@ -679,5 +686,20 @@ public class Level {
     public float getTankMaxY()
     {
         return actor.getMaxY();
+    }
+    
+    public LinkedList<DynamicGameObject> getObjects()
+    {
+        return objects;
+    }
+    
+    public void addObject(DynamicGameObject object)
+    {
+        objects.add(object);
+    }
+    
+    public void removeObject(int index)
+    {
+        objects.remove(index);
     }
 }

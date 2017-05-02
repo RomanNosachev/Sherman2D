@@ -179,4 +179,9 @@ public class ConfigManager {
     {
         return Integer.parseInt(config.getProperty("ShellExplosionSpriteSheetCount"));
     }
+    
+    public Image loadBoxSprite() throws SlickException
+    {
+        return new Image(config.getProperty("BoxSprite"));
+    }
 }

@@ -4,7 +4,9 @@ import model.field.Field;
 import model.gameObject.Builder;
 import model.tank.Tank;
 
-public class LevelBuilder implements Builder {
+public class LevelBuilder 
+implements Builder
+{
     Level level;
     
     @Override

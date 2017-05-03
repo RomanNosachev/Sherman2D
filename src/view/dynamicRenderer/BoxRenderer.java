@@ -9,9 +9,4 @@ extends DynamicRenderer
     {
         super(object);
     }
-    
-    public Class<? extends DynamicGameObject> getRenderingObjectClass()
-    {
-        return renderingObject.getClass();
-    }
 }

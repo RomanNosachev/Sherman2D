@@ -253,6 +253,16 @@ public class Level {
         return actor.collidesWith(actor.getShellBase(index));
     }
     
+    public boolean shellCollidesWithObject(int shellIndex, int objectIndex)
+    {
+        return objects.get(objectIndex).collidesWith(actor.getShellBase(shellIndex));
+    }
+    
+    public boolean tankCollidesWithObject(int objectIndex)
+    {
+        return actor.collidesWith(objects.get(objectIndex));
+    }
+    
     public boolean tankBoundingWithLevel()
     {
         return actor.boundingWith(field.getBase());
@@ -273,6 +283,16 @@ public class Level {
         return field.collidesWith(actor.getShellBase(index));
     }
     
+    public boolean objectCollidesWithLevel(int index)
+    {
+        return objects.get(index).collidesWith(field);
+    }
+    
+    public boolean objectCollidesWithObject(int lIndex, int rIndex)
+    {
+        return objects.get(lIndex).collidesWith(objects.get(rIndex));
+    }
+        
     public boolean tankContainsShell(int index)
     {
         return actor.isContains(actor.getShellBase(index));
@@ -701,5 +721,20 @@ public class Level {
     public void removeObject(int index)
     {
         objects.remove(index);
+    }
+    
+    public int getObjectsCount()
+    {
+        return objects.size();
+    }
+    
+    public void moveObjectX(int index, float movement)
+    {
+        objects.get(index).setX(objects.get(index).getX() + movement);
+    }
+    
+    public void moveObjectY(int index, float movement)
+    {
+        objects.get(index).setY(objects.get(index).getY() + movement);
     }
 }

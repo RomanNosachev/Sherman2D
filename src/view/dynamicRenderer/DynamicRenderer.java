@@ -20,7 +20,6 @@ implements Renderer
         
     public DynamicRenderer()
     {
-        
     }
     
     public DynamicRenderer(DynamicGameObject object)
@@ -53,5 +52,10 @@ implements Renderer
     {
         g.setColor(Color.darkGray);
         g.draw(base);
+    }
+    
+    public Class<? extends DynamicGameObject> getRenderingObjectClass()
+    {
+        return renderingObject.getClass();
     }
 }

@@ -62,7 +62,7 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         levelRenderer.render(gc, g);
-        actorPlayer.play(gc);
+        //actorPlayer.play(gc);
     }
     
     @Override
@@ -108,10 +108,16 @@ public class Game extends BasicGame {
             DynamicGameObject a = new Barrel();
             a.setBase(new Rectangle(50, 50, 50, 100));
             DynamicGameObject b = new Box();
-            b.setBase(new Rectangle(100, 100, 100, 100));
+            b.setBase(new Rectangle(550, 50, 100, 100));
+            DynamicGameObject b1 = new Box();
+            b1.setBase(new Rectangle(651, 50, 100, 100));
+            DynamicGameObject b2 = new Box();
+            b2.setBase(new Rectangle(550, 150, 100, 100));
             
-            level.addObject(a);
+            //level.addObject(a);
             level.addObject(b);
+            level.addObject(b1);
+            level.addObject(b2);
             //////
             
             barrelRenderer = new BarrelRenderer(a);
@@ -122,8 +128,8 @@ public class Game extends BasicGame {
             levelRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             levelRenderer.setFieldRenderer(fieldRenderer);
             levelRenderer.setTankRenderer(actorRenderer);
-            levelRenderer.setBarrelRenderer(barrelRenderer);
-            levelRenderer.setBoxRenderer(boxRenderer);
+            levelRenderer.addRenderer(barrelRenderer);
+            levelRenderer.addRenderer(boxRenderer);
         } 
         catch (IOException e)
         {

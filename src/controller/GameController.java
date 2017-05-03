@@ -9,7 +9,8 @@ import model.level.Level;
 import model.tank.Climb;
 import model.tank.Move;
 
-public class GameController {
+public class GameController 
+{
     private Level            model;
     
     private boolean          gameOver = false;
@@ -20,8 +21,8 @@ public class GameController {
     }
     
     public void mainLoop(GameContainer gc, int delta) throws SlickException
-    {             
-        System.out.println(model.isMoving() + " " + model.isClimbing());
+    {                     
+        //System.out.println(model.isMoving() + " " + model.isClimbing());
                 
         gravity(delta);
         
@@ -33,6 +34,14 @@ public class GameController {
         if (model.getTankRotateAngle() > 135 || model.getTankRotateAngle() < -135)
         {
             setGameOver(true);
+        }
+        
+        for (int objectIndex = 0; objectIndex < model.getObjectsCount(); objectIndex++)
+        {
+            if (model.tankCollidesWithObject(objectIndex))
+            {
+                model.removeObject(objectIndex);
+            }
         }
                         
         for (int shellIndex = 0; shellIndex < model.getShellCount() - 1; shellIndex++)
@@ -76,6 +85,18 @@ public class GameController {
                     model.setShellCollides(shellIndex, true);
                     
                     model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));    
+                }
+                
+                for (int objectIndex = 0; objectIndex < model.getObjectsCount(); objectIndex++)
+                {                    
+                    if (model.shellCollidesWithObject(shellIndex, objectIndex))
+                    {
+                        model.setShellCollides(shellIndex, true);
+                        model.setShellFlying(shellIndex, false);
+                        
+                        model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));
+                        model.removeObject(objectIndex);
+                    }
                 }
             }
             else
@@ -296,7 +317,7 @@ public class GameController {
                 rotateLeft(delta);            
         }
         else
-        {
+        {            
             if ((model.isMoving() == Move.BACK && model.isClimbing() == Climb.UP)
                     || (model.isMoving() == Move.FORTH && model.isClimbing() == Climb.DOWN))
             {
@@ -314,7 +335,9 @@ public class GameController {
     
     public void gravity(int delta)
     {
-        for (int i = 0; i < PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC; i++)
+        float movement = PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC;
+        
+        for (int i = 0; i < movement; i++)
         {
             model.moveY(1);
             
@@ -324,7 +347,28 @@ public class GameController {
             }
             else
             {
-                model.setClimbing(Climb.DOWN);
+                if (model.isClimbing() != Climb.UP)
+                    model.setClimbing(Climb.DOWN);
+            }
+            
+            for (int objectIndex = 0; objectIndex < model.getObjectsCount(); objectIndex++)
+            {
+                model.moveObjectY(objectIndex, 1);
+                
+                if (model.objectCollidesWithLevel(objectIndex))
+                {
+                    model.moveObjectY(objectIndex, -1);
+                }
+                else
+                {
+                    for (int secObjectIndex = 0; secObjectIndex < model.getObjectsCount(); secObjectIndex++)
+                    {
+                        if (model.objectCollidesWithObject(objectIndex, secObjectIndex) && (objectIndex != secObjectIndex))
+                        {
+                            model.moveObjectY(objectIndex, -1);
+                        }
+                    }
+                }
             }
         }         
         

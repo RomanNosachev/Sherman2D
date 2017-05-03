@@ -1,5 +1,7 @@
 package view.levelRenderer;
 
+import java.util.LinkedList;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
@@ -9,13 +11,13 @@ import org.newdawn.slick.SlickException;
 
 import model.dynamicGameObject.DynamicGameObject;
 import model.level.Level;
-import view.dynamicRenderer.BarrelRenderer;
-import view.dynamicRenderer.BoxRenderer;
+import view.dynamicRenderer.DynamicRenderer;
 import view.fieldRenderer.FieldRenderer;
 import view.shellRenderer.ShellRenderer;
 import view.tankRenderer.TankRenderer;
 
-public class LevelRenderer {    
+public class LevelRenderer 
+{    
     private Level level;
     
     private float infoStringHeight = 0;
@@ -23,8 +25,8 @@ public class LevelRenderer {
     
     private FieldRenderer   fieldRenderer;
     private TankRenderer    tankRenderer;
-    private BoxRenderer     boxRenderer;
-    private BarrelRenderer  barrelRenderer;
+    
+    private LinkedList<DynamicRenderer> renderers;
     
     public LevelRenderer()
     {
@@ -32,8 +34,18 @@ public class LevelRenderer {
         fieldRenderer = new FieldRenderer();
         tankRenderer = new TankRenderer();
         tankRenderer.setShellRenderer(new ShellRenderer());
+        renderers = new LinkedList<>();
     }
     
+    public LevelRenderer(Level level)
+    {
+        this.level = level;
+        fieldRenderer = new FieldRenderer();
+        tankRenderer = new TankRenderer();
+        tankRenderer.setShellRenderer(new ShellRenderer());
+        renderers = new LinkedList<>();
+    }
+
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         scale(g);
@@ -45,10 +57,13 @@ public class LevelRenderer {
         {
             g.draw(object.getBase());
             
-            if (object.getClass() == boxRenderer.getRenderingObjectClass())
-            {
-                boxRenderer.setRenderingObject(object);
-                boxRenderer.render(gc, g);
+            for (DynamicRenderer renderer : renderers)
+            {                
+                if (object.getClass() == renderer.getRenderingObjectClass())
+                {
+                    renderer.setRenderingObject(object);
+                    renderer.render(gc, g);
+                }
             }
         }
         
@@ -94,11 +109,6 @@ public class LevelRenderer {
                 Display.getWidth() - 100 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());
     }
     
-    public LevelRenderer(Level level)
-    {
-        this.level = level;
-    }
-    
     public void setInfoStringHeight(float height)
     {
         infoStringHeight = height;
@@ -124,13 +134,8 @@ public class LevelRenderer {
         tankRenderer.setShellRenderer(sr);
     }
     
-    public void setBarrelRenderer(BarrelRenderer br)
+    public void addRenderer(DynamicRenderer renderer)
     {
-        barrelRenderer = br;
-    }
-    
-    public void setBoxRenderer(BoxRenderer br)
-    {
-        boxRenderer = br;
+        renderers.add(renderer);
     }
 }

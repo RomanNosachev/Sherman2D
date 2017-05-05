@@ -1,6 +1,6 @@
 package model.gameObject;
 
-public interface Explosivable 
+public interface Detonable 
 {    
    public float getRadius();
    public void  setRadius(float radius);

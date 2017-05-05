@@ -26,7 +26,8 @@ public class LevelRenderer
     private FieldRenderer   fieldRenderer;
     private TankRenderer    tankRenderer;
     
-    private LinkedList<DynamicRenderer> renderers;
+    private LinkedList<DynamicRenderer> objectRenderers;
+    private LinkedList<DynamicRenderer> enemyRenderers;
     
     public LevelRenderer()
     {
@@ -34,7 +35,8 @@ public class LevelRenderer
         fieldRenderer = new FieldRenderer();
         tankRenderer = new TankRenderer();
         tankRenderer.setShellRenderer(new ShellRenderer());
-        renderers = new LinkedList<>();
+        objectRenderers = new LinkedList<>();
+        enemyRenderers = new LinkedList<>();
     }
     
     public LevelRenderer(Level level)
@@ -43,7 +45,8 @@ public class LevelRenderer
         fieldRenderer = new FieldRenderer();
         tankRenderer = new TankRenderer();
         tankRenderer.setShellRenderer(new ShellRenderer());
-        renderers = new LinkedList<>();
+        objectRenderers = new LinkedList<>();
+        enemyRenderers = new LinkedList<>();
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException
@@ -57,11 +60,25 @@ public class LevelRenderer
         {
             g.draw(object.getBase());
             
-            for (DynamicRenderer renderer : renderers)
+            for (DynamicRenderer renderer : objectRenderers)
             {                
                 if (object.getClass() == renderer.getRenderingObjectClass())
                 {
                     renderer.setRenderingObject(object);
+                    renderer.render(gc, g);
+                }
+            }
+        }
+        
+        for (DynamicGameObject enemy : level.getEnemies())
+        {
+            g.draw(enemy.getBase());
+            
+            for (DynamicRenderer renderer : enemyRenderers)
+            {
+                if (enemy.getClass() == renderer.getRenderingObjectClass())
+                {
+                    renderer.setRenderingObject(enemy);
                     renderer.render(gc, g);
                 }
             }
@@ -134,8 +151,13 @@ public class LevelRenderer
         tankRenderer.setShellRenderer(sr);
     }
     
-    public void addRenderer(DynamicRenderer renderer)
+    public void addObjectRenderer(DynamicRenderer renderer)
     {
-        renderers.add(renderer);
+        objectRenderers.add(renderer);
+    }
+    
+    public void addEnemyRenederer(DynamicRenderer renderer)
+    {
+        enemyRenderers.add(renderer);
     }
 }

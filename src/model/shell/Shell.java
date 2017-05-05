@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import org.newdawn.slick.geom.Vector2f;
 
 import model.dynamicGameObject.DynamicGameObject;
-import model.gameObject.Explosivable;
+import model.gameObject.Detonable;
 
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 
 public class Shell 
 extends DynamicGameObject 
-implements Explosivable
+implements Detonable
 {
     private static final long serialVersionUID = 5640440536160496891L;
 

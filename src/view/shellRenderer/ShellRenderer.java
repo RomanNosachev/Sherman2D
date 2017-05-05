@@ -33,7 +33,6 @@ extends DynamicRenderer
     public ShellRenderer(DynamicGameObject rObject)
     {
         renderingObject = (Shell) rObject;
-        boundingRadius = rObject.getBoundingCircleRadius();
     }
     
     @Override

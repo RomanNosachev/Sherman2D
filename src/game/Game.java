@@ -15,6 +15,8 @@ import controller.KeyController;
 import model.dynamicGameObject.Barrel;
 import model.dynamicGameObject.Box;
 import model.dynamicGameObject.DynamicGameObject;
+import model.enemy.EnemyTank;
+import model.enemy.EnemyTankBuilder;
 import model.field.Field;
 import model.field.FieldBuilder;
 import model.field.FieldSheduler;
@@ -32,6 +34,7 @@ import view.dynamicRenderer.BoxRenderer;
 import view.fieldRenderer.FieldRenderer;
 import view.levelRenderer.LevelRenderer;
 import view.shellRenderer.ShellRenderer;
+import view.tankRenderer.EnemyTankRenderer;
 import view.tankRenderer.TankPlayer;
 import view.tankRenderer.TankRenderer;
 
@@ -50,6 +53,7 @@ public class Game extends BasicGame {
     private ShellRenderer       shellRenderer;
     private BoxRenderer         boxRenderer;
     private BarrelRenderer      barrelRenderer;
+    private EnemyTankRenderer   enemyTankRenderer;
     
     private TankPlayer          actorPlayer;
     
@@ -62,7 +66,7 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         levelRenderer.render(gc, g);
-        //actorPlayer.play(gc);
+        actorPlayer.play(gc);
     }
     
     @Override
@@ -70,7 +74,7 @@ public class Game extends BasicGame {
     {
         try
         {        
-            ConfigManager configManager = new ConfigManager("physicSC.ini");
+            ConfigManager configManager = new ConfigManager("physic.ini");
             
             FieldSheduler fieldSheduler = new FieldSheduler();
             field = fieldSheduler.createStaticLevel(new FieldBuilder(), configManager);
@@ -107,29 +111,53 @@ public class Game extends BasicGame {
             ////
             DynamicGameObject a = new Barrel();
             a.setBase(new Rectangle(50, 50, 50, 100));
-            DynamicGameObject b = new Box();
-            b.setBase(new Rectangle(550, 50, 100, 100));
-            DynamicGameObject b1 = new Box();
-            b1.setBase(new Rectangle(651, 50, 100, 100));
-            DynamicGameObject b2 = new Box();
-            b2.setBase(new Rectangle(550, 150, 100, 100));
             
-            //level.addObject(a);
+            DynamicGameObject b = new Box();
+            b.setBase(new Rectangle(0, 0, 100, 100));
+            b.setPosition(800, 50);
+            b.setScale(0.15F);
+            
+            DynamicGameObject b1 = new Box();
+            b1.setBase(new Rectangle(0, 0, 100, 100));
+            b1.setPosition(901, 50);
+            b1.setScale(0.5F);
+            
+            DynamicGameObject b2 = new Box();
+            b2.setBase(new Rectangle(0, 0, 100, 100));
+            b2.setPosition(800, 150);
+            b2.setScale(0.8F);
+            
+            DynamicGameObject b3 = new Box();
+            b3.setBase(new Rectangle(0, 0, 100, 100));
+            b3.setPosition(901, 150);
+            
+            level.addObject(a);
             level.addObject(b);
             level.addObject(b1);
             level.addObject(b2);
+            level.addObject(b3);
+            
+            EnemyTank enemy = (EnemyTank) tankSheduler.createTank(new EnemyTankBuilder(), shell.clone(), configManager);
+            enemy.setPosition(1000, -1000);
+            level.addEnemies(enemy);
             //////
             
-            barrelRenderer = new BarrelRenderer(a);
-            boxRenderer = new BoxRenderer(b);
+            barrelRenderer = new BarrelRenderer(new Barrel());
+            boxRenderer = new BoxRenderer(new Box());
             boxRenderer.setSprite(configManager.loadBoxSprite());
+            
+            enemyTankRenderer = new EnemyTankRenderer(enemy);
+            enemyTankRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
+            enemyTankRenderer.setCannonSprite(configManager.loadTankCannonSprite());
+            enemyTankRenderer.setShellRenderer(shellRenderer);
             
             levelRenderer = new LevelRenderer(level);
             levelRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             levelRenderer.setFieldRenderer(fieldRenderer);
             levelRenderer.setTankRenderer(actorRenderer);
-            levelRenderer.addRenderer(barrelRenderer);
-            levelRenderer.addRenderer(boxRenderer);
+            //levelRenderer.addRenderer(barrelRenderer);
+            levelRenderer.addObjectRenderer(boxRenderer);
+            levelRenderer.addEnemyRenederer(enemyTankRenderer);
         } 
         catch (IOException e)
         {
@@ -163,7 +191,6 @@ public class Game extends BasicGame {
         catch (Exception e)
         {
             Sys.alert(e.getClass().getName() + ": ", e.getMessage());
-        }
-        
+        }    
     }
 }

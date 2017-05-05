@@ -1,10 +1,10 @@
 package model.dynamicGameObject;
 
-import model.gameObject.Explosivable;
+import model.gameObject.Detonable;
 
 public class Barrel 
 extends DynamicGameObject 
-implements Explosivable
+implements Detonable
 {
     private static final long serialVersionUID = 5926740128855775983L;
     

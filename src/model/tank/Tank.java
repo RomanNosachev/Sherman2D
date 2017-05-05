@@ -51,6 +51,20 @@ extends DynamicGameObject
     }
     
     @Override
+    public void setPosition(float x, float y)
+    {
+        gun.setPosition(gun.getX() - (base.getX() - x), gun.getY() - (base.getY() - y));
+        super.setPosition(x, y);
+    }
+    
+    @Override
+    public void setPosition(Vector2f pos) throws IllegalArgumentException
+    {
+        gun.setPosition(gun.getX() - (base.getX() - pos.x), gun.getY() - (base.getY() - pos.y));
+        super.setPosition(pos);
+    }
+    
+    @Override
     public void rotate(float angle)
     {
         rotateAngle += angle;

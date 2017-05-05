@@ -9,4 +9,9 @@ extends DynamicRenderer
     {
         super(object);
     }
+
+    public BoxRenderer()
+    {
+        super();
+    }
 }

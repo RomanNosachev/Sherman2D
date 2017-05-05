@@ -18,6 +18,8 @@ implements GameObject,
     protected Shape    base;
     protected Shape    simpleBase;
     
+    protected float    scale = 1F;
+    
     protected Vector2f startPosition;
     protected float    startWidth;
     protected float    startHeight;
@@ -83,8 +85,7 @@ implements GameObject,
     
     public void setPosition(Vector2f pos) throws IllegalArgumentException
     {
-        simpleBase.setLocation(simpleBase.getX() - (base.getX() - pos.x), simpleBase.getY() - (base.getY() - pos.y));
-        
+        simpleBase.setLocation(simpleBase.getX() - (base.getX() - pos.x), simpleBase.getY() - (base.getY() - pos.y));      
         base.setLocation(pos.x, pos.y);
     }
     
@@ -287,5 +288,20 @@ implements GameObject,
     public StaticGameObject toStaticGameObject()
     {
         return new StaticGameObject(base);
+    }
+    
+    public void setScale(float scale)
+    {
+        this.scale = scale;
+        
+        Vector2f pos = base.getLocation();
+        base.setLocation(0, 0);
+        base = base.transform(Transform.createScaleTransform(scale, scale));
+        base.setLocation(pos);        
+    }
+    
+    public float getScale()
+    {
+        return scale;
     }
 }

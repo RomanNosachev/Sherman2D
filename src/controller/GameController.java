@@ -43,6 +43,15 @@ public class GameController
                 model.removeObject(objectIndex);
             }
         }
+        
+        for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
+        {
+            if (model.getEnemyHitPoint(enemyIndex) <= 0)
+            {
+                model.removeEnemies(enemyIndex);
+                enemyIndex--;
+            }
+        }
                         
         for (int shellIndex = 0; shellIndex < model.getShellCount() - 1; shellIndex++)
         {            
@@ -96,6 +105,18 @@ public class GameController
                         
                         model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));
                         model.removeObject(objectIndex);
+                    }
+                }
+                
+                for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
+                {
+                    if (model.shellCollidesWithEnemy(shellIndex, enemyIndex))
+                    {
+                        model.setShellCollides(shellIndex, true);
+                        model.setShellFlying(shellIndex, false);
+                        
+                        model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));
+                        model.addEnemyHitPoint(enemyIndex, -model.getShellDamage(shellIndex));
                     }
                 }
             }
@@ -368,6 +389,16 @@ public class GameController
                             model.moveObjectY(objectIndex, -1);
                         }
                     }
+                }
+            }
+            
+            for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
+            {
+                model.moveEnemyY(enemyIndex, 1);
+                
+                if (model.enemyCollidesWithLevel(enemyIndex))
+                {
+                    model.moveEnemyY(enemyIndex, -1);
                 }
             }
         }         

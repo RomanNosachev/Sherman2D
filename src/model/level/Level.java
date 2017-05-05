@@ -13,10 +13,12 @@ import java.util.LinkedList;
 
 import org.newdawn.slick.geom.Shape;
 
-public class Level {    
+public class Level 
+{    
     private Tank                            actor;
     private Field                           field;
     private LinkedList<DynamicGameObject>   objects;
+    private LinkedList<DynamicGameObject>   enemies;
     
     private Camera                          actorCamera;
     private Camera                          shellCamera;
@@ -30,6 +32,7 @@ public class Level {
         actorCamera = new Camera(new Vector2f(0, 0));
         shellCamera = new Camera(new Vector2f(0, 0));
         objects = new LinkedList<>();
+        enemies = new LinkedList<>();
     }
     
     public Level(Tank actor, Field field)
@@ -39,6 +42,7 @@ public class Level {
         actorCamera = new Camera(new Vector2f(actor.getStartPosition()));
         shellCamera = new Camera(new Vector2f(actor.getShellStartPosition(0)));
         objects = new LinkedList<>();
+        enemies = new LinkedList<>();
     }
     
     public void setTank(Tank tank)
@@ -293,6 +297,21 @@ public class Level {
         return objects.get(lIndex).collidesWith(objects.get(rIndex));
     }
         
+    public boolean shellCollidesWithEnemy(int shellIndex, int enemyIndex)
+    {
+        return enemies.get(enemyIndex).collidesWith(actor.getShell(shellIndex));
+    }
+    
+    public boolean enemyCollidesWithEnemy(int lIndex, int rIndex)
+    {
+        return enemies.get(lIndex).collidesWith(enemies.get(rIndex));
+    }
+    
+    public boolean enemyCollidesWithLevel(int index)
+    {
+        return field.collidesWith(enemies.get(index));
+    }
+    
     public boolean tankContainsShell(int index)
     {
         return actor.isContains(actor.getShellBase(index));
@@ -736,5 +755,55 @@ public class Level {
     public void moveObjectY(int index, float movement)
     {
         objects.get(index).setY(objects.get(index).getY() + movement);
+    }
+    
+    public LinkedList<DynamicGameObject> getEnemies()
+    {
+        return enemies;
+    }
+    
+    public void addEnemies(DynamicGameObject enemy)
+    {
+        enemies.add(enemy);
+    }
+    
+    public void removeEnemies(int index)
+    {
+        enemies.remove(index);
+    }
+    
+    public int getEnemiesCount()
+    {
+        return enemies.size();
+    }
+    
+    public DynamicGameObject getEnemy(int index)
+    {
+        return enemies.get(index);
+    }
+    
+    public void addHitPoint(float hp)
+    {
+        actor.setHitPoint(actor.getHitPoint() + hp);
+    }
+    
+    public void addEnemyHitPoint(int index, float hp)
+    {
+        enemies.get(index).setHitPoint(enemies.get(index).getHitPoint() + hp);
+    }
+    
+    public float getEnemyHitPoint(int index)
+    {
+        return enemies.get(index).getHitPoint();
+    }
+    
+    public void moveEnemyX(int index, float movement)
+    {
+        enemies.get(index).setX(enemies.get(index).getX() + movement);
+    }
+    
+    public void moveEnemyY(int index, float movement)
+    {
+        enemies.get(index).setY(enemies.get(index).getY() + movement);
     }
 }

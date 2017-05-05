@@ -16,12 +16,12 @@ import view.shellRenderer.ShellRenderer;
 public class TankRenderer 
 extends DynamicRenderer 
 {
-    private ShellRenderer   shellRenderer;
+    protected ShellRenderer   shellRenderer;
     
-    private Animation       movingTank;
-    private Image           cannon; 
+    protected Animation       movingTank;
+    protected Image           cannon; 
     
-    private int             movingTankSpriteCount;
+    protected int             movingTankSpriteCount;
     private int             selectTankSprite;
 
     public TankRenderer()
@@ -32,14 +32,12 @@ extends DynamicRenderer
     public TankRenderer(DynamicGameObject rObject)
     {
         renderingObject = (Tank) rObject;
-        boundingRadius = renderingObject.getBoundingCircleRadius();
     }
     
     @Override
     public void setRenderingObject(DynamicGameObject object)
     {
         renderingObject = (Tank) object;
-        boundingRadius = renderingObject.getBoundingCircleRadius();
     }
     
     public void setShellRenderer(ShellRenderer sRenderer)
@@ -75,12 +73,16 @@ extends DynamicRenderer
     public void drawAnimation(Graphics g)
     {        
         if (((Tank) renderingObject).isMoving() == Move.BACK)
+        {
             if (++selectTankSprite >= movingTankSpriteCount)
                 selectTankSprite = 0;
-            
-        if (((Tank) renderingObject).isMoving() == Move.FORTH)
-            if (--selectTankSprite <= 0)
-                selectTankSprite = movingTankSpriteCount - 1;
+        }
+        else 
+        {
+            if (((Tank) renderingObject).isMoving() == Move.FORTH)
+                if (--selectTankSprite <= 0)
+                    selectTankSprite = movingTankSpriteCount - 1;
+        }
             
         cannon.setRotation(90 - ((Tank) renderingObject).getShellStartAngle(((Tank) renderingObject).getShellCount() - 1));
         cannon.drawCentered(((Tank) renderingObject).getCannonCenterX(), 

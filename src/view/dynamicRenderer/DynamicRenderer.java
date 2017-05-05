@@ -14,8 +14,8 @@ public abstract class DynamicRenderer
 implements Renderer 
 {   
     protected DynamicGameObject renderingObject;  
-    protected Image             sprite;
-    protected float             boundingRadius;
+    
+    protected Image             sprite;    
     protected float             infoStringHeight;
         
     public DynamicRenderer()
@@ -26,10 +26,11 @@ implements Renderer
     {
         renderingObject = object;
     }
-    
+        
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
-        sprite.drawCentered(renderingObject.getCenterX(), renderingObject.getCenterY());
+        sprite.getScaledCopy(renderingObject.getScale()).drawCentered(renderingObject.getCenterX(),
+                renderingObject.getCenterY());        
     }
     
     public void setRenderingObject(DynamicGameObject object)

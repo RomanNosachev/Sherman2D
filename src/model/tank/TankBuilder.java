@@ -7,8 +7,10 @@ import model.dynamicGameObject.DynamicGameObject;
 import model.dynamicGameObject.DynamicGameObjectBuilder;
 import model.shell.Shell;
 
-public class TankBuilder implements DynamicGameObjectBuilder {
-    private Tank tank;
+public class TankBuilder 
+implements DynamicGameObjectBuilder 
+{
+    protected Tank tank;
     
     @Override
     public void buildObject()

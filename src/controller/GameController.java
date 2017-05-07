@@ -11,21 +11,24 @@ import model.tank.Move;
 
 public class GameController 
 {
-    private Level            model;
+    private Level               model;
     
-    private boolean          gameOver = false;
+    private GravityController   gravityController;
+    
+    private boolean             gameOver = false;
         
     public GameController(Level model)
     {
         this.model = model;
+        gravityController = new GravityController(model);
     }
     
     public void mainLoop(GameContainer gc, int delta) throws SlickException
     {                     
         //System.out.println(model.isMoving() + " " + model.isClimbing());
                 
-        gravity(delta);
-        
+        gravityController.gravity(delta);
+                
         if (model.getTankHitPoint() <= 0)
         {
             setGameOver(true);
@@ -132,43 +135,7 @@ public class GameController
     {
         model.shot();
     }
-    
-    public boolean rotateLeft(int delta)
-    {
-        float rotateAngle = 90F * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        for (int i = 0; i < rotateAngle; i++)
-        {
-            model.rotate(-1);
-            
-            if (model.tankCollidesWithLevel())
-            {
-                model.rotate(1);
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    public boolean rotateRight(int delta)
-    {
-        float rotateAngle = 90F * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        for (int i = 0; i < rotateAngle; i++)
-        {
-            model.rotate(1);
-            
-            if (model.tankCollidesWithLevel())
-            {
-                model.rotate(-1);
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
+
     public void upGun(int delta)
     {
         float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
@@ -232,19 +199,19 @@ public class GameController
                 
         for (int i = 0; i < movement; i++)
         {                
-            model.moveX(-1);
+            model.moveTankX(-1);
             
             if (model.tankCollidesWithLevel())
             {
-                model.moveX(1);
+                model.moveTankX(1);
                                         
                 model.setClimbing(Climb.UP);
-                model.moveY(-1);
+                model.moveTankY(-1);
                         
                 if (model.tankCollidesWithLevel())
                 {
                     model.setClimbing(Climb.STRAIGHT);
-                    model.moveY(1);
+                    model.moveTankY(1);
                 }
             }
             else
@@ -260,19 +227,19 @@ public class GameController
         
         for (int i = 0; i < movement; i++)
         {                
-            model.moveX(1);
+            model.moveTankX(1);
             
             if (model.tankCollidesWithLevel())
             {
-                model.moveX(-1);
+                model.moveTankX(-1);
                                         
                 model.setClimbing(Climb.UP);
-                model.moveY(-1);
+                model.moveTankY(-1);
                         
                 if (model.tankCollidesWithLevel())
                 {
                     model.setClimbing(Climb.STRAIGHT);
-                    model.moveY(1);
+                    model.moveTankY(1);
                 }
             }
             else
@@ -328,82 +295,6 @@ public class GameController
             
             model.setShellY(model.getShellBackIndex(), model.getShellY(model.getShellBackIndex()) - movement);
         }        
-    }
-    
-    public void stabilize(int delta)
-    {        
-        if ((model.isMoving() == Move.FORTH && model.isClimbing() == Climb.UP)
-                || (model.isMoving() == Move.BACK && model.isClimbing() == Climb.DOWN))
-        {            
-                rotateLeft(delta);            
-        }
-        else
-        {            
-            if ((model.isMoving() == Move.BACK && model.isClimbing() == Climb.UP)
-                    || (model.isMoving() == Move.FORTH && model.isClimbing() == Climb.DOWN))
-            {
-                   rotateRight(delta);
-            }
-            else
-            {
-                if (Float.compare(model.getTankRotateAngle(), -2) > 0)
-                    rotateLeft(delta);
-                else if (Float.compare(model.getTankRotateAngle(), 2) < 0)
-                    rotateRight(delta);
-            }
-        }
-    }
-    
-    public void gravity(int delta)
-    {
-        float movement = PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        for (int i = 0; i < movement; i++)
-        {
-            model.moveY(1);
-            
-            if (model.tankCollidesWithLevel())
-            {
-                model.moveY(-1);                
-            }
-            else
-            {
-                if (model.isClimbing() != Climb.UP)
-                    model.setClimbing(Climb.DOWN);
-            }
-            
-            for (int objectIndex = 0; objectIndex < model.getObjectsCount(); objectIndex++)
-            {
-                model.moveObjectY(objectIndex, 1);
-                
-                if (model.objectCollidesWithLevel(objectIndex))
-                {
-                    model.moveObjectY(objectIndex, -1);
-                }
-                else
-                {
-                    for (int secObjectIndex = 0; secObjectIndex < model.getObjectsCount(); secObjectIndex++)
-                    {
-                        if (model.objectCollidesWithObject(objectIndex, secObjectIndex) && (objectIndex != secObjectIndex))
-                        {
-                            model.moveObjectY(objectIndex, -1);
-                        }
-                    }
-                }
-            }
-            
-            for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
-            {
-                model.moveEnemyY(enemyIndex, 1);
-                
-                if (model.enemyCollidesWithLevel(enemyIndex))
-                {
-                    model.moveEnemyY(enemyIndex, -1);
-                }
-            }
-        }         
-        
-        stabilize(delta);
     }
     
     public boolean isGameOver()

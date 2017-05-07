@@ -92,11 +92,15 @@ public class LevelRenderer
         int dWheal = Mouse.getDWheel();
         
         if (dWheal > 0)
+        {
             scale += 0.1;
+        }
+        else
+        {
+            if (dWheal < 0)
+                scale -= 0.1; 
+        }
 
-        if (dWheal < 0)
-            scale -= 0.1;
-       
         g.scale(scale, scale);
     }
     

@@ -304,4 +304,16 @@ implements GameObject,
     {
         return scale;
     }
+    
+    public void moveX(float movement)
+    {
+        base.setX(base.getX() + movement);
+        simpleBase.setX(simpleBase.getX() + movement);
+    }
+    
+    public void moveY(float movement)
+    {
+        base.setY(base.getY() + movement);
+        simpleBase.setY(simpleBase.getY() + movement);
+    }
 }

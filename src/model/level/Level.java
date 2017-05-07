@@ -679,32 +679,35 @@ public class Level
         actor.removeShell(index);
     }
     
-    public void moveX(float movement)
+    public void moveTankX(float movement)
     {
+        /*
         actor.setX(actor.getX() + movement);
         actor.setCannonX(actor.getCannonX() + movement);
         actor.setCannonRotationPointX(actor.getCannonRotationPointX() + movement);
         actor.setShellBackX(actor.getShellBackX() + movement);
+        */
         
+        actor.moveX(movement);
         actorCamera.setX(actorCamera.getX() + movement);
     }
     
-    public void moveY(float movement)
+    public void moveTankY(float movement)
     {
+        /*
         actor.setY(actor.getY() + movement);
         actor.setCannonY(actor.getCannonY() + movement);
         actor.setCannonRotationPointY(actor.getCannonRotationPointY() + movement);
         actor.setShellBackY(actor.getShellBackY() + movement);
+        */
         
+        actor.moveY(movement);
         actorCamera.setY(actorCamera.getY() + movement);
     }
     
-    public void rotate(float rotateAngle)
+    public void rotateTank(float rotateAngle)
     {
         actor.rotate(rotateAngle);
-        actor.cannonRotate(rotateAngle, actor.getSimpleCenterX(), actor.getSimpleCenterY());
-        actor.setShotStartAngle(actor.getShellBackIndex(), actor.getShotStartAngle(actor.getShellBackIndex()) - rotateAngle);
-        actor.shellRotate(actor.getShellBackIndex(), rotateAngle, actor.getSimpleCenterX(), actor.getSimpleCenterY());
     }
     
     public float getTankMinX()
@@ -799,11 +802,11 @@ public class Level
     
     public void moveEnemyX(int index, float movement)
     {
-        enemies.get(index).setX(enemies.get(index).getX() + movement);
+        enemies.get(index).moveX(movement);
     }
     
     public void moveEnemyY(int index, float movement)
     {
-        enemies.get(index).setY(enemies.get(index).getY() + movement);
+        enemies.get(index).moveY(movement);
     }
 }

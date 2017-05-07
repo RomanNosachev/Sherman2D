@@ -5,7 +5,7 @@ import org.newdawn.slick.geom.Vector2f;
 import model.dynamicGameObject.DynamicGameObject;
 import model.shell.Shell;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
@@ -16,7 +16,7 @@ extends DynamicGameObject
 {
     private static final long serialVersionUID = -3579494870824274339L;
     
-    private ArrayList<Shell>    ammo;
+    private LinkedList<Shell>    ammo;
     private Cannon              gun;      
 
     private float               speed;
@@ -30,13 +30,13 @@ extends DynamicGameObject
     public Tank()
     {
         base = new Polygon();
-        ammo = new ArrayList<Shell>();
+        ammo = new LinkedList<Shell>();
     }
         
     public Tank(Shape base) throws IllegalArgumentException
     {
         setBase(base);
-        ammo = new ArrayList<Shell>(); 
+        ammo = new LinkedList<Shell>(); 
         ammo.add(new Shell(new Polygon()));
         boundingRadius = base.getBoundingCircleRadius();
     }
@@ -45,7 +45,7 @@ extends DynamicGameObject
     {
         setBase(base);
         base.setLocation(position);
-        ammo = new ArrayList<Shell>(); 
+        ammo = new LinkedList<Shell>(); 
         ammo.add(new Shell(new Polygon()));
         boundingRadius = base.getBoundingCircleRadius();
     }
@@ -76,8 +76,12 @@ extends DynamicGameObject
         float[] coordArray = {gun.getRotationPointX(), gun.getRotationPointY()};
         Shape newRotationPoint = new Polygon(coordArray);
         
+        gun.rotate(angle, simpleBase.getCenterX(), simpleBase.getCenterY());        
         gun.setRotationPoint(newRotationPoint.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, 
                 simpleBase.getCenterX(), simpleBase.getCenterY())).getPoints());
+        
+        ammo.getLast().setStartAngle(ammo.getLast().getStartAngle() - angle);
+        ammo.getLast().rotate(angle, simpleBase.getCenterX(), simpleBase.getCenterY());
     }
     
     @Override
@@ -92,7 +96,11 @@ extends DynamicGameObject
         float[] coordArray = {gun.getRotationPointX(), gun.getRotationPointY()};
         Shape newRotationPoint = new Polygon(coordArray);
         
+        gun.rotate(angle, base.getCenterX(), base.getCenterY());        
         gun.setRotationPoint(newRotationPoint.transform(Transform.createRotateTransform(angle * (float) Math.PI / 180F, x, y)).getPoints());
+        
+        ammo.getLast().setStartAngle(ammo.getLast().getStartAngle() - angle);
+        ammo.getLast().rotate(angle, simpleBase.getCenterX(), simpleBase.getCenterY());
     }
     
     public void addShell(Shell shell) throws IllegalArgumentException
@@ -569,5 +577,25 @@ extends DynamicGameObject
     public void setClimbing(Climb climbing)
     {
         this.climbing = climbing;
+    }
+    
+    @Override
+    public void moveX(float movement)
+    {
+        base.setX(base.getX() + movement);
+        simpleBase.setX(simpleBase.getX() + movement);
+        gun.setX(gun.getX() + movement);
+        gun.setRotationPointX(gun.getRotationPointX() + movement);
+        ammo.getLast().setX(ammo.getLast().getX() + movement);
+    }
+    
+    @Override
+    public void moveY(float movement)
+    {
+        base.setY(base.getY() + movement);
+        simpleBase.setY(simpleBase.getY() + movement);
+        gun.setY(gun.getY() + movement);
+        gun.setRotationPointY(gun.getRotationPointY() + movement);
+        ammo.getLast().setY(ammo.getLast().getY() + movement);
     }
 }

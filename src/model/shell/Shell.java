@@ -49,9 +49,9 @@ implements Detonable
     {
         try 
         {
-            Shell clon = (Shell) super.clone();
-            clon.setBase(new Polygon(base.getPoints()));
-            return clon;
+            Shell clone = (Shell) super.clone();
+            clone.setBase(new Polygon(base.getPoints()));
+            return clone;
         }
         catch (CloneNotSupportedException e) 
         {

@@ -22,7 +22,7 @@ extends DynamicRenderer
     protected Image           cannon; 
     
     protected int             movingTankSpriteCount;
-    private int             selectTankSprite;
+    private int               selectTankSprite;
 
     public TankRenderer()
     {
@@ -67,28 +67,34 @@ extends DynamicRenderer
             shellRenderer.render(gc, g);
         }
         
+        drawBase(g, renderingObject.getBase());
+        drawBase(g, ((Tank) renderingObject).getCannonBase());
         drawAnimation(g);
     }
 
     public void drawAnimation(Graphics g)
-    {        
-        if (((Tank) renderingObject).isMoving() == Move.BACK)
-        {
-            if (++selectTankSprite >= movingTankSpriteCount)
-                selectTankSprite = 0;
-        }
-        else 
-        {
-            if (((Tank) renderingObject).isMoving() == Move.FORTH)
-                if (--selectTankSprite <= 0)
-                    selectTankSprite = movingTankSpriteCount - 1;
-        }
-            
-        cannon.setRotation(90 - ((Tank) renderingObject).getShellStartAngle(((Tank) renderingObject).getShellCount() - 1));
-        cannon.drawCentered(((Tank) renderingObject).getCannonCenterX(), 
-                            ((Tank) renderingObject).getCannonCenterY());
+    {    
+        Image newCannon;
         
-        sprite = movingTank.getImage(selectTankSprite);
+        if (((Tank) renderingObject).isMoving() != Move.STOP)
+            if (--selectTankSprite <= 0)
+                selectTankSprite = movingTankSpriteCount - 1;
+           
+        if (((Tank) renderingObject).getDirection() == Move.BACK)
+        {
+            sprite = movingTank.getImage(selectTankSprite).getFlippedCopy(true, false);
+            newCannon = cannon.getFlippedCopy(true, false);
+        } 
+        else
+        {
+            sprite = movingTank.getImage(selectTankSprite);
+            newCannon = cannon;
+        }
+        
+        newCannon.setRotation(((Tank) renderingObject).getCannonRotateAngle());
+        newCannon.drawCentered(((Tank) renderingObject).getCannonCenterX(), 
+                            ((Tank) renderingObject).getCannonCenterY());
+
         sprite.setRotation(renderingObject.getRotateAngle());
         sprite.drawCentered(renderingObject.getSimpleCenterX(), renderingObject.getSimpleCenterY());  
     }

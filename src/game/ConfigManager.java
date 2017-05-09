@@ -184,4 +184,9 @@ public class ConfigManager {
     {
         return new Image(config.getProperty("BoxSprite"));
     }
+    
+    public Image loadBarrelSprite() throws SlickException
+    {
+        return new Image(config.getProperty("BarrelSprite"));
+    }
 }

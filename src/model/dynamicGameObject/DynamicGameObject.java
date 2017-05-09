@@ -13,7 +13,7 @@ import model.staticGameObject.StaticGameObject;
 @SuppressWarnings("serial")
 public abstract class DynamicGameObject 
 implements GameObject,
-           Cloneable 
+           Cloneable
 {
     protected Shape    base;
     protected Shape    simpleBase;
@@ -29,7 +29,7 @@ implements GameObject,
     
     protected float    hitPoint;
     protected float    maxHitPoint;
-
+    
     public Shape getSimpleBase()
     {
         return simpleBase;
@@ -315,5 +315,42 @@ implements GameObject,
     {
         base.setY(base.getY() + movement);
         simpleBase.setY(simpleBase.getY() + movement);
+    }
+    
+    public void reverse(boolean horizontal, boolean vertical)
+    {
+        if (horizontal)
+        {
+            float prevRotateAngle = rotateAngle;
+            
+            rotate(-getRotateAngle());
+            
+            float[] polygonPoints = new float[base.getPointCount() * 2];
+            
+            for (int i = 0, j = 0; j < base.getPointCount(); i+=2, j++)
+            {
+                if (base.getPoint(j)[0] > simpleBase.getCenterX())
+                {
+                    polygonPoints[i] = simpleBase.getCenterX() - Math.abs(base.getPoint(j)[0] - simpleBase.getCenterX());
+                }
+                else
+                {
+                    if (base.getPoint(j)[0] < simpleBase.getCenterX())
+                    {
+                        polygonPoints[i] = simpleBase.getCenterX() + Math.abs(base.getPoint(j)[0] - simpleBase.getCenterX());
+                    }
+                    else
+                    {
+                        polygonPoints[i] = base.getPoint(j)[0];
+                    }
+                }
+                
+                polygonPoints[i + 1] = base.getPoint(j)[1];
+            }
+            
+            base = new Polygon(polygonPoints);
+            
+            rotate(prevRotateAngle);
+        }
     }
 }

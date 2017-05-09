@@ -16,7 +16,7 @@ extends DynamicGameObject
 {
     private static final long serialVersionUID = -3579494870824274339L;
     
-    private LinkedList<Shell>    ammo;
+    private LinkedList<Shell>   ammo;
     private Cannon              gun;      
 
     private float               speed;
@@ -24,6 +24,7 @@ extends DynamicGameObject
     private float               maxAimingAngle;
     
     private Move                moving = Move.STOP;
+    private Move                direction = Move.FORTH;
     private Climb               climbing = Climb.STRAIGHT;
     private boolean             damaged = false;
     
@@ -163,6 +164,11 @@ extends DynamicGameObject
         return moving;
     }
 
+    public Move getDirection()
+    {
+        return direction;
+    }
+    
     public void setShellFlying(int index, boolean fl)
     {
         ammo.get(index).setFlying(fl);
@@ -171,6 +177,9 @@ extends DynamicGameObject
     public void setMoving(Move fl)
     {
         moving = fl;
+        
+        if (fl != Move.STOP)
+            direction = fl;
     }
     
     public void setShotStartSpeed(int index, float speed)
@@ -597,5 +606,92 @@ extends DynamicGameObject
         gun.setY(gun.getY() + movement);
         gun.setRotationPointY(gun.getRotationPointY() + movement);
         ammo.getLast().setY(ammo.getLast().getY() + movement);
+    }
+    
+    @Override
+    public void reverse(boolean horizontal, boolean vertical)
+    {
+        float prevRotateAngle = rotateAngle;
+        
+        if (horizontal)
+        {
+            float prevCannonRotateAngle = gun.getRotateAngle();
+            
+            rotate(-getRotateAngle());
+            
+            float[] cannonPolygonPoints = new float[gun.getBase().getPointCount() * 2];
+                         
+            float[] polygonPoints = new float[base.getPointCount() * 2];
+            
+            for (int i = 0, j = 0; j < base.getPointCount(); i+=2, j++)
+            {
+                if (base.getPoint(j)[0] > simpleBase.getCenterX())
+                {
+                    polygonPoints[i] = simpleBase.getCenterX() - Math.abs(base.getPoint(j)[0] - simpleBase.getCenterX());
+                }
+                else
+                {
+                    if (base.getPoint(j)[0] < simpleBase.getCenterX())
+                    {
+                        polygonPoints[i] = simpleBase.getCenterX() + Math.abs(base.getPoint(j)[0] - simpleBase.getCenterX());
+                    }
+                    else
+                    {
+                        polygonPoints[i] = base.getPoint(j)[0];
+                    }
+                }
+                
+                polygonPoints[i + 1] = base.getPoint(j)[1];
+            }
+            
+            base = new Polygon(polygonPoints);
+            
+            for (int i = 0, j = 0; j < gun.getBase().getPointCount(); i+=2, j++)
+            {
+                if (gun.getBase().getPoint(j)[0] > simpleBase.getCenterX())
+                {
+                    cannonPolygonPoints[i] = simpleBase.getCenterX() - Math.abs(gun.getBase().getPoint(j)[0] - simpleBase.getCenterX());
+                }
+                else
+                {
+                    if (gun.getBase().getPoint(j)[0] < simpleBase.getCenterX())
+                    {
+                        cannonPolygonPoints[i] = simpleBase.getCenterX() + Math.abs(gun.getBase().getPoint(j)[0] - simpleBase.getCenterX());
+                    }
+                    else
+                    {
+                        cannonPolygonPoints[i] = gun.getBase().getPoint(j)[0];
+                    }
+                }
+                
+                cannonPolygonPoints[i + 1] = gun.getBase().getPoint(j)[1];
+            }
+                        
+            Vector2f newRotationPoint = gun.getRotationPoint();
+            
+            if (newRotationPoint.x > simpleBase.getCenterX())
+                newRotationPoint.x = simpleBase.getCenterX() - Math.abs(newRotationPoint.x - simpleBase.getCenterX());
+            else
+                newRotationPoint.x = simpleBase.getCenterX() + Math.abs(newRotationPoint.x - simpleBase.getCenterX());
+            
+            gun.setBase(new Polygon(cannonPolygonPoints));
+            gun.setRotationPoint(newRotationPoint);
+            gun.setRotateAngle(-prevCannonRotateAngle + prevRotateAngle);
+            
+            ammo.getLast().setPosition(gun.getCenterX() - ammo.getLast().getStartWidth() / 2,
+                    gun.getCenterY() - ammo.getLast().getStartHeight() / 2);
+ 
+            if (ammo.getLast().getStartAngle() <= 90)
+                ammo.getLast().setStartAngle((90 - ammo.getLast().getStartAngle()) + 90);
+            else
+                ammo.getLast().setStartAngle((90 - ammo.getLast().getStartAngle()) - 270);      
+            
+            rotate(prevRotateAngle);
+        }
+    }
+    
+    public float getCannonRotateAngle()
+    {
+        return gun.getRotateAngle();
     }
 }

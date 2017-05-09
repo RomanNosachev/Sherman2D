@@ -2,7 +2,8 @@ package model.camera;
 
 import org.newdawn.slick.geom.Vector2f;
 
-public class Camera {
+public class Camera 
+{
     private Vector2f position;
 
     public Camera(Vector2f pos)

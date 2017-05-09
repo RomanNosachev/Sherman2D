@@ -785,7 +785,7 @@ public class Level
         return enemies.get(index);
     }
     
-    public void addHitPoint(float hp)
+    public void addTankHitPoint(float hp)
     {
         actor.setHitPoint(actor.getHitPoint() + hp);
     }
@@ -808,5 +808,20 @@ public class Level
     public void moveEnemyY(int index, float movement)
     {
         enemies.get(index).moveY(movement);
+    }
+    
+    public void tankReverse(boolean horizontal, boolean vertical)
+    {
+        actor.reverse(horizontal, vertical);
+    }
+    
+    public Move getTankDirection()
+    {
+        return actor.getDirection();
+    }
+    
+    public float getTankCannonRotateAngle()
+    {
+        return actor.getCannonRotateAngle();
     }
 }

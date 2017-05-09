@@ -8,7 +8,9 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 import controller.GameController;
 import controller.KeyController;
@@ -71,7 +73,7 @@ public class Game extends BasicGame {
     
     @Override
     public void init(GameContainer gc) throws SlickException
-    {
+    {        
         try
         {        
             ConfigManager configManager = new ConfigManager("physic.ini");
@@ -110,7 +112,18 @@ public class Game extends BasicGame {
             
             ////
             DynamicGameObject a = new Barrel();
-            a.setBase(new Rectangle(50, 50, 50, 100));
+            a.setBase(new Rectangle(0, 0, 90, 130));
+            a.setPosition(1300, 0);
+
+            DynamicGameObject a1 = new Barrel();
+            a1.setBase(new Rectangle(0, 0, 90, 130));
+            a1.setPosition(1400, 0);
+            a1.setScale(0.5F);
+            
+            DynamicGameObject a2 = new Barrel();
+            a2.setBase(new Rectangle(0, 0, 90, 130));
+            a2.setPosition(1400, -100);
+            a2.setScale(0.25F);
             
             DynamicGameObject b = new Box();
             b.setBase(new Rectangle(0, 0, 100, 100));
@@ -132,6 +145,8 @@ public class Game extends BasicGame {
             b3.setPosition(901, 150);
             
             level.addObject(a);
+            level.addObject(a1);
+            level.addObject(a2);
             level.addObject(b);
             level.addObject(b1);
             level.addObject(b2);
@@ -140,9 +155,13 @@ public class Game extends BasicGame {
             EnemyTank enemy = (EnemyTank) tankSheduler.createTank(new EnemyTankBuilder(), shell.clone(), configManager);
             enemy.setPosition(1000, -1000);
             level.addEnemies(enemy);
+            EnemyTank enemy2 = (EnemyTank) tankSheduler.createTank(new EnemyTankBuilder(), shell.clone(), configManager);
+            enemy2.setPosition(1200, 0);
+            level.addEnemies(enemy2);
             //////
             
             barrelRenderer = new BarrelRenderer(new Barrel());
+            barrelRenderer.setSprite(configManager.loadBarrelSprite());
             boxRenderer = new BoxRenderer(new Box());
             boxRenderer.setSprite(configManager.loadBoxSprite());
             
@@ -155,7 +174,7 @@ public class Game extends BasicGame {
             levelRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
             levelRenderer.setFieldRenderer(fieldRenderer);
             levelRenderer.setTankRenderer(actorRenderer);
-            //levelRenderer.addRenderer(barrelRenderer);
+            levelRenderer.addObjectRenderer(barrelRenderer);
             levelRenderer.addObjectRenderer(boxRenderer);
             levelRenderer.addEnemyRenederer(enemyTankRenderer);
         } 
@@ -183,9 +202,10 @@ public class Game extends BasicGame {
         {
             AppGameContainer app = new AppGameContainer(new Game("Sherman2D"));
             app.setDisplayMode(800, 600, false);
+            app.setShowFPS(false);
             app.setAlwaysRender(true);
             app.setTargetFrameRate(100);
-                
+            
             app.start();
         } 
         catch (Exception e)

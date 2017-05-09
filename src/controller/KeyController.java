@@ -15,15 +15,7 @@ public class KeyController {
     {
         if (gc.getInput().isKeyPressed(Input.KEY_SPACE))
             controller.shot();
-            
-        /*
-        if (gc.getInput().isKeyDown(Input.KEY_RIGHT))
-            controller.rotateRight(delta);
-        
-        if (gc.getInput().isKeyDown(Input.KEY_LEFT))
-            controller.rotateLeft(delta);
-        */
-    
+
         if (gc.getInput().isKeyDown(Input.KEY_UP))
             controller.upGun(delta);
         
@@ -47,13 +39,5 @@ public class KeyController {
         {
             controller.stop();
         }
-        
-        /*
-        if (gc.getInput().isKeyDown(Input.KEY_S))
-            controller.moveDown(delta);
-        
-        if (gc.getInput().isKeyDown(Input.KEY_W))
-            controller.moveUp(delta);
-            */
     }
 }

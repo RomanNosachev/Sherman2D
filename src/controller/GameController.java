@@ -9,6 +9,13 @@ import model.level.Level;
 import model.tank.Climb;
 import model.tank.Move;
 
+/*
+ * ѕроблемы:
+ * - проверка угла вертикального наведени€
+ * - лишний градус поворота оруди€ при отзеркаливании
+ * 
+ */
+
 public class GameController 
 {
     private Level               model;
@@ -26,6 +33,8 @@ public class GameController
     public void mainLoop(GameContainer gc, int delta) throws SlickException
     {                     
         //System.out.println(model.isMoving() + " " + model.isClimbing());
+        //System.out.println(model.getTankDirection());
+        System.out.println("C: " + model.getTankCannonRotateAngle() + "   T: " + model.getTankRotateAngle());
                 
         gravityController.gravity(delta);
                 
@@ -44,6 +53,7 @@ public class GameController
             if (model.tankCollidesWithObject(objectIndex))
             {
                 model.removeObject(objectIndex);
+                objectIndex--;
             }
         }
         
@@ -85,7 +95,9 @@ public class GameController
                     if (model.shellCollidesWithTank(shellIndex) && !model.isTankDamaged())
                     {
                         model.setTankDamaged(true);
-                        model.setTankHitPoint(model.getTankHitPoint() - model.getShellDamage(shellIndex));
+                        model.addTankHitPoint(-model.getShellDamage(shellIndex));
+                        
+                        continue;
                     }
                 }
 
@@ -95,8 +107,9 @@ public class GameController
                     model.setShellFlying(shellIndex, false);
                     model.setShellLeftTank(false);
                     model.setShellCollides(shellIndex, true);
-                    
                     model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));    
+                    
+                    continue;
                 }
                 
                 for (int objectIndex = 0; objectIndex < model.getObjectsCount(); objectIndex++)
@@ -117,8 +130,8 @@ public class GameController
                     {
                         model.setShellCollides(shellIndex, true);
                         model.setShellFlying(shellIndex, false);
-                        
                         model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));
+                        
                         model.addEnemyHitPoint(enemyIndex, -model.getShellDamage(shellIndex));
                     }
                 }
@@ -139,36 +152,38 @@ public class GameController
     public void upGun(int delta)
     {
         float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        if (Float.compare(model.getShotStartAngle(model.getShellBackIndex()) + model.getTankRotateAngle(),
-                model.getMaxAimingAngle()) < 0)
-        {
+                
+        //if (Float.compare(model.getShotStartAngle(model.getShellBackIndex()) + model.getTankRotateAngle(),
+        //        model.getMaxAimingAngle()) < 0)
+        //{
             model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) + rotateAngle);
             
             model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
             model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
 
-        } else
-        {
-            model.setShotStartAngle(model.getShellBackIndex(), model.getMaxAimingAngle() - model.getTankRotateAngle());
-        }
+        //} 
+        //else
+        //{
+        //    model.setShotStartAngle(model.getShellBackIndex(), model.getMaxAimingAngle() - model.getTankRotateAngle());
+        //}
     }
     
     public void downGun(int delta)
     {
         float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
         
-        if (Float.compare(model.getShotStartAngle(model.getShellBackIndex()) + model.getTankRotateAngle(),
-                model.getMinAimingAngle()) > 0)
-        {
+        //if (Float.compare(model.getShotStartAngle(model.getShellBackIndex()) + model.getTankRotateAngle(),
+        //        model.getMinAimingAngle()) > 0)
+        //{
             model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) - rotateAngle);
             
             model.tankCannonRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
             model.shellRotate(model.getShellBackIndex(), rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
-        } else
-        {
-            model.setShotStartAngle(model.getShellBackIndex(), model.getMinAimingAngle() - model.getTankRotateAngle());
-        }
+        //}
+        //else
+        //{
+        //    model.setShotStartAngle(model.getShellBackIndex(), model.getMinAimingAngle() - model.getTankRotateAngle());
+        //}
     }
     
     public void addShotPower(int delta)
@@ -195,8 +210,11 @@ public class GameController
     
     public void moveBack(int delta)
     {        
+        if (model.getTankDirection() == Move.FORTH)
+            model.tankReverse(true, false);
+        
         float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
-                
+                        
         for (int i = 0; i < movement; i++)
         {                
             model.moveTankX(-1);
@@ -218,11 +236,14 @@ public class GameController
             {
                 model.setMoving(Move.BACK);
             }
-        }
+        } 
     }
     
     public void moveForth(int delta)
     {        
+        if (model.getTankDirection() == Move.BACK)
+            model.tankReverse(true, false);
+        
         float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
         
         for (int i = 0; i < movement; i++)
@@ -253,48 +274,6 @@ public class GameController
     {
         model.setMoving(Move.STOP);
         model.setClimbing(Climb.STRAIGHT);
-    }
-    
-    @Deprecated
-    public void moveUp(int delta)
-    {
-        float movement = model.getMovePoint() * 10 * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        model.setPositionY(model.getTankY() - movement);
-        model.setTankCannonY(model.getTankCannonY() - movement);
-        model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() - movement);
-                    
-        model.setShellY(model.getShellBackIndex(), model.getShellY(model.getShellBackIndex()) - movement);
-        
-        if (model.tankCollidesWithLevel())
-        {
-            model.setPositionY(model.getTankY() + movement);
-            model.setTankCannonY(model.getTankCannonY() + movement);
-            model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() + movement);
-            
-            model.setShellY(model.getShellBackIndex(), model.getShellY(0) + movement);
-        }        
-    }
-    
-    @Deprecated
-    public void moveDown(int delta)
-    {
-        float movement = model.getMovePoint() * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        model.setPositionY(model.getTankY() + movement);
-        model.setTankCannonY(model.getTankCannonY() + movement);
-        model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() + movement);
-        
-        model.setShellY(model.getShellBackIndex(), model.getShellY(model.getShellBackIndex()) + movement);
-        
-        if (model.tankCollidesWithLevel())
-        {
-            model.setPositionY(model.getTankBase().getY() - movement);
-            model.setTankCannonY(model.getTankCannonY() - movement);
-            model.setTankCannonRotationPointY(model.getTankCannonRotationPointY() - movement);
-            
-            model.setShellY(model.getShellBackIndex(), model.getShellY(model.getShellBackIndex()) - movement);
-        }        
     }
     
     public boolean isGameOver()

@@ -174,30 +174,6 @@ public class GameController
             model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
             model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());          
         }
-        
-        /*
-        if (Float.compare((Math.abs(model.getTankCannonRotateAngle()) + 90), Math.abs(model.getTankRotateAngle()) + Math.abs(model.getMaxAimingAngle())) > 0)
-        {
-            model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) + rotateAngle);
-                
-            model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-            model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());          
-        }
-        */
-        
-        //if (Float.compare(model.getShotStartAngle(model.getShellBackIndex()) + model.getTankRotateAngle(),
-        //        model.getMaxAimingAngle()) < 0)
-        //{
-        //    model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) + rotateAngle);
-        //    
-        //    model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-        //    model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
-
-        //} 
-        //else
-        //{
-        //    model.setShotStartAngle(model.getShellBackIndex(), model.getMaxAimingAngle() - model.getTankRotateAngle());
-        //}
     }
     
     public void downGun(int delta)
@@ -213,9 +189,9 @@ public class GameController
         else 
         {
             rotateAngle = -45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            aimingCheckAngle = Math.abs(model.getTankCannonRotateAngle()) + model.getTankRotateAngle();
+            aimingCheckAngle = (-model.getTankCannonRotateAngle()) + model.getTankRotateAngle();
         }
-     
+
         System.out.println(aimingCheckAngle);
         
         if (Float.compare((90 - model.getMinAimingAngle()), aimingCheckAngle) > 0)

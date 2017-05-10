@@ -17,7 +17,7 @@ import model.dynamicGameObject.DynamicGameObject;
 import model.shell.Shell;
 import view.dynamicRenderer.DynamicRenderer;
 
-public class ShellRenderer 
+public class ShellRenderer
 extends DynamicRenderer 
 {    
     private Image       shellSprite;

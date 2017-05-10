@@ -150,16 +150,48 @@ public class GameController
     }
 
     public void upGun(int delta)
-    {
-        float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
-                
-        //if (Float.compare(model.getShotStartAngle(model.getShellBackIndex()) + model.getTankRotateAngle(),
-        //        model.getMaxAimingAngle()) < 0)
-        //{
+    {        
+        float rotateAngle;
+        float aimingCheckAngle;
+        
+        if (model.getTankDirection() == Move.FORTH)
+        {
+            rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
+            aimingCheckAngle = model.getTankCannonRotateAngle() - model.getTankRotateAngle();
+        }
+        else 
+        {
+            rotateAngle = -45F * delta / PhysicConstants.CLOCK_PER_SEC;
+            aimingCheckAngle = (-model.getTankCannonRotateAngle()) + model.getTankRotateAngle();
+        }
+        
+        System.out.println(aimingCheckAngle);
+        
+        if (Float.compare(model.getMaxAimingAngle(), 90 - aimingCheckAngle) > 0)
+        {
             model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) + rotateAngle);
             
             model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-            model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
+            model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());          
+        }
+        
+        /*
+        if (Float.compare((Math.abs(model.getTankCannonRotateAngle()) + 90), Math.abs(model.getTankRotateAngle()) + Math.abs(model.getMaxAimingAngle())) > 0)
+        {
+            model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) + rotateAngle);
+                
+            model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
+            model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());          
+        }
+        */
+        
+        //if (Float.compare(model.getShotStartAngle(model.getShellBackIndex()) + model.getTankRotateAngle(),
+        //        model.getMaxAimingAngle()) < 0)
+        //{
+        //    model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) + rotateAngle);
+        //    
+        //    model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
+        //    model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
 
         //} 
         //else
@@ -170,20 +202,29 @@ public class GameController
     
     public void downGun(int delta)
     {
-        float rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
+        float rotateAngle;
+        float aimingCheckAngle;
         
-        //if (Float.compare(model.getShotStartAngle(model.getShellBackIndex()) + model.getTankRotateAngle(),
-        //        model.getMinAimingAngle()) > 0)
-        //{
+        if (model.getTankDirection() == Move.FORTH)
+        {
+            rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
+            aimingCheckAngle = model.getTankCannonRotateAngle() - model.getTankRotateAngle();
+        }
+        else 
+        {
+            rotateAngle = -45F * delta / PhysicConstants.CLOCK_PER_SEC;
+            aimingCheckAngle = Math.abs(model.getTankCannonRotateAngle()) + model.getTankRotateAngle();
+        }
+     
+        System.out.println(aimingCheckAngle);
+        
+        if (Float.compare((90 - model.getMinAimingAngle()), aimingCheckAngle) > 0)
+        {
             model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) - rotateAngle);
             
             model.tankCannonRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-            model.shellRotate(model.getShellBackIndex(), rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());                
-        //}
-        //else
-        //{
-        //    model.setShotStartAngle(model.getShellBackIndex(), model.getMinAimingAngle() - model.getTankRotateAngle());
-        //}
+            model.shellRotate(model.getShellBackIndex(), rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
+        }
     }
     
     public void addShotPower(int delta)

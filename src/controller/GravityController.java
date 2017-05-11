@@ -18,6 +18,14 @@ public class GravityController
     {
         float movement = PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC;
         
+        for (int shellIndex = 0; shellIndex < model.getShellCount() - 1; shellIndex++)
+        {
+            if (model.isShellFlying(shellIndex))
+            {
+                model.setShotDirectionY(shellIndex, model.getShotDirectionY(shellIndex) - PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC);
+            }
+        }
+        
         for (int i = 0; i < movement; i++)
         {
             model.moveTankY(1);
@@ -74,7 +82,7 @@ public class GravityController
         {
             model.rotateTank(-1);
             
-            if (model.tankCollidesWithLevel())
+            if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
             {
                 model.rotateTank(1);
                 return false;
@@ -92,7 +100,7 @@ public class GravityController
         {
             model.rotateTank(1);
             
-            if (model.tankCollidesWithLevel())
+            if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
             {
                 model.rotateTank(-1);
                 return false;

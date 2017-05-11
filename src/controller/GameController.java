@@ -9,13 +9,6 @@ import model.level.Level;
 import model.tank.Climb;
 import model.tank.Move;
 
-/*
- * ѕроблемы:
- * - проверка угла вертикального наведени€
- * - лишний градус поворота оруди€ при отзеркаливании
- * 
- */
-
 public class GameController 
 {
     private Level               model;
@@ -27,15 +20,13 @@ public class GameController
     public GameController(Level model)
     {
         this.model = model;
-        gravityController = new GravityController(model);
+        gravityController = new GravityController(model); 
     }
     
     public void mainLoop(GameContainer gc, int delta) throws SlickException
-    {                     
-        //System.out.println(model.isMoving() + " " + model.isClimbing());
-        //System.out.println(model.getTankDirection());
-        System.out.println("C: " + model.getTankCannonRotateAngle() + "   T: " + model.getTankRotateAngle());
-                
+    {                         
+        System.out.println(model.isTankCollides());
+
         gravityController.gravity(delta);
                 
         if (model.getTankHitPoint() <= 0)
@@ -79,8 +70,6 @@ public class GameController
                 float rotateAngle = (float) new Vector2f(newVector.getX() - oldVector.getX(), newVector.getY() - oldVector.getY()).getTheta() + 90;
                 
                 model.setShellRotation(shellIndex, rotateAngle);
-
-                model.setShotDirectionY(shellIndex, model.getShotDirectionY(shellIndex) - PhysicConstants.GRAVITY * delta / PhysicConstants.CLOCK_PER_SEC);
 
                 model.addShotPathPoint(shellIndex, model.getShellBase(shellIndex).getCenterX(), model.getShellBase(shellIndex).getCenterY());
 
@@ -151,78 +140,22 @@ public class GameController
 
     public void upGun(int delta)
     {        
-        float rotateAngle;
-        float aimingCheckAngle;
-        
-        if (model.getTankDirection() == Move.FORTH)
-        {
-            rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            aimingCheckAngle = model.getTankCannonRotateAngle() - model.getTankRotateAngle();
-        }
-        else 
-        {
-            rotateAngle = -45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            aimingCheckAngle = (-model.getTankCannonRotateAngle()) + model.getTankRotateAngle();
-        }
-        
-        System.out.println(aimingCheckAngle);
-        
-        if (Float.compare(model.getMaxAimingAngle(), 90 - aimingCheckAngle) > 0)
-        {
-            model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) + rotateAngle);
-            
-            model.tankCannonRotate(-rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-            model.shellRotate(model.getShellBackIndex(), -rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());          
-        }
+        model.upTankCannon(45F * delta / PhysicConstants.CLOCK_PER_SEC);
     }
     
     public void downGun(int delta)
     {
-        float rotateAngle;
-        float aimingCheckAngle;
-        
-        if (model.getTankDirection() == Move.FORTH)
-        {
-            rotateAngle = 45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            aimingCheckAngle = model.getTankCannonRotateAngle() - model.getTankRotateAngle();
-        }
-        else 
-        {
-            rotateAngle = -45F * delta / PhysicConstants.CLOCK_PER_SEC;
-            aimingCheckAngle = (-model.getTankCannonRotateAngle()) + model.getTankRotateAngle();
-        }
-
-        System.out.println(aimingCheckAngle);
-        
-        if (Float.compare((90 - model.getMinAimingAngle()), aimingCheckAngle) > 0)
-        {
-            model.setShotStartAngle(model.getShellBackIndex(), model.getShotStartAngle(model.getShellBackIndex()) - rotateAngle);
-            
-            model.tankCannonRotate(rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-            model.shellRotate(model.getShellBackIndex(), rotateAngle, model.getTankCannonRotationPointX(), model.getTankCannonRotationPointY());
-        }
+        model.upTankCannon(-45F * delta / PhysicConstants.CLOCK_PER_SEC);
     }
     
     public void addShotPower(int delta)
     {
-        if (Float.compare(model.getShotStartSpeed(model.getShellBackIndex()), 5000) < 0)
-        {
-            model.setShotStartSpeed(model.getShellBackIndex(), model.getShotStartSpeed(model.getShellBackIndex()) + 200F * delta / PhysicConstants.CLOCK_PER_SEC);
-        } else
-        {
-            model.setShotStartSpeed(model.getShellBackIndex(), 5000);
-        }
+        model.addTankShotPower(200F * delta / PhysicConstants.CLOCK_PER_SEC);
     }
     
     public void subShotPower(int delta)
     {
-        if (Float.compare(model.getShotStartSpeed(model.getShellBackIndex()), 200) > 0)
-        {
-            model.setShotStartSpeed(model.getShellBackIndex(), model.getShotStartSpeed(model.getShellBackIndex()) - 200F * delta / PhysicConstants.CLOCK_PER_SEC);
-        } else
-        {
-            model.setShotStartSpeed(model.getShellBackIndex(), 200);
-        }
+        model.addTankShotPower(-200F * delta / PhysicConstants.CLOCK_PER_SEC);
     }
     
     public void moveBack(int delta)
@@ -236,14 +169,14 @@ public class GameController
         {                
             model.moveTankX(-1);
             
-            if (model.tankCollidesWithLevel())
+            if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
             {
                 model.moveTankX(1);
                                         
                 model.setClimbing(Climb.UP);
                 model.moveTankY(-1);
                         
-                if (model.tankCollidesWithLevel())
+                if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
                 {
                     model.setClimbing(Climb.STRAIGHT);
                     model.moveTankY(1);
@@ -267,14 +200,14 @@ public class GameController
         {                
             model.moveTankX(1);
             
-            if (model.tankCollidesWithLevel())
+            if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
             {
                 model.moveTankX(-1);
                                         
                 model.setClimbing(Climb.UP);
                 model.moveTankY(-1);
                         
-                if (model.tankCollidesWithLevel())
+                if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
                 {
                     model.setClimbing(Climb.STRAIGHT);
                     model.moveTankY(1);

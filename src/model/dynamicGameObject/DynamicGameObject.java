@@ -30,6 +30,8 @@ implements GameObject,
     protected float    hitPoint;
     protected float    maxHitPoint;
     
+    protected volatile boolean  collides = false;
+    
     public Shape getSimpleBase()
     {
         return simpleBase;
@@ -352,5 +354,15 @@ implements GameObject,
             
             rotate(prevRotateAngle);
         }
+    }
+    
+    public boolean isCollides()
+    {
+        return collides;
+    }
+
+    public void setCollides(boolean collides)
+    {
+        this.collides = collides;
     }
 }

@@ -4,6 +4,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import model.camera.Camera;
 import model.dynamicGameObject.DynamicGameObject;
+import model.enemy.EnemyTank;
 import model.field.Field;
 import model.tank.Climb;
 import model.tank.Move;
@@ -22,9 +23,7 @@ public class Level
     
     private Camera                          actorCamera;
     private Camera                          shellCamera;
-    
-    private boolean                         isShellLeftTank = false;
-        
+            
     public Level()
     {
         actor = new Tank();
@@ -267,6 +266,22 @@ public class Level
         return actor.collidesWith(objects.get(objectIndex));
     }
     
+    public boolean tankCollidesWithEnemy(int enemyIndex)
+    {
+        return actor.collidesWith(enemies.get(enemyIndex));
+    }
+    
+    public boolean tankCollidesWithEnemies()
+    {
+        for (DynamicGameObject enemy : enemies)
+        {
+            if (actor.collidesWith(enemy))
+                return true;
+        }
+        
+        return false;
+    }
+    
     public boolean tankBoundingWithLevel()
     {
         return actor.boundingWith(field.getBase());
@@ -279,6 +294,7 @@ public class Level
     
     public boolean tankCollidesWithLevel()
     {
+        actor.setCollides(actor.collidesWith(field.getBase()));
         return actor.collidesWith(field.getBase());
     }
     
@@ -324,7 +340,7 @@ public class Level
     
     public boolean tankExcludesShell(int index)
     {
-        return !actor.collidesWith(actor.getShellBase(index)) && !actor.isContains(getShellBase(index));
+        return !actor.collidesWith(actor.getShellBase(index)) && !actor.isContains(actor.getShell(index).getBoundingCircle());
     }
     
     public void shellRotate(int index, float angle)
@@ -601,12 +617,12 @@ public class Level
     
     public boolean isShellLeftTank()
     {
-        return isShellLeftTank;
+        return actor.isShellLeft();
     }
     
-    public void setShellLeftTank(boolean isShellLeftTank)
+    public void setShellLeftTank(boolean fl)
     {
-        this.isShellLeftTank = isShellLeftTank;
+        actor.setShellLeft(fl);
     }
     
     public void setTankHitPoint(float f)
@@ -681,26 +697,12 @@ public class Level
     
     public void moveTankX(float movement)
     {
-        /*
-        actor.setX(actor.getX() + movement);
-        actor.setCannonX(actor.getCannonX() + movement);
-        actor.setCannonRotationPointX(actor.getCannonRotationPointX() + movement);
-        actor.setShellBackX(actor.getShellBackX() + movement);
-        */
-        
         actor.moveX(movement);
         actorCamera.setX(actorCamera.getX() + movement);
     }
     
     public void moveTankY(float movement)
     {
-        /*
-        actor.setY(actor.getY() + movement);
-        actor.setCannonY(actor.getCannonY() + movement);
-        actor.setCannonRotationPointY(actor.getCannonRotationPointY() + movement);
-        actor.setShellBackY(actor.getShellBackY() + movement);
-        */
-        
         actor.moveY(movement);
         actorCamera.setY(actorCamera.getY() + movement);
     }
@@ -823,5 +825,25 @@ public class Level
     public float getTankCannonRotateAngle()
     {
         return actor.getCannonRotateAngle();
+    }
+
+    public void upTankCannon(float upAngle)
+    {
+        actor.upCannon(upAngle);
+    }
+    
+    public boolean isTankCollides()
+    {
+        return actor.isCollides();
+    }
+    
+    public void setTankCollides(boolean fl)
+    {
+        actor.setCollides(fl);
+    }
+    
+    public void addTankShotPower(float power)
+    {
+        actor.addShotPower(power);
     }
 }

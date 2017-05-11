@@ -25,7 +25,6 @@ implements Detonable
     private Vector2f            collisionPoint;
     
     private boolean             flying = false;
-    private boolean             collides = false;
     
     private float               damage;
     private float               explosionRadius;
@@ -150,11 +149,13 @@ implements Detonable
         path.clear();
     }
 
+    @Override
     public boolean isCollides()
     {
         return collides;
     }
 
+    @Override
     public void setCollides(boolean collides)
     {
         this.collides = collides;

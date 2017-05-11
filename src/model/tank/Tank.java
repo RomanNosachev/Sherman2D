@@ -26,7 +26,9 @@ extends DynamicGameObject
     private Move                moving = Move.STOP;
     private Move                direction = Move.FORTH;
     private Climb               climbing = Climb.STRAIGHT;
+    
     private boolean             damaged = false;
+    private boolean             shellLeft = false;
     
     public Tank()
     {
@@ -205,11 +207,11 @@ extends DynamicGameObject
     public void shot()
     {        
         Shell buffer = (Shell) ammo.get(getShellCount() - 1).clone();
-                        
-        ammo.get(getShellCount() - 1).setFlying(true);
-        ammo.get(getShellCount() - 1).setDirection();
-        ammo.get(getShellCount() - 1).clearPath();
-        ammo.get(getShellCount() - 1).addPathPoint(ammo.get(getShellCount() - 1).getCenterX(), ammo.get(getShellCount() - 1).getCenterY());
+        
+        ammo.getLast().setFlying(true);
+        ammo.getLast().setDirection();
+        ammo.getLast().clearPath();
+        ammo.getLast().addPathPoint(ammo.get(getShellCount() - 1).getCenterX(), ammo.get(getShellCount() - 1).getCenterY());
         ammo.add(buffer);                
     }
     
@@ -595,7 +597,7 @@ extends DynamicGameObject
         simpleBase.setX(simpleBase.getX() + movement);
         gun.setX(gun.getX() + movement);
         gun.setRotationPointX(gun.getRotationPointX() + movement);
-        ammo.getLast().setX(ammo.getLast().getX() + movement);
+        ammo.getLast().setX(ammo.getLast().getX() + movement); 
     }
     
     @Override
@@ -680,7 +682,7 @@ extends DynamicGameObject
             
             ammo.getLast().setPosition(gun.getCenterX() - ammo.getLast().getStartWidth() / 2,
                     gun.getCenterY() - ammo.getLast().getStartHeight() / 2);
- 
+            
             if (ammo.getLast().getStartAngle() <= 90)
                 ammo.getLast().setStartAngle((90 - ammo.getLast().getStartAngle()) + 90);
             else
@@ -689,9 +691,81 @@ extends DynamicGameObject
             rotate(prevRotateAngle);
         }
     }
+
+    public void upCannon(float upAngle)
+    {
+        float aimingCheckAngle;
+        float angle;
+        
+        if (direction == Move.FORTH)
+        {
+            angle = -upAngle;
+            aimingCheckAngle = gun.getRotateAngle() - rotateAngle;
+        }
+        else 
+        {
+            angle = upAngle;
+            aimingCheckAngle = (-gun.getRotateAngle()) + rotateAngle;
+        }
+        
+        if (upAngle > 0)
+        {         
+            if (Float.compare(maxAimingAngle, 90 - aimingCheckAngle) > 0)
+            {
+                ammo.getLast().setStartAngle(ammo.getLast().getStartAngle() - angle);
+                gun.rotate(angle, gun.getRotationPointX(), gun.getRotationPointY());
+                ammo.getLast().rotate(angle, gun.getRotationPointX(), gun.getRotationPointY());       
+            }
+        }
+        else
+        {
+            if (Float.compare((90 - minAimingAngle), aimingCheckAngle) > 0)
+            {
+                ammo.getLast().setStartAngle(ammo.getLast().getStartAngle() - angle);
+                gun.rotate(angle, gun.getRotationPointX(), gun.getRotationPointY());
+                ammo.getLast().rotate(angle, gun.getRotationPointX(), gun.getRotationPointY());
+            }
+        }  
+    }
     
     public float getCannonRotateAngle()
     {
         return gun.getRotateAngle();
+    }
+
+    public boolean isShellLeft()
+    {
+        return shellLeft;
+    }
+
+    public void setShellLeft(boolean shellLeft)
+    {
+        this.shellLeft = shellLeft;
+    }
+    
+    public void addShotPower(float power)
+    {
+        if (power > 0)
+        {
+            if (Float.compare(ammo.getLast().getStartSpeed(), 5000) < 0)
+            {
+                ammo.getLast().setStartSpeed(ammo.getLast().getStartSpeed() + power);
+            } 
+            else
+            {
+                ammo.getLast().setStartSpeed(5000);
+            }
+        }
+        else
+        {
+            if (Float.compare(ammo.getLast().getStartSpeed(), 200) > 0)
+            {
+                ammo.getLast().setStartSpeed(ammo.getLast().getStartSpeed() + power);
+            } 
+            else
+            {
+                ammo.getLast().setStartSpeed(200);
+            }
+        }
     }
 }

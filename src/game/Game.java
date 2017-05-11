@@ -66,7 +66,7 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         levelRenderer.render(gc, g);
-        actorPlayer.play(gc);
+        //actorPlayer.play(gc);
     }
     
     @Override
@@ -107,19 +107,19 @@ public class Game extends BasicGame {
             actorPlayer = new TankPlayer(actor);
             actorPlayer.setMove(configManager.loadTankMovingSound());
             actorPlayer.setHit(configManager.loadTankHitSound());
-            
+        
             ////
             DynamicGameObject a = new Barrel();
-            a.setBase(new Rectangle(0, 0, 90, 130));
+            a.setBase(new Rectangle(0, 0, 90, 125));
             a.setPosition(1300, 0);
 
             DynamicGameObject a1 = new Barrel();
-            a1.setBase(new Rectangle(0, 0, 90, 130));
+            a1.setBase(new Rectangle(0, 0, 90, 125));
             a1.setPosition(1400, 0);
             a1.setScale(0.5F);
             
             DynamicGameObject a2 = new Barrel();
-            a2.setBase(new Rectangle(0, 0, 90, 130));
+            a2.setBase(new Rectangle(0, 0, 90, 125));
             a2.setPosition(1400, -100);
             a2.setScale(0.25F);
             
@@ -164,8 +164,8 @@ public class Game extends BasicGame {
             boxRenderer.setSprite(configManager.loadBoxSprite());
             
             enemyTankRenderer = new EnemyTankRenderer(enemy);
-            enemyTankRenderer.setSpriteSheet(configManager.loadTankSpriteSheet(), configManager.loadTankSpriteSheetCount());
-            enemyTankRenderer.setCannonSprite(configManager.loadTankCannonSprite());
+            enemyTankRenderer.setSpriteSheet(configManager.loadEnemyTankSpriteSheet(), configManager.loadEnemyTankSpriteSheetCount());
+            enemyTankRenderer.setCannonSprite(configManager.loadEnemyTankCannonSprite());
             enemyTankRenderer.setShellRenderer(shellRenderer);
             
             levelRenderer = new LevelRenderer(level);

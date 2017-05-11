@@ -175,6 +175,21 @@ public class ConfigManager {
         return new Image(config.getProperty("ShellExplosionSpriteSheet"));
     }
     
+    public Image loadEnemyTankSpriteSheet() throws SlickException
+    {
+        return new Image(config.getProperty("EnemyTankSpriteSheet"));
+    }
+    
+    public int loadEnemyTankSpriteSheetCount()
+    {
+        return Integer.parseInt(config.getProperty("EnemyTankSpriteSheetCount"));
+    }
+    
+    public Image loadEnemyTankCannonSprite() throws SlickException
+    {
+        return new Image(config.getProperty("EnemyTankCannonSprite"));
+    }
+    
     public int loadShellExplosionSpriteSheetCount()
     {
         return Integer.parseInt(config.getProperty("ShellExplosionSpriteSheetCount"));

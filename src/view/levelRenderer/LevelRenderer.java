@@ -52,7 +52,8 @@ public class LevelRenderer
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         scale(g);
-        g.translate(-level.getCameraX(), -level.getCameraY());
+        g.translate(-level.getCameraX() + Display.getWidth() / 4, 
+                -level.getCameraY() + (Display.getHeight() - infoStringHeight * 4));
         fieldRenderer.render(gc, g);
         tankRenderer.render(gc, g);
         

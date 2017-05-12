@@ -3,6 +3,7 @@ package model.tank;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Vector2f;
 
+import model.dynamicGameObject.Cannon;
 import model.dynamicGameObject.DynamicGameObject;
 import model.dynamicGameObject.DynamicGameObjectBuilder;
 import model.shell.Shell;

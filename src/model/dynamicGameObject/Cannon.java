@@ -1,8 +1,6 @@
-package model.tank;
+package model.dynamicGameObject;
 
 import org.newdawn.slick.geom.Vector2f;
-
-import model.dynamicGameObject.DynamicGameObject;
 
 public class Cannon extends DynamicGameObject{
     private static final long serialVersionUID = 7719346898999599929L;

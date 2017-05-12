@@ -1,4 +1,4 @@
-package model.tank;
+package model.dynamicGameObject;
 
 public enum Climb
 {

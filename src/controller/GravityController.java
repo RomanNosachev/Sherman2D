@@ -1,9 +1,9 @@
 package controller;
 
 import model.PhysicConstants;
+import model.dynamicGameObject.Climb;
+import model.dynamicGameObject.Direction;
 import model.level.Level;
-import model.tank.Climb;
-import model.tank.Move;
 
 public class GravityController 
 {
@@ -36,8 +36,8 @@ public class GravityController
             }
             else
             {
-                if (model.isClimbing() != Climb.UP)
-                    model.setClimbing(Climb.DOWN);
+                if (model.isTankClimbing() != Climb.UP)
+                    model.setTankClimbing(Climb.DOWN);
             }
             
             for (int objectIndex = 0; objectIndex < model.getObjectsCount(); objectIndex++)
@@ -68,43 +68,76 @@ public class GravityController
                 {
                     model.moveEnemyY(enemyIndex, -1);
                 }
+                else
+                {
+                    if (model.isEnemyClimbing(enemyIndex) != Climb.UP)
+                        model.setEnemyClimbing(enemyIndex, Climb.DOWN);
+                }
             }
         }       
         
         stabilize(delta);
     }
     
-    private boolean rotateLeft(int delta)
+    private boolean rotateTank(float rotateAngle, int delta)
     {
-        float rotateAngle = 90F * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        for (int i = 0; i < rotateAngle; i++)
+        if (rotateAngle < 0)
         {
-            model.rotateTank(-1);
-            
-            if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
+            for (int i = 0; i < Math.abs(rotateAngle); i++)
+            {
+                model.rotateTank(-1);
+                
+                if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
+                {
+                    model.rotateTank(1);
+                    return false;
+                }
+            }            
+        }
+        else
+        {            
+            for (int i = 0; i < rotateAngle; i++)
             {
                 model.rotateTank(1);
-                return false;
-            }
+                
+                if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
+                {
+                    model.rotateTank(-1);
+                    return false;
+                }
+            }            
         }
         
         return true;
     }
-    
-    private boolean rotateRight(int delta)
+ 
+    private boolean rotateEnemy(int index, float rotateAngle, int delta)
     {
-        float rotateAngle = 90F * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        for (int i = 0; i < rotateAngle; i++)
+        if (rotateAngle < 0)
         {
-            model.rotateTank(1);
-            
-            if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
+            for (int i = 0; i < Math.abs(rotateAngle); i++)
             {
-                model.rotateTank(-1);
-                return false;
-            }
+                model.rotateEnemy(index, -1);
+                
+                if (model.enemyCollidesWithLevel(index) || model.tankCollidesWithEnemy(index) || model.enemyCollidesWithEnemies(index))
+                {
+                    model.rotateEnemy(index, 1);
+                    return false;
+                }
+            }            
+        }        
+        else
+        {
+            for (int i = 0; i < rotateAngle; i++)
+            {
+                model.rotateEnemy(index, 1);
+                
+                if (model.enemyCollidesWithLevel(index) || model.tankCollidesWithEnemy(index) || model.enemyCollidesWithEnemies(index))
+                {                    
+                    model.rotateEnemy(index, -1);
+                    return false;
+                }
+            }     
         }
         
         return true;
@@ -112,24 +145,62 @@ public class GravityController
     
     private void stabilize(int delta)
     {
-        if ((model.isMoving() == Move.FORTH && model.isClimbing() == Climb.UP)
-                || (model.isMoving() == Move.BACK && model.isClimbing() == Climb.DOWN))
+        float rotateAngle = 90F * delta / PhysicConstants.CLOCK_PER_SEC;
+        
+        if ((model.isTankMoving() == Direction.FORTH && model.isTankClimbing() == Climb.UP)
+                || (model.isTankMoving() == Direction.BACK && model.isTankClimbing() == Climb.DOWN))
         {            
-                rotateLeft(delta);            
+            rotateTank(-rotateAngle, delta);
         }
         else
         {            
-            if ((model.isMoving() == Move.BACK && model.isClimbing() == Climb.UP)
-                    || (model.isMoving() == Move.FORTH && model.isClimbing() == Climb.DOWN))
+            if ((model.isTankMoving() == Direction.BACK && model.isTankClimbing() == Climb.UP)
+                    || (model.isTankMoving() == Direction.FORTH && model.isTankClimbing() == Climb.DOWN))
             {
-                   rotateRight(delta);
+                rotateTank(rotateAngle, delta);
             }
             else
             {
                 if (Float.compare(model.getTankRotateAngle(), -2) > 0)
-                    rotateLeft(delta);
-                else if (Float.compare(model.getTankRotateAngle(), 2) < 0)
-                    rotateRight(delta);
+                {
+                    rotateTank(-rotateAngle, delta);
+                }
+                else 
+                {
+                    if (Float.compare(model.getTankRotateAngle(), 2) < 0)
+                        rotateTank(rotateAngle, delta);
+                }
+            }
+        }
+        
+        for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
+        {
+            if ((model.isEnemyMoving(enemyIndex) == Direction.FORTH && model.isEnemyClimbing(enemyIndex) == Climb.UP)
+                    || (model.isEnemyMoving(enemyIndex) == Direction.BACK && model.isEnemyClimbing(enemyIndex) == Climb.DOWN))
+            {            
+                rotateEnemy(enemyIndex, -rotateAngle, delta);        
+            }
+            else
+            {            
+                if ((model.isEnemyMoving(enemyIndex) == Direction.BACK && model.isEnemyClimbing(enemyIndex) == Climb.UP)
+                        || (model.isEnemyMoving(enemyIndex) == Direction.FORTH && model.isEnemyClimbing(enemyIndex) == Climb.DOWN))
+                {
+                    rotateEnemy(enemyIndex, rotateAngle, delta);
+                }
+                else
+                {                                            
+                    if (Float.compare(model.getEnemyRotateAngle(enemyIndex), -2) > 0)
+                    {
+                        rotateEnemy(enemyIndex, -rotateAngle, delta);
+                    }
+                    else
+                    {
+                        if ((Float.compare(model.getEnemyRotateAngle(enemyIndex), 2) < 0))
+                        {
+                            rotateEnemy(enemyIndex, rotateAngle, delta);
+                        }
+                    }
+                }
             }
         }
     }

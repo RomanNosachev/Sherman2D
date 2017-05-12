@@ -2,6 +2,9 @@ package model.tank;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import model.dynamicGameObject.Cannon;
+import model.dynamicGameObject.Direction;
+import model.dynamicGameObject.Drivable;
 import model.dynamicGameObject.DynamicGameObject;
 import model.shell.Shell;
 
@@ -12,7 +15,8 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
 public class Tank 
-extends DynamicGameObject 
+extends DynamicGameObject
+implements Drivable
 {
     private static final long serialVersionUID = -3579494870824274339L;
     
@@ -22,11 +26,7 @@ extends DynamicGameObject
     private float               speed;
     private float               minAimingAngle;
     private float               maxAimingAngle;
-    
-    private Move                moving = Move.STOP;
-    private Move                direction = Move.FORTH;
-    private Climb               climbing = Climb.STRAIGHT;
-    
+        
     private boolean             damaged = false;
     private boolean             shellLeft = false;
     
@@ -151,7 +151,7 @@ extends DynamicGameObject
         this.speed = speed;
     }
     
-    public float getMovePoint()
+    public float getMovePoints()
     {
         return speed;
     }
@@ -161,29 +161,11 @@ extends DynamicGameObject
         return ammo.get(index).isFlying();
     }
     
-    public Move isMoving()
-    {
-        return moving;
-    }
-
-    public Move getDirection()
-    {
-        return direction;
-    }
-    
     public void setShellFlying(int index, boolean fl)
     {
         ammo.get(index).setFlying(fl);
     }
-    
-    public void setMoving(Move fl)
-    {
-        moving = fl;
-        
-        if (fl != Move.STOP)
-            direction = fl;
-    }
-    
+
     public void setShotStartSpeed(int index, float speed)
     {
         ammo.get(index).setStartSpeed(speed);
@@ -252,7 +234,7 @@ extends DynamicGameObject
     
     public Vector2f getShotDirection(int index)
     {
-        return ammo.get(index).getDirection();
+        return ammo.get(index).getDirectionVector();
     }
     
     public float getShotDirectionX(int index)
@@ -580,16 +562,6 @@ extends DynamicGameObject
         ammo.remove(index);
     }
 
-    public Climb isClimbing()
-    {
-        return climbing;
-    }
-
-    public void setClimbing(Climb climbing)
-    {
-        this.climbing = climbing;
-    }
-    
     @Override
     public void moveX(float movement)
     {
@@ -697,7 +669,7 @@ extends DynamicGameObject
         float aimingCheckAngle;
         float angle;
         
-        if (direction == Move.FORTH)
+        if (direction == Direction.FORTH)
         {
             angle = -upAngle;
             aimingCheckAngle = gun.getRotateAngle() - rotateAngle;

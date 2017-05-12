@@ -15,20 +15,24 @@ public abstract class DynamicGameObject
 implements GameObject,
            Cloneable
 {
-    protected Shape    base;
-    protected Shape    simpleBase;
+    protected Shape         base;
+    protected Shape         simpleBase;
     
-    protected float    scale = 1F;
+    protected float         scale = 1F;
     
-    protected Vector2f startPosition;
-    protected float    startWidth;
-    protected float    startHeight;
+    protected Vector2f      startPosition;
+    protected float         startWidth;
+    protected float         startHeight;
     
-    protected float    boundingRadius;
-    protected float    rotateAngle = 0;
+    protected float         boundingRadius;
+    protected float         rotateAngle = 0;
     
-    protected float    hitPoint;
-    protected float    maxHitPoint;
+    protected float         hitPoint;
+    protected float         maxHitPoint;
+    
+    protected Direction     moving = Direction.STOP;
+    protected Direction     direction = Direction.FORTH;
+    protected Climb         climbing = Climb.STRAIGHT;
     
     protected volatile boolean  collides = false;
     
@@ -61,8 +65,7 @@ implements GameObject,
     {
         startPosition = pos;
         simpleBase.setLocation(simpleBase.getX() - (base.getX() - pos.x), simpleBase.getY() - (base.getY() - pos.y));
-        
-        base.setLocation(pos.x, pos.y);
+        base.setLocation(pos.x, pos.y);        
     }
 
     public Vector2f getPosition()
@@ -365,4 +368,34 @@ implements GameObject,
     {
         this.collides = collides;
     }
+    
+    public Direction isMoving()
+    {
+        return moving;
+    }
+
+    public Direction getDirection()
+    {
+        return direction;
+    }
+    
+    public void setMoving(Direction fl)
+    {
+        moving = fl;
+        
+        if (fl != Direction.STOP)
+            direction = fl;
+    }
+
+    public Climb isClimbing()
+    {
+        return climbing;
+    }
+
+    public void setClimbing(Climb climbing)
+    {
+        this.climbing = climbing;
+    }
+    
+    
 }

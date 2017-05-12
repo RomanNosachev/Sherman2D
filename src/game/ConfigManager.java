@@ -204,4 +204,14 @@ public class ConfigManager {
     {
         return new Image(config.getProperty("BarrelSprite"));
     }
+    
+    public float loadEnemyTankVisibility()
+    {
+        return Float.parseFloat(config.getProperty("EnemyTankVisibility"));
+    }
+    
+    public float loadEnemyTankSpeed()
+    {
+        return Float.parseFloat(config.getProperty("EnemyTankSpeed"));
+    }
 }

@@ -10,4 +10,9 @@ extends TankBuilder
     {
         tank = new EnemyTank();
     }
+    
+    public void buildVisibility(float vis)
+    {
+        ((EnemyTank) tank).setVisibility(vis);
+    }
 }

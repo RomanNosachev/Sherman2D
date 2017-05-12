@@ -66,7 +66,7 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         levelRenderer.render(gc, g);
-        //actorPlayer.play(gc);
+        actorPlayer.play(gc);
     }
     
     @Override
@@ -150,12 +150,21 @@ public class Game extends BasicGame {
             level.addObject(b2);
             level.addObject(b3);
             
-            EnemyTank enemy = (EnemyTank) tankSheduler.createTank(new EnemyTankBuilder(), shell.clone(), configManager);
+            EnemyTank enemy = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
             enemy.setPosition(1000, -1000);
             level.addEnemies(enemy);
-            EnemyTank enemy2 = (EnemyTank) tankSheduler.createTank(new EnemyTankBuilder(), shell.clone(), configManager);
+            
+            EnemyTank enemy2 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
             enemy2.setPosition(1200, 0);
             level.addEnemies(enemy2);
+            
+            EnemyTank enemy3 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
+            enemy3.setPosition(2000, 0);
+            level.addEnemies(enemy3);
+            
+            EnemyTank enemy4 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
+            enemy4.setPosition(2300, 0);
+            level.addEnemies(enemy4);
             //////
             
             barrelRenderer = new BarrelRenderer(new Barrel());

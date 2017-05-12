@@ -7,8 +7,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import model.dynamicGameObject.Direction;
 import model.dynamicGameObject.DynamicGameObject;
-import model.tank.Move;
 import model.tank.Tank;
 import view.dynamicRenderer.DynamicRenderer;
 import view.shellRenderer.ShellRenderer;
@@ -76,11 +76,11 @@ extends DynamicRenderer
     {    
         Image newCannon;
         
-        if (((Tank) renderingObject).isMoving() != Move.STOP)
+        if (((Tank) renderingObject).isMoving() != Direction.STOP)
             if (--selectTankSprite <= 0)
                 selectTankSprite = movingTankSpriteCount - 1;
            
-        if (((Tank) renderingObject).getDirection() == Move.BACK)
+        if (((Tank) renderingObject).getDirection() == Direction.BACK)
         {
             sprite = movingTank.getImage(selectTankSprite).getFlippedCopy(true, false);
             newCannon = cannon.getFlippedCopy(true, false);
@@ -89,6 +89,12 @@ extends DynamicRenderer
         {
             sprite = movingTank.getImage(selectTankSprite);
             newCannon = cannon;
+        }
+        
+        if (renderingObject.getScale() != 1)
+        {  
+            sprite = sprite.getScaledCopy(renderingObject.getScale());
+            newCannon = newCannon.getScaledCopy(renderingObject.getScale());
         }
         
         newCannon.setRotation(((Tank) renderingObject).getCannonRotateAngle());

@@ -11,7 +11,9 @@ import model.field.Field;
 import model.staticGameObject.StaticGameObject;
 import view.staticRenderer.StaticRenderer;
 
-public class FieldRenderer extends StaticRenderer {
+public class FieldRenderer 
+extends StaticRenderer 
+{
     private Field           renderingObject;
 
     private Image           background;

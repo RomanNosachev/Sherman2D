@@ -21,7 +21,7 @@ implements Detonable
     private float               startSpeed;
     private float               startAngle;
     
-    private Vector2f            direction;
+    private Vector2f            directionVector;
     private Vector2f            collisionPoint;
     
     private boolean             flying = false;
@@ -90,37 +90,37 @@ implements Detonable
     
     public void setDirection(float x, float y)
     {
-        direction = new Vector2f(x, y);
+        directionVector = new Vector2f(x, y);
     }
     
     public void setDirectionX(float x)
     {
-        direction.x = x;
+        directionVector.x = x;
     }
     
     public void setDirectionY(float y)
     {
-        direction.y = y;
+        directionVector.y = y;
     }
     
-    public Vector2f getDirection()
+    public Vector2f getDirectionVector()
     {
-        return direction;
+        return directionVector;
     }
     
     public float getDirectionX()
     {
-        return direction.getX();
+        return directionVector.getX();
     }
     
     public float getDirectionY()
     {
-        return direction.getY();
+        return directionVector.getY();
     }
     
     public void setDirection()
     {
-        direction = new Vector2f((float) (startSpeed * Math.cos(startAngle * Math.PI / 180)),
+        directionVector = new Vector2f((float) (startSpeed * Math.cos(startAngle * Math.PI / 180)),
                 (float) (startSpeed * Math.sin(startAngle * Math.PI / 180)));
     }
     

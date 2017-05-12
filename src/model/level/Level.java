@@ -1,17 +1,17 @@
 package model.level;
 
 import org.newdawn.slick.geom.Vector2f;
-
 import model.camera.Camera;
+import model.dynamicGameObject.Climb;
+import model.dynamicGameObject.Direction;
+import model.dynamicGameObject.Drivable;
 import model.dynamicGameObject.DynamicGameObject;
-import model.enemy.EnemyTank;
+import model.enemy.Enmity;
 import model.field.Field;
-import model.tank.Climb;
-import model.tank.Move;
 import model.tank.Tank;
-
 import java.util.LinkedList;
 
+import org.newdawn.slick.geom.Ellipse;
 import org.newdawn.slick.geom.Shape;
 
 public class Level 
@@ -47,6 +47,7 @@ public class Level
     public void setTank(Tank tank)
     {
         actor = tank;
+        actorCamera = new Camera(new Vector2f(actor.getStartPosition()));
     }
     
     public void setField(Field field)
@@ -64,22 +65,22 @@ public class Level
         actor.setShellFlying(index, fl);
     }
     
-    public void setMoving(Move fl)
+    public void setTankMoving(Direction fl)
     {
         actor.setMoving(fl);
     }
     
-    public Move isMoving()
+    public Direction isTankMoving()
     {
         return actor.isMoving();
     }
     
-    public void setClimbing(Climb fl)
+    public void setTankClimbing(Climb fl)
     {
         actor.setClimbing(fl);
     }
     
-    public Climb isClimbing()
+    public Climb isTankClimbing()
     {
         return actor.isClimbing();
     }
@@ -191,9 +192,9 @@ public class Level
         actor.setSpeed(speed);
     }
     
-    public float getMovePoint()
+    public float getMovePoints()
     {
-        return actor.getMovePoint();
+        return actor.getMovePoints();
     }
     
     public void setShotDirection(int index, float x, float y)
@@ -323,6 +324,21 @@ public class Level
         return enemies.get(lIndex).collidesWith(enemies.get(rIndex));
     }
     
+    public boolean enemyCollidesWithEnemies(int index)
+    {
+        for (int i = 0; i < enemies.size(); i++)
+        {
+            if (enemyCollidesWithEnemy(index, i))
+            {
+                if (i != index)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     public boolean enemyCollidesWithLevel(int index)
     {
         return field.collidesWith(enemies.get(index));
@@ -408,13 +424,7 @@ public class Level
         
         actor.rotate(angle);
     }
-    
-    public void tankRotate(int index, float angle, float x, float y)
-    {
-        actor.rotate(angle, x, y);
-        actor.setShotStartAngle(index, actor.getShotStartAngle(index) - angle);
-    }
-    
+
     public float getTankRotateAngle()
     {
         return actor.getRotateAngle();
@@ -480,12 +490,12 @@ public class Level
         return actor.getStartPosition();
     }
     
-    public float getTankStartPositionX()
+    public float getTankStartX()
     {
         return actor.getStartX();
     }
     
-    public float getTankStartPositionY()
+    public float getTankStartY()
     {
         return actor.getStartY();
     }
@@ -817,7 +827,7 @@ public class Level
         actor.reverse(horizontal, vertical);
     }
     
-    public Move getTankDirection()
+    public Direction getTankDirection()
     {
         return actor.getDirection();
     }
@@ -845,5 +855,87 @@ public class Level
     public void addTankShotPower(float power)
     {
         actor.addShotPower(power);
+    }
+    
+    public Direction getEnemyDirection(int index)
+    {
+        return enemies.get(index).getDirection();
+    }
+    
+    public void enemyReverse(int index, boolean horizontal, boolean vertical)
+    {
+        enemies.get(index).reverse(horizontal, vertical);
+    }
+    
+    public float getEnemyMovePoints(int index)
+    {
+        if (enemies.get(index) instanceof Drivable)
+        {
+            return ((Drivable) enemies.get(index)).getMovePoints();
+        }
+        
+        return 0;
+    }
+
+    public void setEnemyClimbing(int index, Climb fl)
+    {
+        enemies.get(index).setClimbing(fl);
+    }
+    
+    public void setEnemyMoving(int index, Direction fl)
+    {
+        enemies.get(index).setMoving(fl);
+    }
+
+    public Climb isEnemyClimbing(int index)
+    {
+        return enemies.get(index).isClimbing();
+    }
+
+    public float getEnemyVisibility(int index)
+    {
+        if (enemies.get(index) instanceof Enmity)
+        {
+            return ((Enmity) enemies.get(index)).getVisibility();
+        }
+        
+        return 0;
+    }
+    
+    public boolean tankVisibleToEnemy(int index)
+    {
+        float visibility = getEnemyVisibility(index);
+        
+        if (visibility > 0)
+        {
+            Ellipse visionCircle = new Ellipse(enemies.get(index).getCenterX(), enemies.get(index).getCenterY(), 
+                getEnemyVisibility(index), getEnemyVisibility(index));
+            
+            return actor.collidesWith(visionCircle) || visionCircle.contains(actor.getBase());
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public Direction isEnemyMoving(int index)
+    {
+        return enemies.get(index).isMoving();
+    }
+    
+    public void rotateEnemy(int index, float angle)
+    {
+        enemies.get(index).rotate(angle);
+    }
+
+    public float getEnemyRotateAngle(int index)
+    {
+        return enemies.get(index).getRotateAngle();
+    }
+    
+    public float getEnemyX(int index)
+    {
+        return enemies.get(index).getX();
     }
 }

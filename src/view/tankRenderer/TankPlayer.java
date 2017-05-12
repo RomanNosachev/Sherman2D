@@ -7,7 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 
-import model.tank.Move;
+import model.dynamicGameObject.Direction;
 import model.tank.Tank;
 import view.renderer.Player;
 
@@ -37,7 +37,7 @@ public class TankPlayer implements Player {
     @Override
     public void play(GameContainer gc) throws SlickException
     {
-        if (playingObject.isMoving() != Move.STOP)
+        if (playingObject.isMoving() != Direction.STOP)
         {
             if (!move.playing())
                 move.play();

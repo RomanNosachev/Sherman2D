@@ -1,6 +1,8 @@
 package model.tank;
 
 import game.ConfigManager;
+import model.enemy.EnemyTank;
+import model.enemy.EnemyTankBuilder;
 import model.shell.Shell;
 
 public class TankSheduler 
@@ -25,5 +27,28 @@ public class TankSheduler
         builder.buildTankMaxHitPoint(configManager.loadTankMaxHitPoint());
                 
         return (Tank) builder.getObject();
+    }
+    
+    public EnemyTank createEnemyTank(EnemyTankBuilder builder, Shell shell, ConfigManager configManager)
+    {
+        builder.buildObject();
+        
+        builder.buildShell(shell);
+        
+        builder.buildBase(configManager.loadTankPolygonPoints());
+        builder.buildCannon();
+        builder.buildCannonBase(configManager.loadTankCannonPolygonPoints(), configManager.loadShellStartAngle());
+        builder.buildCannonStartPosition(configManager.loadTankCannonStartPosition());
+        builder.buildCannonRotationPoint(configManager.loadTankCannonRotationPoint());
+                
+        builder.buildStartPosition(configManager.loadTankStartPosition());
+        
+        builder.buildTankSpeed(configManager.loadEnemyTankSpeed());
+        builder.buildTankMaxAimingAngle(configManager.loadTankMaxAimingAngle());
+        builder.buildTankMinAimingAngle(configManager.loadTankMinAimingAngle());
+        builder.buildTankMaxHitPoint(configManager.loadTankMaxHitPoint());
+        builder.buildVisibility(configManager.loadEnemyTankVisibility());
+                
+        return (EnemyTank) builder.getObject();
     }
 }

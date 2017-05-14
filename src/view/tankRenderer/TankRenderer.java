@@ -7,8 +7,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
-import model.dynamicGameObject.Direction;
 import model.dynamicGameObject.DynamicGameObject;
+import model.dynamicGameObject.stateEnum.Direction;
 import model.tank.Tank;
 import view.dynamicRenderer.DynamicRenderer;
 import view.shellRenderer.ShellRenderer;

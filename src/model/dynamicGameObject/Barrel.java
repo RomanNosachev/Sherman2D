@@ -1,6 +1,6 @@
 package model.dynamicGameObject;
 
-import model.gameObject.Detonable;
+import model.dynamicGameObject.behavior.Detonable;
 
 public class Barrel 
 extends DynamicGameObject 

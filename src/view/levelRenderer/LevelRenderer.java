@@ -53,7 +53,7 @@ public class LevelRenderer
     {
         scale(g);
         g.translate(-level.getCameraX() + Display.getWidth() / 4, 
-                -level.getCameraY() + (Display.getHeight() - infoStringHeight * 4));
+                -level.getCameraY() + Display.getHeight() - 200);
         fieldRenderer.render(gc, g);
         tankRenderer.render(gc, g);
         
@@ -115,9 +115,9 @@ public class LevelRenderer
     {
         g.setColor(new Color(25, 0, 200));
         g.drawString("Speed: " + Float.toString(level.getShotStartSpeed(level.getShellCount() - 1)), 
-                20 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());    
+                level.getCameraX() - 150, level.getCameraY() + infoStringHeight);    
         g.drawString("Angle: " + Float.toString(level.getShotStartAngle(level.getShellCount() - 1) % 180), 
-                190 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());
+                level.getCameraX(), level.getCameraY() + infoStringHeight);
     }
     
     public void drawHP(Graphics g)
@@ -127,8 +127,8 @@ public class LevelRenderer
         else
             g.setColor(new Color(25, 0, 200));
         
-        g.drawString("HP: " + Float.toString(level.getTankHitPoint()), 
-                Display.getWidth() - 100 + level.getCameraX(), Display.getHeight() - infoStringHeight + level.getCameraY());
+        g.drawString("HP: " + Float.toString(level.getTankHitPoints()), 
+                level.getCameraX() + 450, level.getCameraY() + infoStringHeight);
     }
     
     public void setInfoStringHeight(float height)

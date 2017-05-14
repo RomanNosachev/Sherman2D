@@ -1,8 +1,8 @@
 package controller;
 
 import model.PhysicConstants;
-import model.dynamicGameObject.Climb;
-import model.dynamicGameObject.Direction;
+import model.dynamicGameObject.stateEnum.Climb;
+import model.dynamicGameObject.stateEnum.Direction;
 import model.level.Level;
 
 public class GravityController 
@@ -36,7 +36,7 @@ public class GravityController
             }
             else
             {
-                if (model.isTankClimbing() != Climb.UP)
+                if (model.getTankClimbing() != Climb.UP)
                     model.setTankClimbing(Climb.DOWN);
             }
             
@@ -147,15 +147,15 @@ public class GravityController
     {
         float rotateAngle = 90F * delta / PhysicConstants.CLOCK_PER_SEC;
         
-        if ((model.isTankMoving() == Direction.FORTH && model.isTankClimbing() == Climb.UP)
-                || (model.isTankMoving() == Direction.BACK && model.isTankClimbing() == Climb.DOWN))
+        if ((model.getTankMoving() == Direction.FORTH && model.getTankClimbing() == Climb.UP)
+                || (model.getTankMoving() == Direction.BACK && model.getTankClimbing() == Climb.DOWN))
         {            
             rotateTank(-rotateAngle, delta);
         }
         else
         {            
-            if ((model.isTankMoving() == Direction.BACK && model.isTankClimbing() == Climb.UP)
-                    || (model.isTankMoving() == Direction.FORTH && model.isTankClimbing() == Climb.DOWN))
+            if ((model.getTankMoving() == Direction.BACK && model.getTankClimbing() == Climb.UP)
+                    || (model.getTankMoving() == Direction.FORTH && model.getTankClimbing() == Climb.DOWN))
             {
                 rotateTank(rotateAngle, delta);
             }

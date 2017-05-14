@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.geom.Vector2f;
 
 import model.dynamicGameObject.DynamicGameObject;
-import model.gameObject.Detonable;
+import model.dynamicGameObject.behavior.Detonable;
 
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;

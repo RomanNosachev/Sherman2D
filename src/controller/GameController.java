@@ -5,8 +5,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
 import model.PhysicConstants;
-import model.dynamicGameObject.Climb;
-import model.dynamicGameObject.Direction;
+import model.dynamicGameObject.stateEnum.Climb;
+import model.dynamicGameObject.stateEnum.Direction;
 import model.level.Level;
 
 public class GameController 
@@ -14,6 +14,7 @@ public class GameController
     private Level               model;
     
     private GravityController   gravityController;
+    private EnemyController     enemyController;
     
     private boolean             gameOver = false;
         
@@ -21,14 +22,17 @@ public class GameController
     {
         this.model = model;
         gravityController = new GravityController(model); 
+        enemyController = new EnemyController(model);
     }
     
     public void mainLoop(GameContainer gc, int delta) throws SlickException
-    {                                 
+    {                               
+        System.out.println(model.getEnemyHitPoints(0));
+        
         gravityController.gravity(delta);
-        enemyController(delta);
-                
-        if (model.getTankHitPoint() <= 0)
+        enemyController.control(delta);
+                        
+        if (model.getTankHitPoints() <= 0)
         {
             setGameOver(true);
         }
@@ -49,11 +53,28 @@ public class GameController
         
         for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
         {
-            if (model.getEnemyHitPoint(enemyIndex) <= 0)
+            if (model.getEnemyHitPoints(enemyIndex) <= 0)
             {
                 model.removeEnemies(enemyIndex);
-                enemyIndex--;
+                
+                continue;
             }
+            
+            if (model.tankCollidesWithEnemy(enemyIndex))
+            {
+                model.setTankCollides(true);
+                
+                if (model.isTankCollides())
+                {
+                    //model.damageTank(model.getEnemyMeleeDamage(enemyIndex));
+                    //model.damageEnemy(enemyIndex, model.getTankMeleeDamage());
+                }
+                
+            }
+            else
+            {
+                model.setTankCollides(false);
+            } 
         }
                         
         for (int shellIndex = 0; shellIndex < model.getShellCount() - 1; shellIndex++)
@@ -83,7 +104,7 @@ public class GameController
                     if (model.shellCollidesWithTank(shellIndex) && !model.isTankDamaged())
                     {
                         model.setTankDamaged(true);
-                        model.addTankHitPoint(-model.getShellDamage(shellIndex));
+                        model.damageTank(model.getShellDamage(shellIndex));
                         
                         continue;
                     }
@@ -120,7 +141,7 @@ public class GameController
                         model.setShellFlying(shellIndex, false);
                         model.setShellCollisionPoint(shellIndex, model.getShellPathBack(shellIndex));
                         
-                        model.addEnemyHitPoint(enemyIndex, -model.getShellDamage(shellIndex));
+                        model.damageEnemy(enemyIndex, model.getShellDamage(shellIndex));
                     }
                 }
             }
@@ -132,84 +153,6 @@ public class GameController
         }
     }
 
-    public void enemyController(int delta)
-    {
-        for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
-        {
-            if (model.tankVisibleToEnemy(enemyIndex))
-            {
-                if (model.getTankX() < model.getEnemyX(enemyIndex))
-                {
-                    if (model.getEnemyDirection(enemyIndex) == Direction.FORTH)
-                        model.enemyReverse(enemyIndex, true, false);
-                    
-                    float movement = model.getEnemyMovePoints(enemyIndex) * delta / PhysicConstants.CLOCK_PER_SEC;
-                    
-                    for (int i = 0; i < movement; i++)
-                    {
-                        model.moveEnemyX(enemyIndex, -1);
-                        
-                        if (model.enemyCollidesWithLevel(enemyIndex) || model.enemyCollidesWithEnemies(enemyIndex) 
-                                || model.tankCollidesWithEnemy(enemyIndex))
-                        {
-                            model.moveEnemyX(enemyIndex, 1);
-                            
-                            model.setEnemyClimbing(enemyIndex, Climb.UP);
-                            model.moveEnemyY(enemyIndex, -1);
-                            
-                            if (model.enemyCollidesWithLevel(enemyIndex) || model.enemyCollidesWithEnemies(enemyIndex) 
-                                    || model.tankCollidesWithEnemy(enemyIndex))
-                            {
-                                model.setEnemyClimbing(enemyIndex, Climb.STRAIGHT);
-                                model.moveEnemyY(enemyIndex, 1);
-                            }
-                        }
-                        else
-                        {
-                            model.setEnemyMoving(enemyIndex, Direction.BACK);
-                        }
-                    }
-                }
-                else
-                {
-                    if (model.getEnemyDirection(enemyIndex) == Direction.BACK)
-                        model.enemyReverse(enemyIndex, true, false);
-                    
-                    float movement = model.getEnemyMovePoints(enemyIndex) * delta / PhysicConstants.CLOCK_PER_SEC;
-                    
-                    for (int i = 0; i < movement; i++)
-                    {
-                        model.moveEnemyX(enemyIndex, 1);
-                        
-                        if (model.enemyCollidesWithLevel(enemyIndex) || model.enemyCollidesWithEnemies(enemyIndex) 
-                                || model.tankCollidesWithEnemy(enemyIndex))
-                        {
-                            model.moveEnemyX(enemyIndex, -1);
-                            
-                            model.setEnemyClimbing(enemyIndex, Climb.UP);
-                            model.moveEnemyY(enemyIndex, -1);
-                            
-                            if (model.enemyCollidesWithLevel(enemyIndex) || model.enemyCollidesWithEnemies(enemyIndex) 
-                                    || model.tankCollidesWithEnemy(enemyIndex))
-                            {
-                                model.setEnemyClimbing(enemyIndex, Climb.STRAIGHT);
-                                model.moveEnemyY(enemyIndex, 1);
-                            }
-                        }
-                        else
-                        {
-                            model.setEnemyMoving(enemyIndex, Direction.FORTH);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                model.setEnemyMoving(enemyIndex, Direction.STOP);
-            }
-        }
-    }
-    
     public void shot()
     {
         model.shot();
@@ -237,64 +180,12 @@ public class GameController
     
     public void moveBack(int delta)
     {        
-        if (model.getTankDirection() == Direction.FORTH)
-            model.tankReverse(true, false);
-        
-        float movement = model.getMovePoints() * delta / PhysicConstants.CLOCK_PER_SEC;
-                        
-        for (int i = 0; i < movement; i++)
-        {                
-            model.moveTankX(-1);
-            
-            if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
-            {
-                model.moveTankX(1);
-                                        
-                model.setTankClimbing(Climb.UP);
-                model.moveTankY(-1);
-                        
-                if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
-                {
-                    model.setTankClimbing(Climb.STRAIGHT);
-                    model.moveTankY(1);
-                }
-            }
-            else
-            {
-                model.setTankMoving(Direction.BACK);
-            }
-        } 
+        model.moveTank(-model.getMovePoints() * delta / PhysicConstants.CLOCK_PER_SEC);
     }
     
     public void moveForth(int delta)
     {        
-        if (model.getTankDirection() == Direction.BACK)
-            model.tankReverse(true, false);
-        
-        float movement = model.getMovePoints() * delta / PhysicConstants.CLOCK_PER_SEC;
-        
-        for (int i = 0; i < movement; i++)
-        {                
-            model.moveTankX(1);
-            
-            if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
-            {
-                model.moveTankX(-1);
-                                        
-                model.setTankClimbing(Climb.UP);
-                model.moveTankY(-1);
-                        
-                if (model.tankCollidesWithLevel() || model.tankCollidesWithEnemies())
-                {
-                    model.setTankClimbing(Climb.STRAIGHT);
-                    model.moveTankY(1);
-                }
-            }
-            else
-            {
-                model.setTankMoving(Direction.FORTH);
-            }
-        }
+        model.moveTank(model.getMovePoints() * delta / PhysicConstants.CLOCK_PER_SEC);
     }
     
     public void stop()

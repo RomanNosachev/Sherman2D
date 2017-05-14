@@ -1,4 +1,4 @@
-package model.dynamicGameObject;
+package model.dynamicGameObject.stateEnum;
 
 public enum Climb
 {

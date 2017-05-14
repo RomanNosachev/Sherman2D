@@ -7,6 +7,8 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
+import model.dynamicGameObject.stateEnum.Climb;
+import model.dynamicGameObject.stateEnum.Direction;
 import model.gameObject.GameObject;
 import model.staticGameObject.StaticGameObject;
 
@@ -27,8 +29,8 @@ implements GameObject,
     protected float         boundingRadius;
     protected float         rotateAngle = 0;
     
-    protected float         hitPoint;
-    protected float         maxHitPoint;
+    protected float         hitPoints;
+    protected float         maxHitPoints;
     
     protected Direction     moving = Direction.STOP;
     protected Direction     direction = Direction.FORTH;
@@ -269,25 +271,25 @@ implements GameObject,
         return base.getWidth();
     }
     
-    public float getHitPoint()
+    public float getHitPoints()
     {
-        return hitPoint;
+        return hitPoints;
     }
 
-    public void setHitPoint(float f)
+    public void setHitPoints(float f)
     {
-        this.hitPoint = f;
+        this.hitPoints = f;
     }
 
-    public float getMaxHitPoint()
+    public float getMaxHitPoints()
     {
-        return maxHitPoint;
+        return maxHitPoints;
     }
 
-    public void setMaxHitPoint(int maxHitPoint)
+    public void setMaxHitPoints(int maxHitPoints)
     {
-        this.maxHitPoint = maxHitPoint;
-        hitPoint = maxHitPoint;
+        this.maxHitPoints = maxHitPoints;
+        hitPoints = maxHitPoints;
     }
     
     public StaticGameObject toStaticGameObject()

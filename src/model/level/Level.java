@@ -1,16 +1,17 @@
 package model.level;
 
 import org.newdawn.slick.geom.Vector2f;
+
 import model.camera.Camera;
-import model.dynamicGameObject.Climb;
-import model.dynamicGameObject.Direction;
-import model.dynamicGameObject.Drivable;
 import model.dynamicGameObject.DynamicGameObject;
-import model.enemy.Enmity;
+import model.dynamicGameObject.behavior.Drivable;
+import model.dynamicGameObject.behavior.Enmity;
+import model.dynamicGameObject.behavior.MeleeDamager;
+import model.dynamicGameObject.stateEnum.Climb;
+import model.dynamicGameObject.stateEnum.Direction;
 import model.field.Field;
 import model.tank.Tank;
 import java.util.LinkedList;
-
 import org.newdawn.slick.geom.Ellipse;
 import org.newdawn.slick.geom.Shape;
 
@@ -70,7 +71,7 @@ public class Level
         actor.setMoving(fl);
     }
     
-    public Direction isTankMoving()
+    public Direction getTankMoving()
     {
         return actor.isMoving();
     }
@@ -80,7 +81,7 @@ public class Level
         actor.setClimbing(fl);
     }
     
-    public Climb isTankClimbing()
+    public Climb getTankClimbing()
     {
         return actor.isClimbing();
     }
@@ -295,7 +296,6 @@ public class Level
     
     public boolean tankCollidesWithLevel()
     {
-        actor.setCollides(actor.collidesWith(field.getBase()));
         return actor.collidesWith(field.getBase());
     }
     
@@ -635,14 +635,14 @@ public class Level
         actor.setShellLeft(fl);
     }
     
-    public void setTankHitPoint(float f)
+    public void setTankHitPoints(float f)
     {
-        actor.setHitPoint(f);
+        actor.setHitPoints(f);
     }
     
-    public float getTankHitPoint()
+    public float getTankHitPoints()
     {
-        return actor.getHitPoint();
+        return actor.getHitPoints();
     }
     
     public float getShellDamage(int index)
@@ -797,19 +797,19 @@ public class Level
         return enemies.get(index);
     }
     
-    public void addTankHitPoint(float hp)
+    public void damageTank(float damage)
     {
-        actor.setHitPoint(actor.getHitPoint() + hp);
+        actor.setHitPoints(actor.getHitPoints() - damage);
     }
     
-    public void addEnemyHitPoint(int index, float hp)
+    public void damageEnemy(int index, float damage)
     {
-        enemies.get(index).setHitPoint(enemies.get(index).getHitPoint() + hp);
+        enemies.get(index).setHitPoints(enemies.get(index).getHitPoints() - damage);
     }
     
-    public float getEnemyHitPoint(int index)
+    public float getEnemyHitPoints(int index)
     {
-        return enemies.get(index).getHitPoint();
+        return enemies.get(index).getHitPoints();
     }
     
     public void moveEnemyX(int index, float movement)
@@ -937,5 +937,142 @@ public class Level
     public float getEnemyX(int index)
     {
         return enemies.get(index).getX();
+    }
+
+    public void moveEnemy(int index, float movement)
+    {
+        Climb newClimbing = Climb.STRAIGHT;
+
+        if (movement > 0)
+        {
+            if (getEnemyDirection(index) == Direction.BACK)
+                enemyReverse(index, true, false);
+                                 
+            setEnemyMoving(index, Direction.FORTH);
+            
+            for (int i = 0; i < movement; i++)
+            {
+                moveEnemyX(index, 1);
+                
+                if (enemyCollidesWithLevel(index) || enemyCollidesWithEnemies(index) 
+                        || tankCollidesWithEnemy(index))
+                {
+                    moveEnemyX(index, -1);
+                    
+                    newClimbing = Climb.UP;
+                    moveEnemyY(index, -1);
+                    
+                    if (enemyCollidesWithLevel(index) || enemyCollidesWithEnemies(index) 
+                            || tankCollidesWithEnemy(index))
+                    {
+                        newClimbing = Climb.STRAIGHT;
+                        moveEnemyY(index, 1);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (getEnemyDirection(index) == Direction.FORTH)
+                enemyReverse(index, true, false);
+                                    
+            setEnemyMoving(index, Direction.BACK);
+            
+            for (int i = 0; i < Math.abs(movement); i++)
+            {
+                moveEnemyX(index, -1);
+                
+                if (enemyCollidesWithLevel(index) || enemyCollidesWithEnemies(index) 
+                        || tankCollidesWithEnemy(index))
+                {
+                    moveEnemyX(index, 1);
+                    
+                    newClimbing = Climb.UP;
+                    moveEnemyY(index, -1);
+                    
+                    if (enemyCollidesWithLevel(index) || enemyCollidesWithEnemies(index) 
+                            || tankCollidesWithEnemy(index))
+                    {
+                        newClimbing = Climb.STRAIGHT;
+                        moveEnemyY(index, 1);
+                    }
+                }
+            }
+        }
+        
+        setEnemyClimbing(index, newClimbing);
+    }
+    
+    public void moveTank(float movement)
+    {
+        Climb newClimbing = Climb.STRAIGHT;
+        
+        if (movement > 0)
+        {
+            if (actor.getDirection() == Direction.BACK)
+                actor.reverse(true, false);
+                                    
+            setTankMoving(Direction.FORTH);
+            
+            for (int i = 0; i < movement; i++)
+            {                
+                moveTankX(1);
+                
+                if (tankCollidesWithLevel() || tankCollidesWithEnemies())
+                {
+                    moveTankX(-1);
+                                            
+                    newClimbing = Climb.UP;
+                    moveTankY(-1);
+                            
+                    if (tankCollidesWithLevel() || tankCollidesWithEnemies())
+                    {
+                        newClimbing = Climb.STRAIGHT;
+                        moveTankY(1);
+                    }
+                }              
+            }
+        }
+        else
+        {
+            if (actor.getDirection() == Direction.FORTH)
+                actor.reverse(true, false);
+                             
+            setTankMoving(Direction.BACK);
+            
+            for (int i = 0; i < Math.abs(movement); i++)
+            {                
+                moveTankX(-1);
+                
+                if (tankCollidesWithLevel() || tankCollidesWithEnemies())
+                {
+                    moveTankX(1);
+                                            
+                    newClimbing = Climb.UP;
+                    moveTankY(-1);
+                            
+                    if (tankCollidesWithLevel() || tankCollidesWithEnemies())
+                    {
+                        newClimbing = Climb.STRAIGHT;
+                        moveTankY(1);
+                    }
+                }
+            } 
+        }
+        
+        setTankClimbing(newClimbing);
+    }
+    
+    public float getTankMeleeDamage()
+    {
+        return actor.getMeleeDamage();
+    }
+    
+    public float getEnemyMeleeDamage(int index)
+    {
+        if (enemies.get(index) instanceof MeleeDamager)
+            return ((MeleeDamager) enemies.get(index)).getMeleeDamage();
+        
+        return 0;
     }
 }

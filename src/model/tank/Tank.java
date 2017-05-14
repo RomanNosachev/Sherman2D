@@ -3,9 +3,10 @@ package model.tank;
 import org.newdawn.slick.geom.Vector2f;
 
 import model.dynamicGameObject.Cannon;
-import model.dynamicGameObject.Direction;
-import model.dynamicGameObject.Drivable;
 import model.dynamicGameObject.DynamicGameObject;
+import model.dynamicGameObject.behavior.Drivable;
+import model.dynamicGameObject.behavior.MeleeDamager;
+import model.dynamicGameObject.stateEnum.Direction;
 import model.shell.Shell;
 
 import java.util.LinkedList;
@@ -16,7 +17,8 @@ import org.newdawn.slick.geom.Transform;
 
 public class Tank 
 extends DynamicGameObject
-implements Drivable
+implements Drivable,
+           MeleeDamager
 {
     private static final long serialVersionUID = -3579494870824274339L;
     
@@ -26,7 +28,8 @@ implements Drivable
     private float               speed;
     private float               minAimingAngle;
     private float               maxAimingAngle;
-        
+    private float               meleeDamage;
+
     private boolean             damaged = false;
     private boolean             shellLeft = false;
     
@@ -594,7 +597,6 @@ implements Drivable
             rotate(-getRotateAngle());
             
             float[] cannonPolygonPoints = new float[gun.getBase().getPointCount() * 2];
-                         
             float[] polygonPoints = new float[base.getPointCount() * 2];
             
             for (int i = 0, j = 0; j < base.getPointCount(); i+=2, j++)
@@ -644,9 +646,13 @@ implements Drivable
             Vector2f newRotationPoint = gun.getRotationPoint();
             
             if (newRotationPoint.x > simpleBase.getCenterX())
+            {
                 newRotationPoint.x = simpleBase.getCenterX() - Math.abs(newRotationPoint.x - simpleBase.getCenterX());
+            }
             else
+            {
                 newRotationPoint.x = simpleBase.getCenterX() + Math.abs(newRotationPoint.x - simpleBase.getCenterX());
+            }
             
             gun.setBase(new Polygon(cannonPolygonPoints));
             gun.setRotationPoint(newRotationPoint);
@@ -739,5 +745,17 @@ implements Drivable
                 ammo.getLast().setStartSpeed(200);
             }
         }
+    }
+
+    @Override
+    public void setMeleeDamage(float damage)
+    {
+        meleeDamage = damage;
+    }
+
+    @Override
+    public float getMeleeDamage()
+    {
+        return meleeDamage;
     }
 }

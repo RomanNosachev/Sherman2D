@@ -3,7 +3,7 @@ package model.field;
 import game.ConfigManager;
 
 public class FieldSheduler {
-    public Field createStaticLevel(FieldBuilder builder, ConfigManager configManager)
+    public Field createField(FieldBuilder builder, ConfigManager configManager)
     {
         builder.buildObject();
         builder.buildBase(configManager.loadLevelPolygonPoints());

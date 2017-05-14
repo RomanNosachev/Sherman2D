@@ -66,7 +66,7 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         levelRenderer.render(gc, g);
-        actorPlayer.play(gc);
+        //actorPlayer.play(gc);
     }
     
     @Override
@@ -77,7 +77,7 @@ public class Game extends BasicGame {
             ConfigManager configManager = new ConfigManager("physic.ini");
             
             FieldSheduler fieldSheduler = new FieldSheduler();
-            field = fieldSheduler.createStaticLevel(new FieldBuilder(), configManager);
+            field = fieldSheduler.createField(new FieldBuilder(), configManager);
             
             ShellSheduler shellSheduler = new ShellSheduler();
             shell = shellSheduler.createShell(new ShellBuilder(), configManager);
@@ -151,20 +151,25 @@ public class Game extends BasicGame {
             level.addObject(b3);
             
             EnemyTank enemy = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
-            enemy.setPosition(1000, -1000);
-            level.addEnemies(enemy);
+            enemy.setPosition(1000, 0);
             
             EnemyTank enemy2 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
             enemy2.setPosition(1200, 0);
-            level.addEnemies(enemy2);
             
             EnemyTank enemy3 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
             enemy3.setPosition(2000, 0);
-            level.addEnemies(enemy3);
             
             EnemyTank enemy4 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
             enemy4.setPosition(2300, 0);
+            
+            EnemyTank enemy5 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
+            enemy5.setPosition(2800, 0);
+            
+            level.addEnemies(enemy);
+            level.addEnemies(enemy2);
+            level.addEnemies(enemy3);
             level.addEnemies(enemy4);
+            level.addEnemies(enemy5);
             //////
             
             barrelRenderer = new BarrelRenderer(new Barrel());
@@ -178,7 +183,7 @@ public class Game extends BasicGame {
             enemyTankRenderer.setShellRenderer(shellRenderer);
             
             levelRenderer = new LevelRenderer(level);
-            levelRenderer.setInfoStringHeight(configManager.loadFloorHeight() / 2);
+            levelRenderer.setInfoStringHeight(configManager.loadFloorHeight() * 2);
             levelRenderer.setFieldRenderer(fieldRenderer);
             levelRenderer.setTankRenderer(actorRenderer);
             levelRenderer.addObjectRenderer(barrelRenderer);

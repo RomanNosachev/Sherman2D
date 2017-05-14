@@ -7,7 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 
-import model.dynamicGameObject.Direction;
+import model.dynamicGameObject.stateEnum.Direction;
 import model.tank.Tank;
 import view.renderer.Player;
 

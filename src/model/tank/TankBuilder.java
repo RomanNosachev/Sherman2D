@@ -76,9 +76,14 @@ implements DynamicGameObjectBuilder
         tank.setMaxAimingAngle(angle);
     }
     
-    public void buildTankMaxHitPoint(int maxHP)
+    public void buildTankMaxHitPoints(int maxHP)
     {
-        tank.setMaxHitPoint(maxHP);
+        tank.setMaxHitPoints(maxHP);
+    }
+    
+    public void buildTankMeleeDamage(float damage)
+    {
+        tank.setMeleeDamage(damage);
     }
     
     @Override

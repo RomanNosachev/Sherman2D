@@ -151,9 +151,9 @@ public class ConfigManager {
         return Integer.parseInt(config.getProperty("ShellDamage"));
     }
     
-    public int loadTankMaxHitPoint()
+    public int loadTankMaxHitPoints()
     {
-        return Integer.parseInt(config.getProperty("TankMaxHitPoint"));
+        return Integer.parseInt(config.getProperty("TankMaxHitPoints"));
     }
     
     public Sound loadTankMovingSound() throws SlickException
@@ -213,5 +213,15 @@ public class ConfigManager {
     public float loadEnemyTankSpeed()
     {
         return Float.parseFloat(config.getProperty("EnemyTankSpeed"));
+    }
+    
+    public float loadEnemyTankMeleeDamage()
+    {
+        return Float.parseFloat(config.getProperty("EnemyTankMeleeDamage"));
+    }
+    
+    public float loadTankMeleeDamage()
+    {
+        return Float.parseFloat(config.getProperty("TankMeleeDamage"));
     }
 }

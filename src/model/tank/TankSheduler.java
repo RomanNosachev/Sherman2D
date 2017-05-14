@@ -24,7 +24,8 @@ public class TankSheduler
         builder.buildTankSpeed(configManager.loadTankSpeed());
         builder.buildTankMaxAimingAngle(configManager.loadTankMaxAimingAngle());
         builder.buildTankMinAimingAngle(configManager.loadTankMinAimingAngle());
-        builder.buildTankMaxHitPoint(configManager.loadTankMaxHitPoint());
+        builder.buildTankMaxHitPoints(configManager.loadTankMaxHitPoints());
+        builder.buildTankMeleeDamage(configManager.loadTankMeleeDamage());
                 
         return (Tank) builder.getObject();
     }
@@ -46,8 +47,9 @@ public class TankSheduler
         builder.buildTankSpeed(configManager.loadEnemyTankSpeed());
         builder.buildTankMaxAimingAngle(configManager.loadTankMaxAimingAngle());
         builder.buildTankMinAimingAngle(configManager.loadTankMinAimingAngle());
-        builder.buildTankMaxHitPoint(configManager.loadTankMaxHitPoint());
+        builder.buildTankMaxHitPoints(configManager.loadTankMaxHitPoints());
         builder.buildVisibility(configManager.loadEnemyTankVisibility());
+        builder.buildTankMeleeDamage(configManager.loadEnemyTankMeleeDamage());
                 
         return (EnemyTank) builder.getObject();
     }

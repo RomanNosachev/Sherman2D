@@ -1,4 +1,4 @@
-package model.dynamicGameObject;
+package model.dynamicGameObject.behavior;
 
 public interface Drivable 
 {

@@ -37,7 +37,7 @@ public class TankPlayer implements Player {
     @Override
     public void play(GameContainer gc) throws SlickException
     {
-        if (playingObject.isMoving() != Direction.STOP)
+        if (playingObject.getMoving() != Direction.STOP)
         {
             if (!move.playing())
                 move.play();

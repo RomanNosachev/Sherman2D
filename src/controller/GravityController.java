@@ -70,7 +70,7 @@ public class GravityController
                 }
                 else
                 {
-                    if (model.isEnemyClimbing(enemyIndex) != Climb.UP)
+                    if (model.getEnemyClimbing(enemyIndex) != Climb.UP)
                         model.setEnemyClimbing(enemyIndex, Climb.DOWN);
                 }
             }
@@ -175,15 +175,15 @@ public class GravityController
         
         for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
         {
-            if ((model.isEnemyMoving(enemyIndex) == Direction.FORTH && model.isEnemyClimbing(enemyIndex) == Climb.UP)
-                    || (model.isEnemyMoving(enemyIndex) == Direction.BACK && model.isEnemyClimbing(enemyIndex) == Climb.DOWN))
+            if ((model.getEnemyMoving(enemyIndex) == Direction.FORTH && model.getEnemyClimbing(enemyIndex) == Climb.UP)
+                    || (model.getEnemyMoving(enemyIndex) == Direction.BACK && model.getEnemyClimbing(enemyIndex) == Climb.DOWN))
             {            
                 rotateEnemy(enemyIndex, -rotateAngle, delta);        
             }
             else
             {            
-                if ((model.isEnemyMoving(enemyIndex) == Direction.BACK && model.isEnemyClimbing(enemyIndex) == Climb.UP)
-                        || (model.isEnemyMoving(enemyIndex) == Direction.FORTH && model.isEnemyClimbing(enemyIndex) == Climb.DOWN))
+                if ((model.getEnemyMoving(enemyIndex) == Direction.BACK && model.getEnemyClimbing(enemyIndex) == Climb.UP)
+                        || (model.getEnemyMoving(enemyIndex) == Direction.FORTH && model.getEnemyClimbing(enemyIndex) == Climb.DOWN))
                 {
                     rotateEnemy(enemyIndex, rotateAngle, delta);
                 }

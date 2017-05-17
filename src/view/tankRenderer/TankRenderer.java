@@ -75,14 +75,22 @@ extends DynamicRenderer
     public void drawAnimation(Graphics g)
     {    
         Image newCannon;
-        
-        if (((Tank) renderingObject).isMoving() != Direction.STOP)
+                  
+        if (renderingObject.getMoving() == Direction.STOP)
+        {
+            sprite = movingTank.getImage(0);
+        }
+        else
+        {
             if (--selectTankSprite <= 0)
                 selectTankSprite = movingTankSpriteCount - 1;
-           
+            
+            sprite = movingTank.getImage(selectTankSprite); 
+        }
+                
         if (((Tank) renderingObject).getDirection() == Direction.BACK)
         {
-            sprite = movingTank.getImage(selectTankSprite).getFlippedCopy(true, false);
+            sprite = sprite.getFlippedCopy(true, false);
             newCannon = cannon.getFlippedCopy(true, false);
         } 
         else
@@ -90,7 +98,7 @@ extends DynamicRenderer
             sprite = movingTank.getImage(selectTankSprite);
             newCannon = cannon;
         }
-        
+
         if (renderingObject.getScale() != 1)
         {  
             sprite = sprite.getScaledCopy(renderingObject.getScale());

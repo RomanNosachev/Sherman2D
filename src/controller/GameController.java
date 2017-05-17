@@ -26,9 +26,7 @@ public class GameController
     }
     
     public void mainLoop(GameContainer gc, int delta) throws SlickException
-    {                               
-        System.out.println(model.getEnemyHitPoints(0));
-        
+    {                                       
         gravityController.gravity(delta);
         enemyController.control(delta);
                         

@@ -155,6 +155,8 @@ public class Game extends BasicGame {
             
             EnemyTank enemy2 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
             enemy2.setPosition(1200, 0);
+            enemy2.setPatrolRadius(100);
+            enemy2.setPatrol(true);
             
             EnemyTank enemy3 = tankSheduler.createEnemyTank(new EnemyTankBuilder(), shell.clone(), configManager);
             enemy3.setPosition(2000, 0);

@@ -7,6 +7,7 @@ import model.dynamicGameObject.DynamicGameObject;
 import model.dynamicGameObject.behavior.Drivable;
 import model.dynamicGameObject.behavior.Enmity;
 import model.dynamicGameObject.behavior.MeleeDamager;
+import model.dynamicGameObject.behavior.Patroller;
 import model.dynamicGameObject.stateEnum.Climb;
 import model.dynamicGameObject.stateEnum.Direction;
 import model.field.Field;
@@ -73,7 +74,7 @@ public class Level
     
     public Direction getTankMoving()
     {
-        return actor.isMoving();
+        return actor.getMoving();
     }
     
     public void setTankClimbing(Climb fl)
@@ -83,7 +84,7 @@ public class Level
     
     public Climb getTankClimbing()
     {
-        return actor.isClimbing();
+        return actor.getClimbing();
     }
     
     public void setShellCollides(int index, boolean collides)
@@ -887,9 +888,9 @@ public class Level
         enemies.get(index).setMoving(fl);
     }
 
-    public Climb isEnemyClimbing(int index)
+    public Climb getEnemyClimbing(int index)
     {
-        return enemies.get(index).isClimbing();
+        return enemies.get(index).getClimbing();
     }
 
     public float getEnemyVisibility(int index)
@@ -919,9 +920,9 @@ public class Level
         }
     }
 
-    public Direction isEnemyMoving(int index)
+    public Direction getEnemyMoving(int index)
     {
-        return enemies.get(index).isMoving();
+        return enemies.get(index).getMoving();
     }
     
     public void rotateEnemy(int index, float angle)
@@ -1075,4 +1076,49 @@ public class Level
         
         return 0;
     }
+    
+    public boolean isEnemyPatrolled(int index)
+    {
+        if (enemies.get(index) instanceof Patroller)
+            return ((Patroller) enemies.get(index)).isPatrolled();
+        
+        return false;
+    }
+    
+    public float getEnemyPatrolStartX(int index)
+    {
+        if (enemies.get(index) instanceof Patroller)
+            return ((Patroller) enemies.get(index)).getPatrolStartX();
+        
+        return -1;
+    }
+    
+    public float getEnemyPatrolFinishX(int index)
+    {
+        if (enemies.get(index) instanceof Patroller)
+            return ((Patroller) enemies.get(index)).getPatrolFinishX();
+        
+        return -1;
+    }
+    
+    public Direction getEnemyPatrolDirection(int index)
+    {
+        if (enemies.get(index) instanceof Patroller)
+            return ((Patroller) enemies.get(index)).getPatrolDirection();
+        
+        return Direction.STOP;
+    }
+    
+    public void setEnemyPatrolDirection(int index, Direction dir)
+    {
+        if (enemies.get(index) instanceof Patroller)
+            ((Patroller) enemies.get(index)).setPatrolDirection(dir);
+    }
+    
+    public void setEnemyPatrol(int index, boolean fl)
+    {
+        if (enemies.get(index) instanceof Patroller)
+            ((Patroller) enemies.get(index)).setPatrol(fl);
+    }
 }
+

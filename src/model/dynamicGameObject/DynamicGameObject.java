@@ -371,7 +371,7 @@ implements GameObject,
         this.collides = collides;
     }
     
-    public Direction isMoving()
+    public Direction getMoving()
     {
         return moving;
     }
@@ -389,7 +389,7 @@ implements GameObject,
             direction = fl;
     }
 
-    public Climb isClimbing()
+    public Climb getClimbing()
     {
         return climbing;
     }

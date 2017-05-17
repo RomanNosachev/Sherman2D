@@ -32,7 +32,7 @@ implements Drivable,
 
     private boolean             damaged = false;
     private boolean             shellLeft = false;
-    
+
     public Tank()
     {
         base = new Polygon();

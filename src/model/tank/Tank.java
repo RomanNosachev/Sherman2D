@@ -30,7 +30,6 @@ implements Drivable,
     private float               maxAimingAngle;
     private float               meleeDamage;
 
-    private boolean             damaged = false;
     private boolean             shellLeft = false;
 
     public Tank()
@@ -490,16 +489,6 @@ implements Drivable,
         return ammo.get(index).getPower();
     }
 
-    public boolean isDamaged()
-    {
-        return damaged;
-    }
-
-    public void setDamaged(boolean isDamaged)
-    {
-        this.damaged = isDamaged;
-    }
-      
     public void setShellCollides(int index, boolean collides)
     {
         ammo.get(index).setCollides(collides);

@@ -36,7 +36,9 @@ implements GameObject,
     protected Direction     direction = Direction.FORTH;
     protected Climb         climbing = Climb.STRAIGHT;
     
-    protected volatile boolean  collides = false;
+    protected boolean       collides = false;
+    protected boolean       damaged = false;
+    protected boolean       shooted = false;
     
     public Shape getSimpleBase()
     {
@@ -399,5 +401,23 @@ implements GameObject,
         this.climbing = climbing;
     }
     
+    public boolean isDamaged()
+    {
+        return damaged;
+    }
+
+    public void setDamaged(boolean damaged)
+    {
+        this.damaged = damaged;
+    }
     
+    public boolean isShooted()
+    {
+        return shooted;
+    }
+
+    public void setShooted(boolean shooted)
+    {
+        this.shooted = shooted;
+    }
 }

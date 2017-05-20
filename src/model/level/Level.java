@@ -360,6 +360,19 @@ public class Level
         return !actor.collidesWith(actor.getShellBase(index)) && !actor.isContains(actor.getShell(index).getBoundingCircle());
     }
     
+    public boolean tankBoundingWithEnemies()
+    {
+        for (int i = 0; i < enemies.size(); i++)
+        {
+            if (actor.boundingWith(enemies.get(i)))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public void shellRotate(int index, float angle)
     {
         actor.shellRotate(index, angle);
@@ -955,9 +968,16 @@ public class Level
             {
                 moveEnemyX(index, 1);
                 
+                boolean collidesWithTank = tankCollidesWithEnemy(index);
+                
                 if (enemyCollidesWithLevel(index) || enemyCollidesWithEnemies(index) 
-                        || tankCollidesWithEnemy(index))
+                        || collidesWithTank)
                 {
+                    if (collidesWithTank)
+                    {
+                        enemies.get(index).setCollides(true);
+                    }
+                     
                     moveEnemyX(index, -1);
                     
                     newClimbing = Climb.UP;
@@ -969,6 +989,11 @@ public class Level
                         newClimbing = Climb.STRAIGHT;
                         moveEnemyY(index, 1);
                     }
+                }
+                else
+                {
+                    enemies.get(index).setCollides(false);
+                    enemies.get(index).setDamaged(false);
                 }
             }
         }
@@ -983,9 +1008,16 @@ public class Level
             {
                 moveEnemyX(index, -1);
                 
+                boolean collidesWithTank = tankCollidesWithEnemy(index);
+                
                 if (enemyCollidesWithLevel(index) || enemyCollidesWithEnemies(index) 
-                        || tankCollidesWithEnemy(index))
+                        || collidesWithTank)
                 {
+                    if (collidesWithTank)
+                    {
+                        enemies.get(index).setCollides(true);
+                    }
+                    
                     moveEnemyX(index, 1);
                     
                     newClimbing = Climb.UP;
@@ -997,6 +1029,11 @@ public class Level
                         newClimbing = Climb.STRAIGHT;
                         moveEnemyY(index, 1);
                     }
+                }
+                else
+                {
+                    enemies.get(index).setCollides(false);
+                    enemies.get(index).setDamaged(false);
                 }
             }
         }
@@ -1019,10 +1056,17 @@ public class Level
             {                
                 moveTankX(1);
                 
-                if (tankCollidesWithLevel() || tankCollidesWithEnemies())
+                boolean collidesWithEnemies = tankCollidesWithEnemies();
+                
+                if (tankCollidesWithLevel() || collidesWithEnemies)
                 {
+                    if (collidesWithEnemies)
+                    {
+                        actor.setCollides(true);
+                    }
+                    
                     moveTankX(-1);
-                                            
+                                                       
                     newClimbing = Climb.UP;
                     moveTankY(-1);
                             
@@ -1031,7 +1075,12 @@ public class Level
                         newClimbing = Climb.STRAIGHT;
                         moveTankY(1);
                     }
-                }              
+                }    
+                else
+                {
+                    actor.setCollides(false);
+                    actor.setDamaged(false);
+                }
             }
         }
         else
@@ -1045,8 +1094,15 @@ public class Level
             {                
                 moveTankX(-1);
                 
-                if (tankCollidesWithLevel() || tankCollidesWithEnemies())
+                boolean collidesWithEnemies = tankCollidesWithEnemies();
+                
+                if (tankCollidesWithLevel() || collidesWithEnemies)
                 {
+                    if (collidesWithEnemies)
+                    {
+                        actor.setCollides(true);
+                    }
+
                     moveTankX(1);
                                             
                     newClimbing = Climb.UP;
@@ -1057,6 +1113,11 @@ public class Level
                         newClimbing = Climb.STRAIGHT;
                         moveTankY(1);
                     }
+                }
+                else
+                {
+                    actor.setCollides(false);
+                    actor.setDamaged(false);
                 }
             } 
         }
@@ -1119,6 +1180,36 @@ public class Level
     {
         if (enemies.get(index) instanceof Patroller)
             ((Patroller) enemies.get(index)).setPatrol(fl);
+    }
+    
+    public boolean isEnemyCollides(int index)
+    {
+        return enemies.get(index).isCollides();
+    }
+    
+    public boolean isEnemyDamaged(int index)
+    {
+        return enemies.get(index).isDamaged();
+    }
+    
+    public void setEnemyCollides(int index, boolean collides)
+    {
+        enemies.get(index).setCollides(collides);
+    }
+    
+    public void setEnemyDamaged(int index, boolean damaged)
+    {
+        enemies.get(index).setDamaged(damaged);
+    }
+    
+    public boolean isTankShooted()
+    {
+        return actor.isShooted();
+    }
+    
+    public void setTankShooted(boolean shooted)
+    {
+        actor.setShooted(shooted);
     }
 }
 

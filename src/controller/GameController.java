@@ -26,7 +26,9 @@ public class GameController
     }
     
     public void mainLoop(GameContainer gc, int delta) throws SlickException
-    {                                       
+    {                                   
+        System.out.println(model.isTankCollides() + " Damaged: " + model.isTankDamaged());
+        
         gravityController.gravity(delta);
         enemyController.control(delta);
                         
@@ -58,21 +60,15 @@ public class GameController
                 continue;
             }
             
-            if (model.tankCollidesWithEnemy(enemyIndex))
+            if (model.isTankCollides())
             {
-                model.setTankCollides(true);
-                
-                if (model.isTankCollides())
+                if (!model.isEnemyDamaged(enemyIndex))
                 {
-                    //model.damageTank(model.getEnemyMeleeDamage(enemyIndex));
-                    //model.damageEnemy(enemyIndex, model.getTankMeleeDamage());
+                    model.damageEnemy(enemyIndex, model.getTankMeleeDamage());
                 }
                 
+                model.setEnemyDamaged(enemyIndex, true);
             }
-            else
-            {
-                model.setTankCollides(false);
-            } 
         }
                         
         for (int shellIndex = 0; shellIndex < model.getShellCount() - 1; shellIndex++)
@@ -96,21 +92,25 @@ public class GameController
                     model.setShellLeftTank(true);
                     model.setTankDamaged(false);
                 }
-
+                
                 if (model.isShellLeftTank() && model.shellBoundingWithTank(shellIndex))
-                {
+                { 
                     if (model.shellCollidesWithTank(shellIndex) && !model.isTankDamaged())
                     {
                         model.setTankDamaged(true);
+                        model.setTankShooted(true);
                         model.damageTank(model.getShellDamage(shellIndex));
                         
                         continue;
                     }
                 }
-
+                
                 if (model.shellCollidesWithLevel(shellIndex) || !model.levelContainsShell(shellIndex))
                 {
-                    model.setTankDamaged(false);
+                    if (model.isTankShooted())
+                         model.setTankDamaged(false);
+                    
+                    model.setTankShooted(false);
                     model.setShellFlying(shellIndex, false);
                     model.setShellLeftTank(false);
                     model.setShellCollides(shellIndex, true);

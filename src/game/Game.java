@@ -38,7 +38,9 @@ import view.tankRenderer.EnemyTankRenderer;
 import view.tankRenderer.TankPlayer;
 import view.tankRenderer.TankRenderer;
 
-public class Game extends BasicGame {
+public class Game 
+extends BasicGame 
+{
     private Level               level;
     private Field               field;
     private Tank                actor;
@@ -66,7 +68,7 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException
     {
         levelRenderer.render(gc, g);
-        //actorPlayer.play(gc);
+        actorPlayer.play(gc);
     }
     
     @Override

@@ -127,8 +127,8 @@ public class LevelRenderer
         else
             g.setColor(new Color(25, 0, 200));
         
-        g.drawString("HP: " + Float.toString(level.getTankHitPoints()), 
-                level.getCameraX() + 450, level.getCameraY() + infoStringHeight);
+        String tankHP = String.format("HP: %.0f", level.getTankHitPoints());
+        g.drawString(tankHP, level.getCameraX() + 450, level.getCameraY() + infoStringHeight);
     }
     
     public void setInfoStringHeight(float height)

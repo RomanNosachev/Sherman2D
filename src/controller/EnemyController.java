@@ -16,7 +16,17 @@ public class EnemyController
     public void control(int delta)
     {
         for (int enemyIndex = 0; enemyIndex < model.getEnemiesCount(); enemyIndex++)
-        {                      
+        {                 
+            if (model.isEnemyCollides(enemyIndex))
+            {
+                if (!model.isTankDamaged())
+                {
+                    model.damageTank(model.getEnemyMeleeDamage(enemyIndex));
+                }
+                
+                model.setTankDamaged(true);
+            }
+            
             if (model.tankVisibleToEnemy(enemyIndex))
             {
                 if (model.isEnemyPatrolled(enemyIndex))
